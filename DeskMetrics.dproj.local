@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2010/07/14 19:53:19.056.dproj,C:\Users\Bernardo\Documents\RAD Studio\Projects\Project2.dproj=C:\Users\Bernardo\Documents\RAD Studio\Projects\DeskMetrics.dproj</Transaction>
+    <Transaction>2010/07/14 19:53:52.222.dproj,C:\Users\Bernardo\Documents\RAD Studio\Projects\DeskMetrics.dproj=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\DeskMetrics.dproj</Transaction>
+    <Transaction>2010/07/14 20:29:09.240.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetrics.pas=</Transaction>
+    <Transaction>2010/07/15 20:28:06.541.dproj,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\DeskMetrics.dproj=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskmts.dproj</Transaction>
+    <Transaction>2010/07/20 20:13:15.748.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsWMI.pas</Transaction>
+    <Transaction>2010/07/21 20:30:10.278.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsHardware.pas</Transaction>
+    <Transaction>2010/07/21 20:35:10.650.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsCommon.pas</Transaction>
+    <Transaction>2010/07/21 20:39:44.340.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsCommon.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsGenerics.pas</Transaction>
+    <Transaction>2010/07/21 20:42:12.348.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsHardware.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsCPUInfo.pas</Transaction>
+    <Transaction>2010/07/21 21:02:39.658.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsWinInfo.pas</Transaction>
+    <Transaction>2010/09/26 00:06:14.802.dproj,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskmts.dproj=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\DeskMetrics.dproj</Transaction>
+    <Transaction>2010/12/13 08:38:03.491.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsImgHlp.pas</Transaction>
+    <Transaction>2010/12/13 09:09:31.128.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsGenerics.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\dskMetricsCommon.pas</Transaction>
+  </Transactions>
+</BorlandProject>
