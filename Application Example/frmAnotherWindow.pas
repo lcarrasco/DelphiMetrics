@@ -1,12 +1,16 @@
-{ **********************************************************}
-{                                                           }
-{     DeskMetrics - Application Example (Delphi)            }
-{     Copyright (c) 2010-2011 DeskMetrics Limited           }
-{                                                           }
-{     http://deskmetrics.com                                }
-{     support@deskmetrics.com                               }
-{                                                           }
-{ **********************************************************}
+{ **********************************************************************}
+{                                                                       }
+{     DeskMetrics - Application Example (Delphi)                        }
+{     Copyright (c) 2010-2011 DeskMetrics Limited                       }
+{                                                                       }
+{     http://deskmetrics.com                                            }
+{     support@deskmetrics.com                                           }
+{                                                                       }
+{     This code is provided under the DeskMetrics Modified BSD License  }
+{     A copy of this license has been distributed in a file called      }
+{     LICENSE with this source code.                                    }
+{                                                                       }
+{ **********************************************************************}
 
 unit frmAnotherWindow;
 
@@ -35,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  DeskMetrics_Static; { Component Unit }
+  DeskMetrics_Dynamic; { Component Unit }
 
 procedure TfrmAnother.btnQuitClick(Sender: TObject);
 begin

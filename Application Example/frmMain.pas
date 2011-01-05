@@ -1,20 +1,16 @@
-{ **********************************************************}
-{                                                           }
-{     DeskMetrics - Application Example (Delphi)            }
-{     Copyright (c) 2010-2011 DeskMetrics Limited           }
-{                                                           }
-{     http://deskmetrics.com                                }
-{     support@deskmetrics.com                               }
-{                                                           }
-{     The entire contents of this file is protected by      }
-{     International Copyright Laws. Unauthorized            }
-{     reproduction, reverse-engineering, and distribution   }
-{     of all or any portion of the code contained in this   }
-{     file is strictly prohibited and may result in severe  }
-{     civil and criminal penalties and will be prosecuted   }
-{     to the maximum extent possible under the law.         }
-{                                                           }
-{ **********************************************************}
+{ **********************************************************************}
+{                                                                       }
+{     DeskMetrics - Application Example (Delphi)                        }
+{     Copyright (c) 2010-2011 DeskMetrics Limited                       }
+{                                                                       }
+{     http://deskmetrics.com                                            }
+{     support@deskmetrics.com                                           }
+{                                                                       }
+{     This code is provided under the DeskMetrics Modified BSD License  }
+{     A copy of this license has been distributed in a file called      }
+{     LICENSE with this source code.                                    }
+{                                                                       }
+{ **********************************************************************}
 
 unit frmMain;
 
@@ -63,7 +59,14 @@ type
     lblTrackingLog: TLabel;
     lblTrackingWindows: TLabel;
     lblZipCode: TLabel;
-    mmoTrackValue: TMemo;
+    Label3: TLabel;
+    Bevel6: TBevel;
+    Label4: TLabel;
+    Bevel7: TBevel;
+    btnFeatureA: TButton;
+    btnFeatureB: TButton;
+    rb1: TRadioButton;
+    rb2: TRadioButton;
     procedure FormShow(Sender: TObject);
     procedure btnTrackEventValueClick(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
@@ -77,6 +80,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnTrackEventClick(Sender: TObject);
     procedure btnEventCancelClick(Sender: TObject);
+    procedure btnFeatureAClick(Sender: TObject);
+    procedure btnFeatureBClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -88,12 +93,12 @@ var
 
 const
   // SET YOUR APPLICATION ID
-  FApplicationID = 'APPLICATION ID';
+  FApplicationID = 'YOUR APPLICATION ID';
 
 implementation
 
 uses
-  DeskMetrics_Static,  { Component Unit }
+  DeskMetrics_Dynamic, { Component Unit }
   frmAnotherWindow, frmCustomerExperience;
 
 {$R *.dfm}
@@ -101,7 +106,10 @@ uses
 procedure Tfrm_Main.btnTrackEventValueClick(Sender: TObject);
 begin
   // Tracks a simple event with its retuned value
-  DeskMetricsTrackEventValue('Disk', 'Size', PWideChar(mmoTrackValue.Lines.Text));
+  if rb1.Checked then
+    DeskMetricsTrackEventValue('Game', 'Level', PWideChar(rb1.Caption))
+  else
+    DeskMetricsTrackEventValue('Game', 'Level', PWideChar(rb2.Caption));
 end;
 
 procedure Tfrm_Main.btnEventCancelClick(Sender: TObject);
@@ -115,8 +123,7 @@ begin
 end;
 
 procedure Tfrm_Main.btnEventStartClick(Sender: TObject);
-begin
-  // Starts a timed event
+begin  // Starts a timed event
   DeskMetricsTrackEventStart('EventX', 'Sum');
 
   btnEventStart.Enabled  := False;
@@ -147,7 +154,7 @@ begin
   Screen.Cursor := crHourGlass;
   try
     // Sends a custom data to server and wait a response
-    CustomDataResult := DeskMetricsTrackCustomDataR(FApplicationID, '1.0', 'Email', PWideChar(edtCustomDataR.Text), False);
+    CustomDataResult := DeskMetricsTrackCustomDataR(FApplicationID, '1.0', 'Email', PWideChar(edtCustomDataR.Text));
   finally
     Screen.Cursor := crDefault;
   end;
@@ -225,6 +232,20 @@ begin
   frmAnother.ShowModal;
 end;
 
+procedure Tfrm_Main.btnFeatureAClick(Sender: TObject);
+begin
+  // Tracks a feature
+  // IMPORTANT! The event category must to be "Feature"
+  DeskMetricsTrackEvent('Feature','Feature A');
+end;
+
+procedure Tfrm_Main.btnFeatureBClick(Sender: TObject);
+begin
+  // Tracks a feature
+  // IMPORTANT! The event category must to be "Window"
+  DeskMetricsTrackEvent('Feature','Feature B');
+end;
+
 procedure Tfrm_Main.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   // TIP! You can use this method to prevent the user needs to wait
@@ -243,7 +264,7 @@ begin
   begin
     // Starts the DeskMetrics component (required)
     // IMPORTANT! Do not forget to set your application ID
-    DeskMetricsStart(FApplicationID, True, False);
+    DeskMetricsStart(FApplicationID, '1.0', True);
 
     // Tracks a window event
     // IMPORTANT! The event category must to be "Window"
@@ -251,8 +272,13 @@ begin
   end;
 
   // Shows informations about the component
-  lblComponentName.Caption    := DeskMetricsGetComponentName;
-  lblComponentVersion.Caption := 'Component Version: ' + DeskMetricsGetComponentVersion;
+  if DeskMetricsDllLoaded then
+  begin
+    lblComponentName.Caption    := DeskMetricsGetComponentName;
+    lblComponentVersion.Caption := 'Component Version: ' + DeskMetricsGetComponentVersion;
+  end
+  else
+    lblComponentName.Caption    := 'DLL Not Found';
 end;
 
 end.

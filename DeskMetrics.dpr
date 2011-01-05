@@ -28,16 +28,15 @@ uses
   dskMetricsWMI in 'dskMetricsWMI.pas',
   dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas',
   dskMetricsCommon in 'dskMetricsCommon.pas',
-  dskMetricsWinInfo in 'dskMetricsWinInfo.pas',
-  dskMetricsImgHlp in 'dskMetricsImgHlp.pas';
+  dskMetricsWinInfo in 'dskMetricsWinInfo.pas';
 
-{support 4GB memory}
+{ 4 GB memory }
 {$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
 
-{multi-threading app}
+{ Multi-threading }
 {$define AssumeMultiThreaded}
 
-{disable compiler platform warning}
+{ Disable compiler platform warning }
 {$WARN UNIT_PLATFORM OFF}
 {$WARN SYMBOL_PLATFORM OFF}
 
@@ -248,7 +247,7 @@ begin
 end;
 
 { Component Control }
-function DeskMetricsStart(FApplicationID: PWideChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall;
+function DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall;
 var
   FHeader: string;
   FOperatingSystem: string;
@@ -263,13 +262,15 @@ begin
       { Set Application ID }
       _SetAppID(FApplicationID);
 
+      if FApplicationVersion = '' then
+        FAppVersion := PWideChar(_GetAppVersion)
+      else
+        FAppVersion := FApplicationVersion;
+
       if (_GetAppID <> '') and (FEnabled) then
       begin
-        { Set Test Mode }
-        _SetTestMode(FTestMode);
-
         { JSON Header }
-        FHeader           := '{"tp":"strApp","atst":' + IntToStr(Integer(FTestMode)) + ',"aver":"' + _GetAppVersion + '","ID":"' + _GetUserID + '","ss":"' + _GetSessionID + '","ts":' + _GetTimeStamp + ',';
+        FHeader           := '{"tp":"strApp","aver":"' + FAppVersion + '","ID":"' + _GetUserID + '","ss":"' + _GetSessionID + '","ts":' + _GetTimeStamp + ',';
         FOperatingSystem  := '"osv":"' + _GetOperatingSystemVersion + '","ossp":'+ _GetOperatingSystemServicePack +',"osar":' + _GetOperatingSystemArchicteture + ',"osjv":"' + _GetJavaVM + '","osnet":"' + _GetDotNetVersion + '","osnsp":' + _GetDotNetServicePack + ',"oslng":' + _GetOperatingSystemLanguage + ',"osscn":"' + _GetOperatingSystemScreen + '",';
         FHardware         := '"cnm":"' + _GetProcessorName + '","cbr":"' + _GetProcessorBrand + '","cfr":' + IntToStr(_GetProcessorFrequency) + ',"ccr":' + _GetProcessorCores + ',"car":'+ _GetProcessorArchicteture + ',"mtt":' + _GetMemoryTotal + ',"mfr":' + _GetMemoryFree + ',"dtt":' + _GetDiskTotal + ',"dfr":' + _GetDiskFree + '}';
         FJSONData         := Trim(FHeader) + Trim(FOperatingSystem) + Trim(FHardware);
@@ -279,10 +280,8 @@ begin
         begin
           FThreadStart := TPostThread.Create(FJSONData, API_SENDDATA, FErrorID);
           FThreadStart.Resume;
-          //_SendPost(FErrorID, API_SENDDATA);
         end;
 
-        { Set Analytics Started }
         _SetStarted(True);
 
         Result := True;
@@ -295,12 +294,12 @@ begin
   end;
 end;
 
-function DeskMetricsStartA(FApplicationID: PAnsiChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall;
+function DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsStart(PWideChar(FApplicationID), FRealTime, FTestMode);
+      Result := DeskMetricsStart(PWideChar(FApplicationID), PWideChar(FApplicationVersion), FRealTime);
     except
       Result := False;
     end;
@@ -345,7 +344,7 @@ begin
         end;
 
         { Debug / Test Mode }
-        if _GetTestMode then
+        if _GetDebugMode then
           _InsertLogText('Stop', FLastErrorID);
       end;
     except
@@ -387,7 +386,7 @@ begin
         end;
 
         { Debug / Test Mode }
-        if _GetTestMode then
+        if _GetDebugMode then
           _InsertLogText('CheckVersion', FErrorID);
       finally
         FJSONData := FJSONTemp;
@@ -648,7 +647,7 @@ begin
   end;
 end;
 
-function DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FAppVersion: PWideChar; FName: PWideChar; FValue: PWideChar; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer; stdcall;
 var
   FJSONTemp: string;
   FNameTemp: string;
@@ -666,14 +665,14 @@ begin
         { Set Application ID }
         _SetAppID(FApplicationID);
 
-        FJSONData := '{"tp":"ctDR","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","aver":"' + FAppVersion + '","atst":' + IntToStr(Integer(FTestMode)) + ',"ID":"' + _GetUserID + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+        FJSONData := '{"tp":"ctDR","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
 
         { Send HTTP request }
         _SendPost(FErrorID, API_SENDDATA);
         Result := FErrorID;
 
         { Debug / Test Mode }
-        if _GetTestMode then
+        if _GetDebugMode then
           _InsertLogText('TrackCustomDataR', FErrorID);
       finally
         FJSONData := FJSONTemp;
@@ -686,12 +685,12 @@ begin
   end;
 end;
 
-function DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsTrackCustomDataR(PWideChar(FApplicationID), PWideChar(FAppVersion), PWideChar(FName), PWideChar(FValue), FTestMode);
+      Result := DeskMetricsTrackCustomDataR(PWideChar(FApplicationID), PWideChar(FApplicationVersion), PWideChar(FName), PWideChar(FValue));
     except
       Result := -1;
     end;
@@ -701,39 +700,39 @@ begin
 end;
 
 { Exceptions }
-procedure DeskMetricsTrackExceptions(Sender: TObject; E:Exception); stdcall;
-begin
-
-end;
-
-procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar); stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      //'{type="exception", exp_msg="Invalid pointer argumentation", exp_type="Win32API", exp_stack="7c817067 kernel32.RegisterWaitForInputIdle + 0x49"},'
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      DeskMetricsTrackException(PWideChar(FExceptionMessage), PWideChar(FExceptionType));
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
+//procedure DeskMetricsTrackExceptions(Sender: TObject; E:Exception); stdcall;
+//begin
+//
+//end;
+//
+//procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar); stdcall;
+//begin
+//  FThreadSafe.Enter;
+//  try
+//    try
+//      //'{type="exception", exp_msg="Invalid pointer argumentation", exp_type="Win32API", exp_stack="7c817067 kernel32.RegisterWaitForInputIdle + 0x49"},'
+//    except
+//    end;
+//  finally
+//    FThreadSafe.Leave;
+//  end;
+//end;
+//
+//procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
+//begin
+//  FThreadSafe.Enter;
+//  try
+//    try
+//      DeskMetricsTrackException(PWideChar(FExceptionMessage), PWideChar(FExceptionType));
+//    except
+//    end;
+//  finally
+//    FThreadSafe.Leave;
+//  end;
+//end;
 
 {Installations}
-function DeskMetricsTrackInstallation(FApplicationID: string; FAppVersion: string; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
 var
   FErrorID: Integer;
 begin
@@ -743,16 +742,16 @@ begin
       { Set Application ID }
       _SetAppID(FApplicationID);
 
+      { Check Version }
+      if FApplicationVersion = '' then
+        FApplicationVersion := NULL_STR;
+
       { JSON Data }
-      FJSONData := '{"tp":"ist","aver":"' + FAppVersion + '","atst":'+ IntToStr(Integer(FTestMode)) +',"ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
+      FJSONData := '{"tp":"ist","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
 
       { Send HTTP request }
       _SendPost(FErrorID, API_SENDDATA);
       Result := FErrorID;
-
-      { Debug / Test Mode }
-      if _GetTestMode then
-        _InsertLogText('TrackInstallation', FErrorID);
     except
       Result := -1;
     end;
@@ -761,12 +760,12 @@ begin
   end;
 end;
 
-function DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FAppVersion: AnsiString; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsTrackInstallation(WideString(FApplicationID), WideString(FAppVersion), FTestMode);
+      Result := DeskMetricsTrackInstallation(WideString(FApplicationID), WideString(FAppVersion));
     except
       Result := -1;
     end;
@@ -776,7 +775,7 @@ begin
 end;
 
 { Uninstallations }
-function DeskMetricsTrackUninstallation(FApplicationID: string; FAppVersion: string; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
 var
   FErrorID: Integer;
 begin
@@ -786,15 +785,19 @@ begin
       { Set Application ID }
       _SetAppID(FApplicationID);
 
+      { Check Version }
+      if FApplicationVersion = '' then
+        FApplicationVersion := NULL_STR;
+
       { JSON Data }
-      FJSONData := '{"tp":"ust","aver":"' + FAppVersion + '","atst":'+ IntToStr(Integer(FTestMode)) +',"ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
+      FJSONData := '{"tp":"ust","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
 
       { Send HTTP request }
       _SendPost(FErrorID, API_SENDDATA);
       Result := FErrorID;
 
       { Debug / Test Mode }
-      if _GetTestMode then
+      if _GetDebugMode then
         _InsertLogText('TrackUninstallation', FErrorID);
     except
       Result := -1;
@@ -804,72 +807,14 @@ begin
   end;
 end;
 
-function DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FAppVersion: AnsiString; FTestMode: Boolean): Integer; stdcall;
+function DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsTrackUninstallation(WideString(FApplicationID), WideString(FAppVersion), FTestMode);
+      Result := DeskMetricsTrackUninstallation(WideString(FApplicationID), WideString(FApplicationVersion));
     except
       Result := -1;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-{ Versions }
-function DeskMetricsSetAppVersion(FVersion: PWideChar): Boolean; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      FAppVersion := FVersion;
-      Result      := True;
-    except
-      Result := False;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsSetAppVersionA(FVersion: PAnsiChar): Boolean; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := DeskMetricsSetAppVersion(PWideChar(FVersion));
-    except
-      Result := False;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsGetAppVersion: PWideChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := PWideChar(FAppVersion);
-    except
-      Result := UNKNOWN_STR;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsGetAppVersionA: PAnsiChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := PAnsiChar(DeskMetricsGetAppVersion);
-    except
-      Result := UNKNOWN_STR;
     end;
   finally
     FThreadSafe.Leave;
@@ -1103,7 +1048,7 @@ begin
         { Sent ? }
         Result := FErrorID = 0;
 
-        if _GetTestMode then
+        if _GetDebugMode then
           _InsertLogText('SendData', FErrorID);
       end;
     except
@@ -1111,6 +1056,25 @@ begin
     end;
   finally
     FThreadSafe.Leave;
+  end;
+end;
+
+{ Debug Mode }
+function DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean; stdcall;
+begin
+  try
+    Result := _SetDebugMode(FEnabled);
+  except
+    Result := False;
+  end;
+end;
+
+function DeskMetricsGetDebugMode: Boolean; stdcall;
+begin
+  try
+    Result := _GetDebugMode;
+  except
+    Result := False;
   end;
 end;
 
@@ -1174,17 +1138,13 @@ exports
  DeskMetricsTrackCustomDataA,
  DeskMetricsTrackCustomDataR,
  DeskMetricsTrackCustomDataRA,
- DeskMetricsTrackExceptions,
- DeskMetricsTrackException,
- DeskMetricsTrackExceptionA,
+ // DeskMetricsTrackExceptions,
+ // DeskMetricsTrackException,
+ // DeskMetricsTrackExceptionA,
  DeskMetricsTrackInstallation,
  DeskMetricsTrackInstallationA,
  DeskMetricsTrackUninstallation,
  DeskMetricsTrackUninstallationA,
- DeskMetricsSetAppVersion,
- DeskMetricsSetAppVersionA,
- DeskMetricsGetAppVersion,
- DeskMetricsGetAppVersionA,
  DeskMetricsSetEnabled,
  DeskMetricsGetEnabled,
  DeskMetricsSetProxy,
@@ -1213,7 +1173,9 @@ exports
  DeskMetricsSetDailyNetworkUtilizationInKB,
  DeskMetricsGetMaxStorageSizeInKB,
  DeskMetricsSetMaxStorageSizeInKB,
- DeskMetricsSendData;
+ DeskMetricsSendData,
+ DeskMetricsSetDebugMode,
+ DeskMetricsGetDebugMode;
 
 begin
   { DLL Management }

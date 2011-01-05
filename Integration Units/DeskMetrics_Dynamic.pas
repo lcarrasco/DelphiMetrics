@@ -6,9 +6,9 @@
 {     http://deskmetrics.com                                }
 {     support@deskmetrics.com                               }
 {                                                           }
-{     Author: Stuart Clennett								}												
-{     Licence: GNU GPL v3									}
-{															}
+{     Author: Stuart Clennett							                	}
+{     Licence: GNU GPL v3								                  	}
+{															                              }
 { **********************************************************}
 
 unit DeskMetrics_Dynamic;
@@ -23,69 +23,67 @@ type
     ReleaseDate: ShortString;
   end;
 
-  TDMStart        = function (FApplicationID: PWideChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall;
-  TDMStartA       = function (FApplicationID: PAnsiChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall;
-  TDMStop         = function : boolean; stdcall;
-  TDMCheckVersion = function (var FVersionData: TVersionData): Boolean; stdcall;
-  TDMTrackEvent   = procedure (FEventCategory, FEventName: PWideChar); stdcall;
-  TDMTrackEventA  = procedure (FEventCategory, FEventName: PAnsiChar); stdcall;
-  TDMTrackEventValue = procedure(FEventCategory, FEventName, FEventValue: PWideChar); stdcall;
-  TDMTrackEventValueA = procedure(FEventCategory, FEventName, FEventValue: PAnsiChar); stdcall;
-  TDMTrackEventStart = procedure(FEventCategory, FEventName: PWideChar); stdcall;
-  TDMTrackEventStartA = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
-  TDMTrackEventStop = procedure(FEventCategory, FEventName: PWideChar); stdcall;
-  TDMTrackEventStopA = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
-  TDMTrackEventCancel = procedure(FEventCategory, FEventName: PWideChar); stdcall;
-  TDMTrackEventCancelA = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
-  TDMTrackLog = procedure(FMessage: PWideChar); stdcall;
-  TDMTrackLogA = procedure(FMessage: PAnsiChar); stdcall;
-  TDMTrackCustomData = procedure(FName, FValue: PWideChar); stdcall;
-  TDMTrackCustomDataA = procedure(FName, FValue: PAnsiChar); stdcall;
-  TDMTrackCustomDataR = function(FApplicationID: PWideChar; FAppVersion: PWideChar; FName: PWideChar; FValue: PWideChar; FTestMode: Boolean): Integer; stdcall;
-  TDMTrackCustomDataRA = function(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar; FTestMode: Boolean): Integer; stdcall;
-  TDMTrackExceptions = procedure(FEnabled: Boolean); stdcall;
-  TDMTrackException = procedure(FExceptionMessage, FExceptionType: PWideChar); stdcall;
-  TDMTrackExceptionA = procedure(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
-  TDMTrackInstallation = function(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer; stdcall;
-  TDMTrackInstallationA = function(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer; stdcall;
-  TDMTrackUninstallation = function(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer; stdcall;
-  TDMTrackUninstallationA = function(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer; stdcall;
-  TDMSetAppVersion = function(FVersion: PWideChar): Boolean; stdcall;
-  TDMSetAppVersionA = function(FVersion: PAnsiChar): Boolean; stdcall;
-  TDMGetAppVersion = function : PWideChar; stdcall;
-  TDMGetAppVersionA = function : PAnsiChar; stdcall;
-  TDMSetProxy = function(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean; stdcall;
-  TDMSetProxyA = function(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean; stdcall;
-  TDMGetProxy = function(var FHostIP: PWideChar; var FPort: Integer): Boolean; stdcall;
-  TDMGetProxyA = function(var FHostIP: PAnsiChar; var FPort: Integer): Boolean; stdcall;
-  TDMSetUserID = function(FID: PWideChar): Boolean; stdcall;
-  TDMSetUserIDA = function(FID: PAnsiChar): Boolean; stdcall;
-  TDMGetComponentName = function : PWideChar; stdcall;
-  TDMGetComponentNameA = function : PAnsiChar; stdcall;
-  TDMGetComponentVersion = function : PWideChar; stdcall;
-  TDMGetComponentVersionA = function : PAnsiChar; stdcall;
-  TDMGetPostServer = function : PWideChar; stdcall;
-  TDMGetPostServerA = function : PAnsiChar; stdcall;
-  TDMSetPostServer = function(FServer: PWideChar): Boolean; stdcall;
-  TDMSetPostServerA = function(FServer: PAnsiChar): Boolean; stdcall;
-  TDMGetPostPort = function : Integer; stdcall;
-  TDMSetPostPort = function(FPort: Integer): Boolean; stdcall;
-  TDMGetPostTimeOut = function: Integer; stdcall;
-  TDMSetPostTimeOut = function(FTimeOut: Integer): Boolean; stdcall;
-  TDMGetPostWaitResponse = function : Boolean; stdcall;
-  TDMSetPostWaitResponse = function(FEnabled: Boolean): Boolean; stdcall;
-  TDMGetJSON = function : PWideChar; stdcall;
-  TDMGetJSONA = function : PAnsiChar; stdcall;
+  TDMStart                = function(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall;
+  TDMStartA               = function(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FRealTime: Boolean): Boolean; stdcall;
+  TDMStop                 = function: Boolean; stdcall;
+  TDMCheckVersion         = function(var FVersionData: TVersionData): Boolean; stdcall;
+  TDMTrackEvent           = procedure(FEventCategory, FEventName: PWideChar); stdcall;
+  TDMTrackEventA          = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
+  TDMTrackEventValue      = procedure(FEventCategory, FEventName, FEventValue: PWideChar); stdcall;
+  TDMTrackEventValueA     = procedure(FEventCategory, FEventName, FEventValue: PAnsiChar); stdcall;
+  TDMTrackEventStart      = procedure(FEventCategory, FEventName: PWideChar); stdcall;
+  TDMTrackEventStartA     = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
+  TDMTrackEventStop       = procedure(FEventCategory, FEventName: PWideChar); stdcall;
+  TDMTrackEventStopA      = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
+  TDMTrackEventCancel     = procedure(FEventCategory, FEventName: PWideChar); stdcall;
+  TDMTrackEventCancelA    = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
+  TDMTrackLog             = procedure(FMessage: PWideChar); stdcall;
+  TDMTrackLogA            = procedure(FMessage: PAnsiChar); stdcall;
+  TDMTrackCustomData      = procedure(FName, FValue: PWideChar); stdcall;
+  TDMTrackCustomDataA     = procedure(FName, FValue: PAnsiChar); stdcall;
+  TDMTrackCustomDataR     = function(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer; stdcall;
+  TDMTrackCustomDataRA    = function(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer; stdcall;
+  TDMTrackInstallation    = function(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
+  TDMTrackInstallationA   = function(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
+  TDMTrackUninstallation  = function(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
+  TDMTrackUninstallationA = function(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
+  TDMSetProxy             = function(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean; stdcall;
+  TDMSetProxyA            = function(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean; stdcall;
+  TDMGetProxy             = function(var FHostIP: PWideChar; var FPort: Integer): Boolean; stdcall;
+  TDMGetProxyA            = function(var FHostIP: PAnsiChar; var FPort: Integer): Boolean; stdcall;
+  TDMSetUserID            = function(FID: PWideChar): Boolean; stdcall;
+  TDMSetUserIDA           = function(FID: PAnsiChar): Boolean; stdcall;
+  TDMGetComponentName     = function:PWideChar; stdcall;
+  TDMGetComponentNameA    = function:PAnsiChar; stdcall;
+  TDMGetComponentVersion  = function:PWideChar; stdcall;
+  TDMGetComponentVersionA = function:PAnsiChar; stdcall;
+  TDMGetPostServer        = function:PWideChar; stdcall;
+  TDMGetPostServerA       = function:PAnsiChar; stdcall;
+  TDMSetPostServer        = function(FServer: PWideChar): Boolean; stdcall;
+  TDMSetPostServerA       = function(FServer: PAnsiChar): Boolean; stdcall;
+  TDMGetPostPort          = function:Integer; stdcall;
+  TDMSetPostPort          = function(FPort: Integer): Boolean; stdcall;
+  TDMGetPostTimeOut       = function:Integer; stdcall;
+  TDMSetPostTimeOut       = function(FTimeOut: Integer): Boolean; stdcall;
+  TDMGetPostWaitResponse  = function:Boolean; stdcall;
+  TDMSetPostWaitResponse  = function(FEnabled: Boolean): Boolean; stdcall;
+  TDMGetJSON              = function:PWideChar; stdcall;
+  TDMGetJSONA             = function:PAnsiChar; stdcall;
   TDMGetDailyNetworkUtilizationInKB = function: Integer; stdcall;
   TDMSetDailyNetworkUtilizationInKB = function(FDataSize: Integer): Boolean; stdcall;
-  TDMGetMaxStorageSizeInKB = function : Integer; stdcall;
+  TDMGetMaxStorageSizeInKB = function: Integer; stdcall;
   TDMSetMaxStorageSizeInKB = function(FDataSize: Integer): Boolean; stdcall;
-  TDMSetEnabled = function(FValue: Boolean): Boolean; stdcall;
-  TDMGetEnabled = function: Boolean; stdcall;
-  TDMSendData = function : Boolean; stdcall;
+  TDMSetEnabled            = function(FValue: Boolean): Boolean; stdcall;
+  TDMGetEnabled            = function:Boolean; stdcall;
+  TDMSendData              = function:Boolean; stdcall;
+  TDMGetDebugMode          = function:Boolean; stdcall;
+  TDMSetDebugMode          = function(FEnabled: Boolean): Boolean; stdcall;
+  // TDMTrackExceptions = procedure(FEnabled: Boolean); stdcall;
+  // TDMTrackException = procedure(FExceptionMessage, FExceptionType: PWideChar); stdcall;
+  // TDMTrackExceptionA = procedure(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
 
-  function  DeskMetricsStart(FApplicationID: PWideChar; FRealTime: Boolean; FTestMode: Boolean): Boolean;
-  function  DeskMetricsStartA(FApplicationID: PAnsiChar; FRealTime: Boolean; FTestMode: Boolean): Boolean;
+  function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean;
+  function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FRealTime: Boolean): Boolean;
   function  DeskMetricsStop: Boolean;
   function  DeskMetricsCheckVersion(var FVersionData: TVersionData): Boolean;
   procedure DeskMetricsTrackEvent(FEventCategory, FEventName: PWideChar);
@@ -102,19 +100,12 @@ type
   procedure DeskMetricsTrackLogA(FMessage: PAnsiChar);
   procedure DeskMetricsTrackCustomData(FName, FValue: PWideChar);
   procedure DeskMetricsTrackCustomDataA(FName, FValue: PAnsiChar);
-  function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FAppVersion: PWideChar; FName: PWideChar; FValue: PWideChar; FTestMode: Boolean): Integer;
-  function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar; FTestMode: Boolean): Integer;
-  procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
-  procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
-  procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
-  function  DeskMetricsTrackInstallation(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer;
-  function  DeskMetricsTrackInstallationA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer;
-  function  DeskMetricsTrackUninstallation(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer;
-  function  DeskMetricsTrackUninstallationA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer;
-  function  DeskMetricsSetAppVersion(FVersion: PWideChar): Boolean;
-  function  DeskMetricsSetAppVersionA(FVersion: PAnsiChar): Boolean;
-  function  DeskMetricsGetAppVersion: PWideChar;
-  function  DeskMetricsGetAppVersionA: PAnsiChar;
+  function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer;
+  function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer;
+  function  DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer;
+  function  DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
+  function  DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer;
+  function  DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
   function  DeskMetricsSetProxy(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean;
   function  DeskMetricsSetProxyA(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean;
   function  DeskMetricsGetProxy(var FHostIP: PWideChar; var FPort: Integer): Boolean;
@@ -144,10 +135,15 @@ type
   function  DeskMetricsSetEnabled(FValue: Boolean): Boolean;
   function  DeskMetricsGetEnabled: Boolean;
   function  DeskMetricsSendData: Boolean;
+  function  DeskMetricsGetDebugMode: Boolean;
+  function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean;
+  // procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
+  // procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
+  // procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
 
-  function  Is_DLL_Loaded : boolean;
-  function  Load_DLL : boolean;
-  function  Unload_DLL : boolean;
+  function  DeskMetricsDllLoaded: Boolean;
+  function  Load_DLL: Boolean;
+  function  Unload_DLL: Boolean;
 
 const
   EMPTY_STRING = '';
@@ -183,17 +179,10 @@ const
   PROC_DeskMetricsTrackCustomDataA = 'DeskMetricsTrackCustomDataA';
   PROC_DeskMetricsTrackCustomDataR = 'DeskMetricsTrackCustomDataR';
   PROC_DeskMetricsTrackCustomDataRA = 'DeskMetricsTrackCustomDataRA';
-  PROC_DeskMetricsTrackExceptions = 'DeskMetricsTrackExceptions';
-  PROC_DeskMetricsTrackException = 'DeskMetricsTrackException';
-  PROC_DeskMetricsTrackExceptionA = 'DeskMetricsTrackExceptionA';
   PROC_DeskMetricsTrackInstallation = 'DeskMetricsTrackInstallation';
   PROC_DeskMetricsTrackInstallationA = 'DeskMetricsTrackInstallationA';
   PROC_DeskMetricsTrackUninstallation = 'DeskMetricsTrackUninstallation';
   PROC_DeskMetricsTrackUninstallationA = 'DeskMetricsTrackUninstallationA';
-  PROC_DeskMetricsSetAppVersion = 'DeskMetricsSetAppVersion';
-  PROC_DeskMetricsSetAppVersionA = 'DeskMetricsSetAppVersionA';
-  PROC_DeskMetricsGetAppVersion = 'DeskMetricsGetAppVersion';
-  PROC_DeskMetricsGetAppVersionA = 'DeskMetricsGetAppVersionA';
   PROC_DeskMetricsSetProxy = 'DeskMetricsSetProxy';
   PROC_DeskMetricsSetProxyA = 'DeskMetricsSetProxyA';
   PROC_DeskMetricsGetProxy = 'DeskMetricsGetProxy';
@@ -223,10 +212,15 @@ const
   PROC_DeskMetricsSetEnabled = 'DeskMetricsSetEnabled';
   PROC_DeskMetricsGetEnabled = 'DeskMetricsGetEnabled';
   PROC_DeskMetricsSendData = 'DeskMetricsSendData';
+  PROC_DeskMetricsGetDebugMode = 'DeskMetricsGetDebugMode';
+  PROC_DeskMetricsSetDebugMode = 'DeskMetricsSetDebugMode';
+  // PROC_DeskMetricsTrackExceptions = 'DeskMetricsTrackExceptions';
+  // PROC_DeskMetricsTrackException = 'DeskMetricsTrackException';
+  // PROC_DeskMetricsTrackExceptionA = 'DeskMetricsTrackExceptionA';
 
 function GetAppPath : string;
 begin
-  result := IncludeTrailingPathDelimiter(ExtractFilePath(paramstr(0)));
+  Result := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
 end;
 
 function CheckLoadDLL : boolean;
@@ -234,51 +228,51 @@ begin
   if hModule < HINSTANCE_ERROR then
   begin
     hModule := LoadLibrary(PChar(GetAppPath + DESKMETRICS_DLL));
-    result := not(hModule < HINSTANCE_ERROR);
+    Result := not(hModule < HINSTANCE_ERROR);
   end else
-    result := TRUE;
+    Result := TRUE;
 end;
 
-function  Is_DLL_Loaded : boolean;
+function  DeskMetricsDllLoaded : boolean;
 begin
-  result := not (hModule < HINSTANCE_ERROR);
+  Result := not (hModule < HINSTANCE_ERROR);
 end;
 
 function  Load_DLL : boolean;
 begin
-  result := CheckLoadDLL;
+  Result := CheckLoadDLL;
 end;
 
 function  Unload_DLL : boolean;
 begin
-  result := false;
+  Result := false;
   if not (hModule < HINSTANCE_ERROR) then
-    result := FreeLibrary(hModule);
+    Result := FreeLibrary(hModule);
 end;
 
-function  DeskMetricsStart(FApplicationID: PWideChar; FRealTime: Boolean; FTestMode: Boolean): Boolean;
+function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean;
 const
   DMStart : TDMStart = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMStart := GetProcAddress(hModule, PROC_DeskMetricsStart);
     if assigned(DMStart) then
-      result := DMStart(fApplicationID, fRealTime, FTestMode);
+      Result := DMStart(FApplicationID, FApplicationVersion, FRealTime);
   end;
 end;
 
-function  DeskMetricsStartA(FApplicationID: PAnsiChar; FRealTime: Boolean; FTestMode: Boolean): Boolean;
+function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FRealTime: Boolean): Boolean;
 const
   DMStartA : TDMStartA = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMStartA := GetProcAddress(hModule, PROC_DeskMetricsStartA);
     if assigned(DMStartA) then
-      result := DMStartA(fApplicationID, fRealTime, FTestMode);
+      Result := DMStartA(FApplicationID, FApplicationVersion, FRealTime);
   end;
 end;
 
@@ -286,12 +280,12 @@ function  DeskMetricsStop: Boolean;
 const
   DMStop : TDMStop = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMStop := GetProcAddress(hModule, PROC_DeskMetricsStop);
     if assigned(DMStop) then
-      result := DMStop;
+      Result := DMStop;
   end;
 end;
 
@@ -299,12 +293,12 @@ function  DeskMetricsCheckVersion(var FVersionData: TVersionData): Boolean;
 const
   DMCheckVersion : TDMCheckVersion = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMCheckVersion := GetProcAddress(hModule, PROC_DeskMetricsCheckVersion);
     if Assigned(DMCheckVersion) then
-      result := DMCheckVersion(fVersionData);
+      Result := DMCheckVersion(fVersionData);
   end;
 end;
 
@@ -476,169 +470,81 @@ begin
   end;
 end;
 
-function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FAppVersion: PWideChar; FName: PWideChar; FValue: PWideChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer;
 const
   DMTrackCustomDataR : TDMTrackCustomDataR = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackCustomDataR := GetProcAddress(hModule, PROC_DeskMetricsTrackCustomDataR);
     if Assigned(DMTrackCustomDataR) then
-      result := DMTrackCustomDataR(FApplicationID, FAppVersion, FName, FValue, FTestMode);
+      Result := DMTrackCustomDataR(FApplicationID, FApplicationVersion, FName, FValue);
   end;
 end;
 
-function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer;
 const
   DMTrackCustomDataRA : TDMTrackCustomDataRA = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackCustomDataRA := GetProcAddress(hModule, PROC_DeskMetricsTrackCustomDataRA);
     if Assigned(DMTrackCustomDataRA) then
-      result := DMTrackCustomDataRA(FApplicationID, FAppVersion, FName, FValue, FTestMode);
+      Result := DMTrackCustomDataRA(FApplicationID, FApplicationVersion, FName, FValue);
   end;
 end;
 
-procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
-const
-  DMTrackExceptions : TDMTrackExceptions = nil;
-begin
-  if CheckLoadDLL then
-  begin
-    @DMTrackExceptions := GetProcAddress(hModule, PROC_DeskMetricsTrackCustomDataR);
-    if Assigned(DMTrackExceptions) then
-      DMTrackExceptions(FEnabled);
-  end;
-end;
-
-procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
-const
-  DMTrackException : TDMTrackException = nil;
-begin
-  if CheckLoadDLL then
-  begin
-    @DMTrackException := GetProcAddress(hModule, PROC_DeskMetricsTrackException);
-    if Assigned(DMTrackException) then
-      DMTrackException(FExceptionMessage, FExceptionType);
-  end;
-end;
-
-procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
-const
-  DMTrackExceptionA : TDMTrackExceptionA = nil;
-begin
-  if CheckLoadDLL then
-  begin
-    @DMTrackExceptionA := GetProcAddress(hModule, PROC_DeskMetricsTrackExceptionA);
-    if Assigned(DMTrackExceptionA) then
-      DMTrackExceptionA(FExceptionMessage, FExceptionType);
-  end;
-end;
-
-function  DeskMetricsTrackInstallation(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer;
 const
   DMTrackInstallation : TDMTrackInstallation = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackInstallation := GetProcAddress(hModule, PROC_DeskMetricsTrackInstallation);
     if Assigned(DMTrackInstallation) then
-      result := DMTrackInstallation(FApplicationID, FAppVersion, FTestMode);
+      Result := DMTrackInstallation(FApplicationID, FApplicationVersion);
   end;
 end;
 
-function  DeskMetricsTrackInstallationA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
 const
   DMTrackInstallationA : TDMTrackInstallationA = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackInstallationA := GetProcAddress(hModule, PROC_DeskMetricsTrackInstallationA);
     if Assigned(DMTrackInstallationA) then
-      result := DMTrackInstallationA(FApplicationID, FAppVersion, FTestMode);
+      Result := DMTrackInstallationA(FApplicationID, FApplicationVersion);
   end;
 end;
 
-function  DeskMetricsTrackUninstallation(FApplicationID: PWideChar; FAppVersion: PWideChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer;
 const
   DMTrackUninstallation : TDMTrackUninstallation = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackUninstallation := GetProcAddress(hModule, PROC_DeskMetricsTrackUninstallation);
     if Assigned(DMTrackUninstallation) then
-      result := DMTrackUninstallation(FApplicationID, FAppVersion, FTestMode);
+      Result := DMTrackUninstallation(FApplicationID, FApplicationVersion);
   end;
 end;
 
-function  DeskMetricsTrackUninstallationA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FTestMode: Boolean): Integer;
+function  DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
 const
   DMTrackUninstallationA : TDMTrackUninstallationA = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMTrackUninstallationA := GetProcAddress(hModule, PROC_DeskMetricsTrackUninstallationA);
     if Assigned(DMTrackUninstallationA) then
-      result := DMTrackUninstallationA(FApplicationID, FAppVersion, FTestMode);
-  end;
-end;
-
-function  DeskMetricsSetAppVersion(FVersion: PWideChar): Boolean;
-const
-  DMSetAppVersion : TDMSetAppVersion = nil;
-begin
-  result := false;
-  if CheckLoadDLL then
-  begin
-    @DMSetAppVersion := GetProcAddress(hModule, PROC_DeskMetricsSetAppVersion);
-    if Assigned(DMSetAppVersion) then
-      DMSetAppVersion(FVersion);
-  end;
-end;
-
-function  DeskMetricsSetAppVersionA(FVersion: PAnsiChar): Boolean;
-const
-  DMSetAppVersionA : TDMSetAppVersionA = nil;
-begin
-  result := false;
-  if CheckLoadDLL then
-  begin
-    @DMSetAppVersionA := GetProcAddress(hModule, PROC_DeskMetricsSetAppVersionA);
-    if Assigned(DMSetAppVersionA) then
-      DMSetAppVersionA(FVersion);
-  end;
-end;
-
-function  DeskMetricsGetAppVersion: PWideChar;
-const
-  DMGetAppVersion : TDMGetAppVersion = nil;
-begin
-  result := EMPTY_STRING;
-  if CheckLoadDLL then
-  begin
-    @DMGetAppVersion := GetProcAddress(hModule, PROC_DeskMetricsGetAppVersion);
-    if Assigned(DMGetAppVersion) then
-      result := DMGetAppVersion;
-  end;
-end;
-
-function  DeskMetricsGetAppVersionA: PAnsiChar;
-const
-  DMGetAppVersionA : TDMGetAppVersionA = nil;
-begin
-  result := EMPTY_STRING;
-  if CheckLoadDLL then
-  begin
-    @DMGetAppVersionA := GetProcAddress(hModule, PROC_DeskMetricsGetAppVersionA);
-    if Assigned(DMGetAppVersionA) then
-      result := DMGetAppVersionA;
+      Result := DMTrackUninstallationA(FApplicationID, FApplicationVersion);
   end;
 end;
 
@@ -646,12 +552,12 @@ function  DeskMetricsSetProxy(FHostIP: PWideChar; FPort: Integer; FUserName, FPa
 const
   DMSetProxy : TDMSetProxy = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetProxy := GetProcAddress(hModule, PROC_DeskMetricsSetProxy);
     if Assigned(DMSetProxy) then
-      result := DMSetProxy(FHostIP, FPort, FUserName, fPassword);
+      Result := DMSetProxy(FHostIP, FPort, FUserName, fPassword);
   end;
 end;
 
@@ -659,12 +565,12 @@ function  DeskMetricsSetProxyA(FHostIP: PAnsiChar; FPort: Integer; FUserName, FP
 const
   DMSetProxyA : TDMSetProxyA = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetProxyA := GetProcAddress(hModule, PROC_DeskMetricsSetProxyA);
     if Assigned(DMSetProxyA) then
-      result := DMSetProxyA(FHostIP, FPort, FUserName, fPassword);
+      Result := DMSetProxyA(FHostIP, FPort, FUserName, fPassword);
   end;
 end;
 
@@ -672,12 +578,12 @@ function  DeskMetricsGetProxy(var FHostIP: PWideChar; var FPort: Integer): Boole
 const
   DMGetProxy : TDMGetProxy = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMGetProxy := GetProcAddress(hModule, PROC_DeskMetricsGetProxy);
     if Assigned(DMGetProxy) then
-      result := DMGetProxy(FHostIP, FPort);
+      Result := DMGetProxy(FHostIP, FPort);
   end;
 end;
 
@@ -685,12 +591,12 @@ function  DeskMetricsGetProxyA(var FHostIP: PAnsiChar; var FPort: Integer): Bool
 const
   DMGetProxyA : TDMGetProxyA = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMGetProxyA := GetProcAddress(hModule, PROC_DeskMetricsGetProxyA);
     if Assigned(DMGetProxyA) then
-      result := DMGetProxyA(FHostIP, FPort);
+      Result := DMGetProxyA(FHostIP, FPort);
   end;
 end;
 
@@ -698,12 +604,12 @@ function  DeskMetricsSetUserID(FID: PWideChar): Boolean;
 const
   DMSetUserID : TDMSetUserID = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetUserID := GetProcAddress(hModule, PROC_DeskMetricsSetUserID);
     if Assigned(DMSetUserID) then
-      result := DMSetUserID(FID);
+      Result := DMSetUserID(FID);
   end;
 end;
 
@@ -711,12 +617,12 @@ function  DeskMetricsSetUserIDA(FID: PAnsiChar): Boolean;
 const
   DMSetUserIDA : TDMSetUserIDA = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetUserIDA := GetProcAddress(hModule, PROC_DeskMetricsSetUserIDA);
     if Assigned(DMSetUserIDA) then
-      result := DMSetUserIDA(FID);
+      Result := DMSetUserIDA(FID);
   end;
 end;
 
@@ -724,12 +630,12 @@ function  DeskMetricsGetComponentName: PWideChar;
 const
   DMGetComponentName : TDMGetComponentName = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetComponentName := GetProcAddress(hModule, PROC_DeskMetricsGetComponentName);
     if Assigned(DMGetComponentName) then
-      result := DMGetComponentName;
+      Result := DMGetComponentName;
   end;
 end;
 
@@ -737,12 +643,12 @@ function  DeskMetricsGetComponentNameA: PAnsiChar;
 const
   DMGetComponentNameA : TDMGetComponentNameA = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetComponentNameA := GetProcAddress(hModule, PROC_DeskMetricsGetComponentNameA);
     if Assigned(DMGetComponentNameA) then
-      result := DMGetComponentNameA;
+      Result := DMGetComponentNameA;
   end;
 end;
 
@@ -750,12 +656,12 @@ function  DeskMetricsGetComponentVersion: PWideChar;
 const
   DMGetComponentVersion : TDMGetComponentVersion = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetComponentVersion := GetProcAddress(hModule, PROC_DeskMetricsGetComponentVersion);
     if Assigned(DMGetComponentVersion) then
-      result := DMGetComponentVersion;
+      Result := DMGetComponentVersion;
   end;
 end;
 
@@ -763,12 +669,12 @@ function  DeskMetricsGetComponentVersionA: PAnsiChar;
 const
   DMGetComponentVersionA : TDMGetComponentVersionA = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetComponentVersionA := GetProcAddress(hModule, PROC_DeskMetricsGetComponentVersionA);
     if Assigned(DMGetComponentVersionA) then
-      result := DMGetComponentVersionA;
+      Result := DMGetComponentVersionA;
   end;
 end;
 
@@ -776,12 +682,12 @@ function  DeskMetricsGetPostServer: PWideChar;
 const
   DMGetPostServer : TDMGetPostServer = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetPostServer := GetProcAddress(hModule, PROC_DeskMetricsGetPostServer);
     if Assigned(DMGetPostServer) then
-      result := DMGetPostServer;
+      Result := DMGetPostServer;
   end;
 end;
 
@@ -789,12 +695,12 @@ function  DeskMetricsGetPostServerA: PAnsiChar;
 const
   DMGetPostServerA : TDMGetPostServerA = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetPostServerA := GetProcAddress(hModule, PROC_DeskMetricsGetPostServerA);
     if Assigned(DMGetPostServerA) then
-      result := DMGetPostServerA;
+      Result := DMGetPostServerA;
   end;
 end;
 
@@ -802,12 +708,12 @@ function  DeskMetricsSetPostServer(FServer: PWideChar): Boolean;
 const
   DMSetPostServer : TDMSetPostServer = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetPostServer := GetProcAddress(hModule, PROC_DeskMetricsSetPostServer);
     if Assigned(DMSetPostServer) then
-      result := DMSetPostServer(FServer);
+      Result := DMSetPostServer(FServer);
   end;
 end;
 
@@ -815,12 +721,12 @@ function  DeskMetricsSetPostServerA(FServer: PAnsiChar): Boolean;
 const
   DMSetPostServerA : TDMSetPostServerA = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetPostServerA := GetProcAddress(hModule, PROC_DeskMetricsSetPostServerA);
     if Assigned(DMSetPostServerA) then
-      result := DMSetPostServerA(FServer);
+      Result := DMSetPostServerA(FServer);
   end;
 end;
 
@@ -828,12 +734,12 @@ function  DeskMetricsGetPostPort: Integer;
 const
   DMGetPostPort : TDMGetPostPort = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMGetPostPort := GetProcAddress(hModule, PROC_DeskMetricsGetPostPort);
     if Assigned(DMGetPostPort) then
-      result := DMGetPostPort;
+      Result := DMGetPostPort;
   end;
 end;
 
@@ -841,12 +747,12 @@ function  DeskMetricsSetPostPort(FPort: Integer): Boolean;
 const
   DMSetPostPort : TDMSetPostPort = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetPostPort := GetProcAddress(hModule, PROC_DeskMetricsSetPostPort);
     if Assigned(DMSetPostPort) then
-      result := DMSetPostPort(FPort);
+      Result := DMSetPostPort(FPort);
   end;
 end;
 
@@ -854,12 +760,12 @@ function  DeskMetricsGetPostTimeOut: Integer;
 const
   DMGetPostTimeOut : TDMGetPostTimeOut = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMGetPostTimeOut := GetProcAddress(hModule, PROC_DeskMetricsGetPostTimeOut);
     if Assigned(DMGetPostTimeOut) then
-      result := DMGetPostTimeOut;
+      Result := DMGetPostTimeOut;
   end;
 end;
 
@@ -867,12 +773,12 @@ function  DeskMetricsSetPostTimeOut(FTimeOut: Integer): Boolean;
 const
   DMSetPostTimeOut : TDMSetPostTimeOut = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetPostTimeOut := GetProcAddress(hModule, PROC_DeskMetricsSetPostTimeOut);
     if Assigned(DMSetPostTimeOut) then
-      result := DMSetPostTimeOut(FTimeOut);
+      Result := DMSetPostTimeOut(FTimeOut);
   end;
 end;
 
@@ -880,12 +786,12 @@ function  DeskMetricsGetPostWaitResponse: Boolean;
 const
   DMGetPostWaitResponse : TDMGetPostWaitResponse = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMGetPostWaitResponse := GetProcAddress(hModule, PROC_DeskMetricsGetPostWaitResponse);
     if Assigned(DMGetPostWaitResponse) then
-      result := DMGetPostWaitResponse;
+      Result := DMGetPostWaitResponse;
   end;
 end;
 
@@ -893,12 +799,12 @@ function  DeskMetricsSetPostWaitResponse(FEnabled: Boolean): Boolean;
 const
   DMSetPostWaitResponse : TDMSetPostWaitResponse = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetPostWaitResponse := GetProcAddress(hModule, PROC_DeskMetricsSetPostWaitResponse);
     if Assigned(DMSetPostWaitResponse) then
-      result := DMSetPostWaitResponse(FEnabled);
+      Result := DMSetPostWaitResponse(FEnabled);
   end;
 end;
 
@@ -906,12 +812,12 @@ function  DeskMetricsGetJSON: PWideChar;
 const
   DMGetJSON : TDMGetJSON = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetJSON := GetProcAddress(hModule, PROC_DeskMetricsGetJSON);
     if Assigned(DMGetJSON) then
-      result := DMGetJSON;
+      Result := DMGetJSON;
   end;
 end;
 
@@ -919,12 +825,12 @@ function  DeskMetricsGetJSONA: PAnsiChar;
 const
   DMGetJSONA : TDMGetJSONA = nil;
 begin
-  result := EMPTY_STRING;
+  Result := EMPTY_STRING;
   if CheckLoadDLL then
   begin
     @DMGetJSONA := GetProcAddress(hModule, PROC_DeskMetricsGetJSONA);
     if Assigned(DMGetJSONA) then
-      result := DMGetJSONA;
+      Result := DMGetJSONA;
   end;
 end;
 
@@ -932,12 +838,12 @@ function  DeskMetricsGetDailyNetworkUtilizationInKB: Integer;
 const
   DMGetDailyNetworkUtilizationInKB : TDMGetDailyNetworkUtilizationInKB = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMGetDailyNetworkUtilizationInKB := GetProcAddress(hModule, PROC_DeskMetricsGetDailyNetworkUtilizationInKB);
     if Assigned(DMGetDailyNetworkUtilizationInKB) then
-      result := DMGetDailyNetworkUtilizationInKB;
+      Result := DMGetDailyNetworkUtilizationInKB;
   end;
 end;
 
@@ -945,12 +851,12 @@ function  DeskMetricsSetDailyNetworkUtilizationInKB(FDataSize: Integer): Boolean
 const
   DMSetDailyNetworkUtilizationInKB : TDMSetDailyNetworkUtilizationInKB = nil;
 begin
-  result := False;
+  Result := False;
   if CheckLoadDLL then
   begin
     @DMSetDailyNetworkUtilizationInKB := GetProcAddress(hModule, PROC_DeskMetricsSetDailyNetworkUtilizationInKB);
     if Assigned(DMSetDailyNetworkUtilizationInKB) then
-      result := DMSetDailyNetworkUtilizationInKB(FDataSize);
+      Result := DMSetDailyNetworkUtilizationInKB(FDataSize);
   end;
 end;
 
@@ -958,12 +864,12 @@ function  DeskMetricsGetMaxStorageSizeInKB: Integer;
 const
   DMGetMaxStorageSizeInKB : TDMGetMaxStorageSizeInKB = nil;
 begin
-  result := NO_INTEGER_VALUE;
+  Result := NO_INTEGER_VALUE;
   if CheckLoadDLL then
   begin
     @DMGetMaxStorageSizeInKB := GetProcAddress(hModule, PROC_DeskMetricsGetMaxStorageSizeInKB);
     if Assigned(DMGetMaxStorageSizeInKB) then
-      result := DMGetMaxStorageSizeInKB;
+      Result := DMGetMaxStorageSizeInKB;
   end;
 end;
 
@@ -971,12 +877,12 @@ function  DeskMetricsSetMaxStorageSizeInKB(FDataSize: Integer): Boolean;
 const
   DMSetMaxStorageSizeInKB : TDMSetMaxStorageSizeInKB = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetMaxStorageSizeInKB := GetProcAddress(hModule, PROC_DeskMetricsSetMaxStorageSizeInKB);
     if Assigned(DMSetMaxStorageSizeInKB) then
-      result := DMSetMaxStorageSizeInKB(FDataSize);
+      Result := DMSetMaxStorageSizeInKB(FDataSize);
   end;
 end;
 
@@ -984,12 +890,12 @@ function  DeskMetricsSetEnabled(FValue: Boolean): Boolean;
 const
   DMSetEnabled : TDMSetEnabled = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSetEnabled := GetProcAddress(hModule, PROC_DeskMetricsSetEnabled);
     if Assigned(DMSetEnabled) then
-      result := DMSetEnabled(FValue);
+      Result := DMSetEnabled(FValue);
   end;
 end;
 
@@ -997,12 +903,12 @@ function  DeskMetricsGetEnabled: Boolean;
 const
   DMGetEnabled : TDMGetEnabled = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMGetEnabled := GetProcAddress(hModule, PROC_DeskMetricsGetEnabled);
     if Assigned(DMGetEnabled) then
-      result := DMGetEnabled;
+      Result := DMGetEnabled;
   end;
 end;
 
@@ -1010,14 +916,76 @@ function  DeskMetricsSendData: Boolean;
 const
   DMSendData : TDMSendData = nil;
 begin
-  result := false;
+  Result := false;
   if CheckLoadDLL then
   begin
     @DMSendData := GetProcAddress(hModule, PROC_DeskMetricsSendData);
     if Assigned(DMSendData) then
-      result := DMSendData;
+      Result := DMSendData;
   end;
 end;
+
+function  DeskMetricsGetDebugMode: Boolean;
+const
+  DMGetDebugMode : TDMGetDebugMode = nil;
+begin
+  Result := false;
+  if CheckLoadDLL then
+  begin
+    @DMGetDebugMode := GetProcAddress(hModule, PROC_DeskMetricsGetDebugMode);
+    if Assigned(DMGetDebugMode) then
+      Result := DMGetDebugMode;
+  end;
+end;
+
+function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean;
+const
+  DMSetDebugMode : TDMSetDebugMode = nil;
+begin
+  Result := false;
+  if CheckLoadDLL then
+  begin
+    @DMSetDebugMode := GetProcAddress(hModule, PROC_DeskMetricsSetDebugMode);
+    if Assigned(DMSetDebugMode) then
+      Result := DMSetDebugMode(FEnabled);
+  end;
+end;
+
+//procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
+//const
+//  DMTrackExceptions : TDMTrackExceptions = nil;
+//begin
+//  if CheckLoadDLL then
+//  begin
+//    @DMTrackExceptions := GetProcAddress(hModule, PROC_DeskMetricsTrackCustomDataR);
+//    if Assigned(DMTrackExceptions) then
+//      DMTrackExceptions(FEnabled);
+//  end;
+//end;
+//
+//procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
+//const
+//  DMTrackException : TDMTrackException = nil;
+//begin
+//  if CheckLoadDLL then
+//  begin
+//    @DMTrackException := GetProcAddress(hModule, PROC_DeskMetricsTrackException);
+//    if Assigned(DMTrackException) then
+//      DMTrackException(FExceptionMessage, FExceptionType);
+//  end;
+//end;
+//
+//procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
+//const
+//  DMTrackExceptionA : TDMTrackExceptionA = nil;
+//begin
+//  if CheckLoadDLL then
+//  begin
+//    @DMTrackExceptionA := GetProcAddress(hModule, PROC_DeskMetricsTrackExceptionA);
+//    if Assigned(DMTrackExceptionA) then
+//      DMTrackExceptionA(FExceptionMessage, FExceptionType);
+//  end;
+//end;
 
 initialization
   hModule := 0;

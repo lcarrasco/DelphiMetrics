@@ -74,9 +74,9 @@ function _SetAppVersion (const FVersion: string): Boolean;
 function _GetAppVersion: string;
 
 { Internal Debug / Test Mode }
-function  _SetTestMode(const FEnabled: Boolean): Boolean;
-function  _GetTestMode: Boolean;
-function  _GetTestData: string;
+function  _SetDebugMode(const FEnabled: Boolean): Boolean;
+function  _GetDebugMode: Boolean;
+function  _GetDebugData: string;
 
 { Internal Logs }
 function  _InsertLogText(const FFunction: string; const FErrorID: Integer): Boolean;
@@ -191,29 +191,29 @@ begin
   end;
 end;
 
-function _SetTestMode(const FEnabled: Boolean): Boolean;
+function _SetDebugMode(const FEnabled: Boolean): Boolean;
 begin
   try
-    FTestMode := FEnabled;
-    Result    := True;
+    FDebugMode := FEnabled;
+    Result     := True;
   except
-    Result    := False;
+    Result     := False;
   end;
 end;
 
-function _GetTestMode: Boolean;
+function _GetDebugMode: Boolean;
 begin
   try
-    Result := FTestMode;
+    Result := FDebugMode;
   except
     Result := False;
   end;
 end;
 
-function  _GetTestData: string;
+function  _GetDebugData: string;
 begin
   try
-    Result := Trim(FTestData);
+    Result := Trim(FDebugData);
   except
     Result := '';
   end;
@@ -222,7 +222,7 @@ end;
 function _InsertLogText(const FFunction: string; const FErrorID: Integer): Boolean;
 begin
   try
-    FTestData := FTestData + '[' + _GetTimeStamp + '] Method ' + FFunction  + ' (Error: ' + IntToStr(FErrorID) + ' - ' + _ErrorToString(FErrorID) + ')';
+    FDebugData := FDebugData + '[' + _GetTimeStamp + '] Method ' + FFunction  + ' (Error: ' + IntToStr(FErrorID) + ' - ' + _ErrorToString(FErrorID) + ')';
     Result    :=_SaveTestLogFile(LOGFILENAME);
   except
     Result    := False;
@@ -242,7 +242,7 @@ begin
       else
         Rewrite(FFile);
 
-      WriteLn(FFile, _GetTestData);
+      WriteLn(FFile, _GetDebugData);
     finally
       CloseFile(FFile);
     end;

@@ -322,6 +322,26 @@ object frm_Main: Tfrm_Main
     ParentFont = False
     Transparent = True
   end
+  object Label3: TLabel
+    Left = 19
+    Top = 234
+    Width = 100
+    Height = 18
+    Caption = 'Tracking Logs'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Bevel6: TBevel
+    Left = 19
+    Top = 256
+    Width = 246
+    Height = 11
+    Shape = bsTopLine
+  end
   object pnlData: TPanel
     Left = 2
     Top = 88
@@ -333,8 +353,8 @@ object frm_Main: Tfrm_Main
     ShowCaption = False
     TabOrder = 0
     object Bevel1: TBevel
-      Left = 19
-      Top = 214
+      Left = 21
+      Top = 272
       Width = 246
       Height = 11
       Shape = bsTopLine
@@ -376,7 +396,7 @@ object frm_Main: Tfrm_Main
     end
     object Label1: TLabel
       Left = 19
-      Top = 121
+      Top = 116
       Width = 81
       Height = 15
       ParentCustomHint = False
@@ -445,7 +465,7 @@ object frm_Main: Tfrm_Main
     end
     object lblTrackingLog: TLabel
       Left = 19
-      Top = 192
+      Top = 248
       Width = 100
       Height = 18
       Caption = 'Tracking Logs'
@@ -475,6 +495,26 @@ object frm_Main: Tfrm_Main
       Width = 96
       Height = 15
       Caption = 'Send a ZIP Code:'
+    end
+    object Label4: TLabel
+      Left = 17
+      Top = 180
+      Width = 128
+      Height = 18
+      Caption = 'Tracking Features'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Bevel7: TBevel
+      Left = 17
+      Top = 204
+      Width = 246
+      Height = 11
+      Shape = bsTopLine
     end
     object btnCheckVersion: TButton
       Left = 346
@@ -523,7 +563,7 @@ object frm_Main: Tfrm_Main
     end
     object btnEventCancel: TButton
       Left = 192
-      Top = 142
+      Top = 137
       Width = 73
       Height = 25
       Caption = 'Cancel'
@@ -539,7 +579,7 @@ object frm_Main: Tfrm_Main
     end
     object btnEventStart: TButton
       Left = 19
-      Top = 142
+      Top = 137
       Width = 76
       Height = 25
       Caption = 'Start'
@@ -554,7 +594,7 @@ object frm_Main: Tfrm_Main
     end
     object btnEventStop: TButton
       Left = 106
-      Top = 142
+      Top = 137
       Width = 74
       Height = 25
       Caption = 'Stop'
@@ -570,7 +610,7 @@ object frm_Main: Tfrm_Main
     end
     object btnLogs: TButton
       Left = 192
-      Top = 231
+      Top = 284
       Width = 73
       Height = 23
       Caption = 'OK'
@@ -614,9 +654,9 @@ object frm_Main: Tfrm_Main
       OnClick = btnTrackEventClick
     end
     object btnTrackEventValue: TButton
-      Left = 105
+      Left = 126
       Top = 83
-      Width = 160
+      Width = 139
       Height = 24
       ParentCustomHint = False
       Caption = 'Track Event with Value'
@@ -664,7 +704,7 @@ object frm_Main: Tfrm_Main
     end
     object edtLogs: TEdit
       Left = 19
-      Top = 231
+      Top = 283
       Width = 163
       Height = 23
       TabOrder = 13
@@ -704,17 +744,53 @@ object frm_Main: Tfrm_Main
       TabOrder = 17
       Text = 'Username'
     end
-    object mmoTrackValue: TMemo
-      Left = 19
-      Top = 83
+    object btnFeatureA: TButton
+      Left = 17
+      Top = 210
       Width = 76
-      Height = 22
-      ParentCustomHint = False
-      Lines.Strings = (
-        '100 MB')
-      ParentShowHint = False
-      ShowHint = False
+      Height = 25
+      Caption = 'Feature A'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 18
+      OnClick = btnFeatureAClick
+    end
+    object btnFeatureB: TButton
+      Left = 96
+      Top = 210
+      Width = 76
+      Height = 25
+      Caption = 'Feature B'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 19
+      OnClick = btnFeatureBClick
+    end
+    object rb1: TRadioButton
+      Left = 21
+      Top = 86
+      Width = 48
+      Height = 17
+      Caption = '1'
+      Checked = True
+      TabOrder = 20
+      TabStop = True
+    end
+    object rb2: TRadioButton
+      Left = 68
+      Top = 86
+      Width = 47
+      Height = 17
+      Caption = '2'
+      TabOrder = 21
     end
   end
 end

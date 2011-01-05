@@ -35,8 +35,8 @@ var
   FStopped: Boolean;
   FEnabled: Boolean;
 
-  FTestMode: Boolean;
-  FTestData: string;
+  FDebugMode: Boolean;
+  FDebugData: string;
 
   FAppID: string;
   FAppVersion: string;

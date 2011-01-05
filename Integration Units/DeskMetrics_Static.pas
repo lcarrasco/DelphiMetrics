@@ -20,8 +20,8 @@ type
     ReleaseDate: ShortString;
   end;
 
-  function  DeskMetricsStart(FApplicationID: PWideChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsStartA(FApplicationID: PAnsiChar; FRealTime: Boolean; FTestMode: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsStartA(FApplicationID: PAnsiChar;  FApplicationVersion: PAnsiChar; FRealTime: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsStop: Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsCheckVersion(var FVersionData: TVersionData): Boolean; stdcall; external 'DeskMetrics.dll';
   procedure DeskMetricsTrackEvent(FEventCategory, FEventName: PWideChar); stdcall; external 'DeskMetrics.dll';
@@ -38,19 +38,12 @@ type
   procedure DeskMetricsTrackLogA(FMessage: PAnsiChar); stdcall; external 'DeskMetrics.dll';
   procedure DeskMetricsTrackCustomData(FName, FValue: PWideChar); stdcall; external 'DeskMetrics.dll';
   procedure DeskMetricsTrackCustomDataA(FName, FValue: PAnsiChar); stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FAppVersion: PWideChar; FName: PWideChar; FValue: PWideChar; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FAppVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  procedure DeskMetricsTrackExceptions(FEnabled: Boolean); stdcall; external 'DeskMetrics.dll';
-  procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar); stdcall; external 'DeskMetrics.dll';
-  procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar); stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackInstallation(FApplicationID: string; FAppVersion: string; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FAppVersion: AnsiString; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackUninstallation(FApplicationID: string; FAppVersion: string; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FAppVersion: AnsiString; FTestMode: Boolean): Integer; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsSetAppVersion(FVersion: PWideChar): Boolean; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsSetAppVersionA(FVersion: PAnsiChar): Boolean; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsGetAppVersion: PWideChar; stdcall; external 'DeskMetrics.dll';
-  function  DeskMetricsGetAppVersionA: PAnsiChar; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsSetProxy(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsSetProxyA(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsGetProxy(var FHostIP: PWideChar; var FPort: Integer): Boolean; stdcall; external 'DeskMetrics.dll';
@@ -80,6 +73,11 @@ type
   function  DeskMetricsSetEnabled(FValue: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsGetEnabled: Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsSendData: Boolean; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsGetDebugMode: Boolean; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
+  // procedure DeskMetricsTrackExceptions(FEnabled: Boolean); stdcall; external 'DeskMetrics.dll';
+  // procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar); stdcall; external 'DeskMetrics.dll';
+  // procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar); stdcall; external 'DeskMetrics.dll';
 
  implementation
  

@@ -8,31 +8,30 @@
   resources were bound to the produced executable.
 */
 
-#define pnglang_EPNGUnknownCriticalChunkText 65280
-#define pnglang_EPNGUnknownCompressionText 65281
-#define pnglang_EPNGUnknownInterlaceText 65282
-#define pnglang_EPNGCannotAssignChunkText 65283
-#define pnglang_EPNGUnexpectedEndText 65284
-#define pnglang_EPNGNoImageDataText 65285
-#define pnglang_EPNGOutMemoryText 65286
-#define pnglang_EPNGHeaderNotPresentText 65287
-#define pnglang_EInvalidNewSize 65288
-#define Consts_SXPThemesRequired 65296
-#define Consts_STaskDlgButtonCaption 65297
-#define Consts_STaskDlgRadioButtonCaption 65298
-#define Consts_SInvalidTaskDlgButtonCaption 65299
-#define JConsts_sChangeJPGSize 65300
-#define JConsts_sJPEGError 65301
-#define JConsts_sJPEGImageFile 65302
-#define pnglang_EPngInvalidCRCText 65303
-#define pnglang_EPNGInvalidIHDRText 65304
-#define pnglang_EPNGMissingMultipleIDATText 65305
-#define pnglang_EPNGZLIBErrorText 65306
-#define pnglang_EPNGInvalidPaletteText 65307
-#define pnglang_EPNGInvalidFileHeaderText 65308
-#define pnglang_EPNGIHDRNotFirstText 65309
-#define pnglang_EPNGSizeExceedsText 65310
-#define pnglang_EPNGUnknownPalEntryText 65311
+#define pnglang_EPNGUnknownCompressionText 65280
+#define pnglang_EPNGUnknownInterlaceText 65281
+#define pnglang_EPNGCannotAssignChunkText 65282
+#define pnglang_EPNGUnexpectedEndText 65283
+#define pnglang_EPNGNoImageDataText 65284
+#define pnglang_EPNGOutMemoryText 65285
+#define pnglang_EPNGHeaderNotPresentText 65286
+#define pnglang_EInvalidNewSize 65287
+#define Consts_STaskDlgButtonCaption 65296
+#define Consts_STaskDlgRadioButtonCaption 65297
+#define Consts_SInvalidTaskDlgButtonCaption 65298
+#define JConsts_sChangeJPGSize 65299
+#define JConsts_sJPEGError 65300
+#define JConsts_sJPEGImageFile 65301
+#define pnglang_EPngInvalidCRCText 65302
+#define pnglang_EPNGInvalidIHDRText 65303
+#define pnglang_EPNGMissingMultipleIDATText 65304
+#define pnglang_EPNGZLIBErrorText 65305
+#define pnglang_EPNGInvalidPaletteText 65306
+#define pnglang_EPNGInvalidFileHeaderText 65307
+#define pnglang_EPNGIHDRNotFirstText 65308
+#define pnglang_EPNGSizeExceedsText 65309
+#define pnglang_EPNGUnknownPalEntryText 65310
+#define pnglang_EPNGUnknownCriticalChunkText 65311
 #define Consts_SmkcIns 65312
 #define Consts_SmkcDel 65313
 #define Consts_SmkcShift 65314
@@ -41,14 +40,14 @@
 #define Consts_SOutOfRange 65317
 #define Consts_SIconToClipboard 65318
 #define Consts_SCannotOpenClipboard 65319
-#define Consts_SInvalidMemoSize 65320
-#define Consts_SDuplicateMenus 65321
-#define Consts_SDockedCtlNeedsName 65322
-#define Consts_SDockTreeRemoveError 65323
-#define Consts_SDockZoneNotFound 65324
-#define Consts_SDockZoneHasNoCtl 65325
-#define Consts_SDockZoneVersionConflict 65326
-#define Consts_SWindowsVistaRequired 65327
+#define Consts_SDuplicateMenus 65320
+#define Consts_SDockedCtlNeedsName 65321
+#define Consts_SDockTreeRemoveError 65322
+#define Consts_SDockZoneNotFound 65323
+#define Consts_SDockZoneHasNoCtl 65324
+#define Consts_SDockZoneVersionConflict 65325
+#define Consts_SWindowsVistaRequired 65326
+#define Consts_SXPThemesRequired 65327
 #define Consts_SMsgDlgNoToAll 65328
 #define Consts_SMsgDlgYesToAll 65329
 #define Consts_SMsgDlgClose 65330
@@ -259,7 +258,6 @@
 #define SysConst_SInvalidPointer 65535
 STRINGTABLE
 BEGIN
-	pnglang_EPNGUnknownCriticalChunkText,	"This \"Portable Network Graphics\" image contains an unknown critical part which could not be decoded."
 	pnglang_EPNGUnknownCompressionText,	"This \"Portable Network Graphics\" image is encoded with an unknown compression scheme which could not be decoded."
 	pnglang_EPNGUnknownInterlaceText,	"This \"Portable Network Graphics\" image uses an unknown interlace scheme which could not be decoded."
 	pnglang_EPNGCannotAssignChunkText,	"The chunks must be compatible to be assigned."
@@ -268,7 +266,6 @@ BEGIN
 	pnglang_EPNGOutMemoryText,	"Some operation could not be performed because the system is out of resources. Close some windows and try again."
 	pnglang_EPNGHeaderNotPresentText,	"This operation is not valid because the current image contains no valid header."
 	pnglang_EInvalidNewSize,	"The new size provided for image resizing is invalid."
-	Consts_SXPThemesRequired,	"%s requires themes to be enabled"
 	Consts_STaskDlgButtonCaption,	"Button%d"
 	Consts_STaskDlgRadioButtonCaption,	"RadioButton%d"
 	Consts_SInvalidTaskDlgButtonCaption,	"Caption cannot be empty"
@@ -284,6 +281,7 @@ BEGIN
 	pnglang_EPNGIHDRNotFirstText,	"This \"Portable Network Graphics\" image is not supported or it might be invalid.\r\n(IHDR chunk is not the first)"
 	pnglang_EPNGSizeExceedsText,	"This \"Portable Network Graphics\" image is not supported because either it's width or height exceeds the maximum size, which is 65535 pixels length."
 	pnglang_EPNGUnknownPalEntryText,	"There is no such palette entry."
+	pnglang_EPNGUnknownCriticalChunkText,	"This \"Portable Network Graphics\" image contains an unknown critical part which could not be decoded."
 	Consts_SmkcIns,	"Ins"
 	Consts_SmkcDel,	"Del"
 	Consts_SmkcShift,	"Shift+"
@@ -292,7 +290,6 @@ BEGIN
 	Consts_SOutOfRange,	"Value must be between %d and %d"
 	Consts_SIconToClipboard,	"Clipboard does not support Icons"
 	Consts_SCannotOpenClipboard,	"Cannot open clipboard: %s"
-	Consts_SInvalidMemoSize,	"Text exceeds memo capacity"
 	Consts_SDuplicateMenus,	"Menu '%s' is already being used by another form"
 	Consts_SDockedCtlNeedsName,	"Docked control must have a name"
 	Consts_SDockTreeRemoveError,	"Error removing control from dock tree"
@@ -300,6 +297,7 @@ BEGIN
 	Consts_SDockZoneHasNoCtl,	" - Dock zone has no control"
 	Consts_SDockZoneVersionConflict,	"Error loading dock zone from the stream. Expecting version %d, but found %d."
 	Consts_SWindowsVistaRequired,	"%s requires Windows Vista or later"
+	Consts_SXPThemesRequired,	"%s requires themes to be enabled"
 	Consts_SMsgDlgNoToAll,	"N&o to All"
 	Consts_SMsgDlgYesToAll,	"Yes to &All"
 	Consts_SMsgDlgClose,	"&Close"
@@ -512,8 +510,8 @@ END
 
 /* c:\program files (x86)\codegear\rad studio\6.0\lib\character.res */
 /* c:\program files (x86)\codegear\rad studio\6.0\lib\Controls.res */
-/* C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Example\Delphi\frmAnotherWindow.dfm */
-/* C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Example\Delphi\frmCustomerExperience.dfm */
-/* C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Example\Delphi\frmMain.dfm */
-/* C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Example\Delphi\AppExample.res */
-/* C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDLL\Example\Delphi\AppExample.drf */
+/* frmAnotherWindow.dfm */
+/* frmCustomerExperience.dfm */
+/* C:\Users\Bernardo\Desktop\deskmetrics-DLL-27f2ca4\Application Example\frmMain.dfm */
+/* C:\Users\Bernardo\Desktop\deskmetrics-DLL-27f2ca4\Application Example\AppExample.res */
+/* C:\Users\Bernardo\Desktop\deskmetrics-DLL-27f2ca4\Application Example\AppExample.drf */

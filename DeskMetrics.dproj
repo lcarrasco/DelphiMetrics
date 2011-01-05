@@ -3,7 +3,7 @@
 			<ProjectGuid>{2C9730CF-E617-4ABF-B8FA-DF2CF0B7CBCF}</ProjectGuid>
 			<ProjectVersion>12.0</ProjectVersion>
 			<MainSource>DeskMetrics.dpr</MainSource>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -51,7 +51,6 @@
 			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<DCCReference Include="dskMetricsCommon.pas"/>
 			<DCCReference Include="dskMetricsWinInfo.pas"/>
-			<DCCReference Include="dskMetricsImgHlp.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -77,13 +76,12 @@
 						<Parameters Name="UseLauncher">False</Parameters>
 						<Parameters Name="LoadAllSymbols">True</Parameters>
 						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
-						<Parameters Name="HostApplication">C:\Users\Bernardo\Documents\Quicksys\Produtos\Portinho\Installation\instalacao_portinho.exe</Parameters>
 					</Parameters>
 					<VersionInfo>
-						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">1</VersionInfo>
-						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="MinorVer">5</VersionInfo>
 						<VersionInfo Name="Release">0</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
@@ -91,19 +89,19 @@
 						<VersionInfo Name="Special">False</VersionInfo>
 						<VersionInfo Name="Private">False</VersionInfo>
 						<VersionInfo Name="DLL">False</VersionInfo>
-						<VersionInfo Name="Locale">1046</VersionInfo>
+						<VersionInfo Name="Locale">1033</VersionInfo>
 						<VersionInfo Name="CodePage">1252</VersionInfo>
 					</VersionInfo>
 					<VersionInfoKeys>
-						<VersionInfoKeys Name="CompanyName"/>
-						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
-						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="CompanyName">DeskMetrics</VersionInfoKeys>
+						<VersionInfoKeys Name="FileDescription">DeskMetrics DLL Component</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.5.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright"/>
 						<VersionInfoKeys Name="LegalTrademarks"/>
-						<VersionInfoKeys Name="OriginalFilename"/>
-						<VersionInfoKeys Name="ProductName"/>
-						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="OriginalFilename">DeskMetrics.dll</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductName">DeskMetrics</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">1.5.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
