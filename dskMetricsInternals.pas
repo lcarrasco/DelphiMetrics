@@ -148,7 +148,7 @@ implementation
 uses
   dskMetricsConsts, dskMetricsVars, dskMetricsWMI,
   dskMetricsCPUInfo,dskMetricsCommon, dskMetricsWinInfo,
-  ActiveX, Windows, SysUtils, Registry, WinInet, Variants;
+  ActiveX, Windows, SysUtils, Registry, WinInet, Variants, DateUtils;
 
 function _SetAppID(const FApplicationID: string): Boolean;
 begin
@@ -309,11 +309,9 @@ begin
 end;
 
 function _GetTimeStamp: string;
-const
-  UnixStartDate: TDateTime = 25569.0;
 begin
   try
-    Result := Trim(IntToStr(Round((Now - UnixStartDate) * 86400)));
+    Result := IntToStr(DateTimeToUnix(Now));
   except
     Result := NULL_STR;
   end;
@@ -1252,11 +1250,20 @@ function _GetCacheData: string;
 var
   FData: string;
   FFileName: string;
+  FTempFolder: string;
   FFile: TextFile;
 begin
   Result := '';
   try
-    FFileName := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + _GetAppID + '.dsmk';
+    FTempFolder := _GetTemporaryFolder;
+
+    if (FTempFolder = '') or (DirectoryExists(FTempFolder) = False) then
+    begin
+      Result := '';
+      Exit;
+    end;
+
+    FFileName := FTempFolder + _GetAppID + '.dsmk';
 
     AssignFile(FFile, FFileName);
     if FileExists(FFileName) then
@@ -1277,11 +1284,18 @@ end;
 function _GetCacheSize: Int64;
 var
   FFileName: string;
+  FTempFolder: string;
   FSearchRec: TSearchRec;
 begin
   Result := -1;
   try
-    FFileName := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + _GetAppID + '.dsmk';
+    if (FTempFolder = '') or (DirectoryExists(FTempFolder) = False) then
+    begin
+      Result := -1;
+      Exit;
+    end;
+
+    FFileName := FTempFolder + _GetAppID + '.dsmk';
 
     if FileExists(FFileName) then
     begin
@@ -1299,12 +1313,21 @@ end;
 
 function _SaveCacheFile: Boolean;
 var
+  FTempFolder: string;
   FFileName: string;
   FFile: TextFile;
 begin
   Result := True;
   try
-    FFileName := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + _GetAppID + '.dsmk';
+    FTempFolder := _GetTemporaryFolder;
+
+    if (FTempFolder = '') or (DirectoryExists(FTempFolder) = False) then
+    begin
+      Result := False;
+      Exit;
+    end;
+
+    FFileName := FTempFolder + _GetAppID + '.dsmk';
 
     AssignFile(FFile, FFileName);
     try
@@ -1333,7 +1356,7 @@ var
 begin
   Result := True;
   try
-    FFileName := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + _GetAppID + '.dsmk';
+    FFileName := _GetTemporaryFolder + _GetAppID + '.dsmk';
     if FileExists(FFileName) then
     begin
       SetFileAttributes(PChar(FFileName), faArchive);
@@ -1407,9 +1430,9 @@ begin
       { check type - WebService API Call }
       if FAction = API_SENDDATA then
       begin
-        hdr       := 'Content-Type: application/x-www-form-urlencoded';
-        FJSON     := '[' + FJSON + ']';
-        data      := AnsiString('data=' + _URLEncode(FJSON))
+        hdr     := 'Content-Type: application/x-www-form-urlencoded';
+        FJSON   := '[' + FJSON + ']';
+        data    := AnsiString('data=' + _URLEncode(FJSON));
       end
       else
       begin

@@ -19,7 +19,7 @@ unit dskMetricsVars;
 interface
 
 uses
-  dskMetricsInternals, SyncObjs;
+  dskMetricsInternals, SyncObjs, SysUtils;
 
 var
   FJSONData: string;
@@ -30,6 +30,8 @@ var
   FThreadStop: TPostThread = nil;
 
   FLastErrorID: Integer;
+
+  FException: Exception;
 
   FStarted: Boolean;
   FStopped: Boolean;

@@ -49,6 +49,7 @@ var
 function _GetOperatingSystemArchictetureInternal: Integer;
 function _GetWindowsVersionName: string;
 function _GetWindowsChar: Char;
+function _GetTemporaryFolder: string;
 
 implementation
 
@@ -80,7 +81,6 @@ begin
           Result := 64;
       end
       else
-        // Function not implemented: can't be running on Wow64
       Result := 32;
   except
     Result := 32;
@@ -128,7 +128,6 @@ begin
     Result := '0';
   end;
 end;
-
 
 function _GetWindowsMajorVersion: Integer;
 var
@@ -244,7 +243,7 @@ end;
 
 function _GetWindowsFolder: string;
 var
-  FBuffer:array[0..MAX_PATH] of Char;
+  FBuffer:array[0..MAX_PATH] of WideChar;
 begin
   try
     GetWindowsDirectory(FBuffer,MAX_PATH);
@@ -260,6 +259,18 @@ begin
   try
     Result := _GetWindowsFolder[1];
   except
+  end;
+end;
+
+function _GetTemporaryFolder: string;
+var
+  FTempBuffer: array [0..MAX_PATH] of Char;
+begin
+  try
+    GetTempPath(MAX_PATH, FTempBuffer);
+    Result := IncludeTrailingPathDelimiter(_GetLongPath(StrPas(FTempBuffer)));
+  except
+    Result := '';
   end;
 end;
 

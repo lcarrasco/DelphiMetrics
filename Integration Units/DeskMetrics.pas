@@ -6,14 +6,16 @@
 {     http://deskmetrics.com                                }
 {     support@deskmetrics.com                               }
 {                                                           }
-{     Author: Stuart Clennett							                	}
-{     Licence: GNU GPL v3								                  	}
+{     Author: Stuart Clennett							                  }
+{     Licence: GNU GPL v3								                    }
 {															                              }
 { **********************************************************}
 
-unit DeskMetrics_Dynamic;
+unit DeskMetrics;
 
 interface
+
+uses SysUtils;
 
 type
   TVersionData = record
@@ -37,6 +39,8 @@ type
   TDMTrackEventStopA      = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
   TDMTrackEventCancel     = procedure(FEventCategory, FEventName: PWideChar); stdcall;
   TDMTrackEventCancelA    = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
+  TDMTrackEventPeriod     = procedure(FEventCategory, FEventName: PWideChar; FEventTime: Integer); stdcall;
+  TDMTrackEventPeriodA    = procedure(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer); stdcall;
   TDMTrackLog             = procedure(FMessage: PWideChar); stdcall;
   TDMTrackLogA            = procedure(FMessage: PAnsiChar); stdcall;
   TDMTrackCustomData      = procedure(FName, FValue: PWideChar); stdcall;
@@ -47,6 +51,7 @@ type
   TDMTrackInstallationA   = function(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
   TDMTrackUninstallation  = function(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
   TDMTrackUninstallationA = function(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
+  TDMTrackException 	    = procedure(FExpectionObject: Exception); stdcall;
   TDMSetProxy             = function(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean; stdcall;
   TDMSetProxyA            = function(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean; stdcall;
   TDMGetProxy             = function(var FHostIP: PWideChar; var FPort: Integer): Boolean; stdcall;
@@ -78,9 +83,6 @@ type
   TDMSendData              = function:Boolean; stdcall;
   TDMGetDebugMode          = function:Boolean; stdcall;
   TDMSetDebugMode          = function(FEnabled: Boolean): Boolean; stdcall;
-  // TDMTrackExceptions = procedure(FEnabled: Boolean); stdcall;
-  // TDMTrackException = procedure(FExceptionMessage, FExceptionType: PWideChar); stdcall;
-  // TDMTrackExceptionA = procedure(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
 
   function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean;
   function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FRealTime: Boolean): Boolean;
@@ -96,6 +98,8 @@ type
   procedure DeskMetricsTrackEventStopA(FEventCategory, FEventName: PAnsiChar);
   procedure DeskMetricsTrackEventCancel(FEventCategory, FEventName: PWideChar);
   procedure DeskMetricsTrackEventCancelA(FEventCategory, FEventName: PAnsiChar);
+  procedure DeskMetricsTrackEventPeriod(FEventCategory, FEventName: PWideChar; FEventTime: Integer);
+  procedure DeskMetricsTrackEventPeriodA(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer);
   procedure DeskMetricsTrackLog(FMessage: PWideChar);
   procedure DeskMetricsTrackLogA(FMessage: PAnsiChar);
   procedure DeskMetricsTrackCustomData(FName, FValue: PWideChar);
@@ -106,6 +110,7 @@ type
   function  DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
   function  DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer;
   function  DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer;
+  procedure DeskMetricsTrackException(FExpectionObject: Exception);
   function  DeskMetricsSetProxy(FHostIP: PWideChar; FPort: Integer; FUserName, FPassword: PWideChar): Boolean;
   function  DeskMetricsSetProxyA(FHostIP: PAnsiChar; FPort: Integer; FUserName, FPassword: PAnsiChar): Boolean;
   function  DeskMetricsGetProxy(var FHostIP: PWideChar; var FPort: Integer): Boolean;
@@ -137,9 +142,6 @@ type
   function  DeskMetricsSendData: Boolean;
   function  DeskMetricsGetDebugMode: Boolean;
   function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean;
-  // procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
-  // procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
-  // procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
 
   function  DeskMetricsDllLoaded: Boolean;
   function  Load_DLL: Boolean;
@@ -151,7 +153,7 @@ const
 
 implementation
 
-uses SysUtils, Windows;
+uses Windows;
 
 var
   hModule : THandle;
@@ -173,6 +175,8 @@ const
   PROC_DeskMetricsTrackEventStopA = 'DeskMetricsTrackEventStopA';
   PROC_DeskMetricsTrackEventCancel = 'DeskMetricsTrackEventCancel';
   PROC_DeskMetricsTrackEventCancelA = 'DeskMetricsTrackEventCancelA';
+  PROC_DeskMetricsTrackEventPeriod = 'DeskMetricsTrackEventPeriod';
+  PROC_DeskMetricsTrackEventPeriodA = 'DeskMetricsTrackEventPeriodA';
   PROC_DeskMetricsTrackLog = 'DeskMetricsTrackLog';
   PROC_DeskMetricsTrackLogA = 'DeskMetricsTrackLogA';
   PROC_DeskMetricsTrackCustomData = 'DeskMetricsTrackCustomData';
@@ -183,6 +187,7 @@ const
   PROC_DeskMetricsTrackInstallationA = 'DeskMetricsTrackInstallationA';
   PROC_DeskMetricsTrackUninstallation = 'DeskMetricsTrackUninstallation';
   PROC_DeskMetricsTrackUninstallationA = 'DeskMetricsTrackUninstallationA';
+  PROC_DeskMetricsTrackException = 'DeskMetricsTrackException';
   PROC_DeskMetricsSetProxy = 'DeskMetricsSetProxy';
   PROC_DeskMetricsSetProxyA = 'DeskMetricsSetProxyA';
   PROC_DeskMetricsGetProxy = 'DeskMetricsGetProxy';
@@ -214,9 +219,6 @@ const
   PROC_DeskMetricsSendData = 'DeskMetricsSendData';
   PROC_DeskMetricsGetDebugMode = 'DeskMetricsGetDebugMode';
   PROC_DeskMetricsSetDebugMode = 'DeskMetricsSetDebugMode';
-  // PROC_DeskMetricsTrackExceptions = 'DeskMetricsTrackExceptions';
-  // PROC_DeskMetricsTrackException = 'DeskMetricsTrackException';
-  // PROC_DeskMetricsTrackExceptionA = 'DeskMetricsTrackExceptionA';
 
 function GetAppPath : string;
 begin
@@ -422,6 +424,30 @@ begin
   end;
 end;
 
+procedure DeskMetricsTrackEventPeriod(FEventCategory, FEventName: PWideChar; FEventTime: Integer);
+const
+  DMTrackEventPeriod : TDMTrackEventPeriod = nil;
+begin
+  if CheckLoadDLL then
+  begin
+    @DMTrackEventPeriod := GetProcAddress(hModule, PROC_DeskMetricsTrackEventPeriod);
+    if Assigned(DMTrackEventPeriod) then
+      DMTrackEventPeriod(FEventCategory, FEventName, FEventTime);
+  end;
+end;
+
+procedure DeskMetricsTrackEventPeriodA(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer);
+const
+  DMTrackEventPeriodA : TDMTrackEventPeriodA = nil;
+begin
+  if CheckLoadDLL then
+  begin
+    @DMTrackEventPeriodA := GetProcAddress(hModule, PROC_DeskMetricsTrackEventPeriodA);
+    if Assigned(DMTrackEventPeriodA) then
+      DMTrackEventPeriodA(FEventCategory, FEventName, FEventTime);
+  end;
+end;
+
 procedure DeskMetricsTrackLog(FMessage: PWideChar);
 const
   DMTrackLog : TDMTrackLog = nil;
@@ -545,6 +571,18 @@ begin
     @DMTrackUninstallationA := GetProcAddress(hModule, PROC_DeskMetricsTrackUninstallationA);
     if Assigned(DMTrackUninstallationA) then
       Result := DMTrackUninstallationA(FApplicationID, FApplicationVersion);
+  end;
+end;
+
+procedure DeskMetricsTrackException(FExpectionObject: Exception);
+const
+  DMTrackException : TDMTrackException = nil;
+begin
+  if CheckLoadDLL then
+  begin
+    @DMTrackException := GetProcAddress(hModule, PROC_DeskMetricsTrackException);
+    if Assigned(DMTrackException) then
+      DMTrackException(FExpectionObject);
   end;
 end;
 
@@ -950,42 +988,6 @@ begin
       Result := DMSetDebugMode(FEnabled);
   end;
 end;
-
-//procedure DeskMetricsTrackExceptions(FEnabled: Boolean);
-//const
-//  DMTrackExceptions : TDMTrackExceptions = nil;
-//begin
-//  if CheckLoadDLL then
-//  begin
-//    @DMTrackExceptions := GetProcAddress(hModule, PROC_DeskMetricsTrackCustomDataR);
-//    if Assigned(DMTrackExceptions) then
-//      DMTrackExceptions(FEnabled);
-//  end;
-//end;
-//
-//procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar);
-//const
-//  DMTrackException : TDMTrackException = nil;
-//begin
-//  if CheckLoadDLL then
-//  begin
-//    @DMTrackException := GetProcAddress(hModule, PROC_DeskMetricsTrackException);
-//    if Assigned(DMTrackException) then
-//      DMTrackException(FExceptionMessage, FExceptionType);
-//  end;
-//end;
-//
-//procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar);
-//const
-//  DMTrackExceptionA : TDMTrackExceptionA = nil;
-//begin
-//  if CheckLoadDLL then
-//  begin
-//    @DMTrackExceptionA := GetProcAddress(hModule, PROC_DeskMetricsTrackExceptionA);
-//    if Assigned(DMTrackExceptionA) then
-//      DMTrackExceptionA(FExceptionMessage, FExceptionType);
-//  end;
-//end;
 
 initialization
   hModule := 0;

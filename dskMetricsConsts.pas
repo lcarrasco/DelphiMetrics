@@ -32,7 +32,7 @@ type
 const
   { DeskMetrics Component Consts }
   COMPONENTNAME      = 'DeskMetrics DLL';
-  COMPONENTVERSION   = '1.5.0.0';
+  COMPONENTVERSION   = '1.6.0.0';
 
   { DeskMetrics Server / HTTP Consts }
   USERAGENT          = 'DeskMetricsDLL';

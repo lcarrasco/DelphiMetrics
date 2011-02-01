@@ -577,6 +577,41 @@ begin
   end;
 end;
 
+procedure DeskMetricsTrackEventPeriod(FEventCategory, FEventName: PWideChar; FEventTime: Integer); stdcall;
+var
+  FEventNameTemp: string;
+  FEventCategoryTemp: string;
+begin
+  FThreadSafe.Enter;
+  try
+    try
+     if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
+      begin
+        FEventNameTemp     := Trim(FEventName);
+        FEventCategoryTemp := Trim(FEventCategory);
+
+        FJSONData := FJSONData + ',{"tp":"evP","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","tm":' + IntToStr(FEventTime) + ',"fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
+      end;
+    except
+    end;
+  finally
+    FThreadSafe.Leave;
+  end;
+end;
+
+procedure DeskMetricsTrackEventPeriodA(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer); stdcall;
+begin
+  FThreadSafe.Enter;
+  try
+    try
+      DeskMetricsTrackEventPeriod(PWideChar(FEventCategory), PWideChar(FEventName), FEventTime);
+    except
+    end;
+  finally
+    FThreadSafe.Leave;
+  end;
+end;
+
 { Logs }
 procedure DeskMetricsTrackLog(FMessage: PWideChar); stdcall;
 var
@@ -700,36 +735,28 @@ begin
 end;
 
 { Exceptions }
-//procedure DeskMetricsTrackExceptions(Sender: TObject; E:Exception); stdcall;
-//begin
-//
-//end;
-//
-//procedure DeskMetricsTrackException(FExceptionMessage, FExceptionType: PWideChar); stdcall;
-//begin
-//  FThreadSafe.Enter;
-//  try
-//    try
-//      //'{type="exception", exp_msg="Invalid pointer argumentation", exp_type="Win32API", exp_stack="7c817067 kernel32.RegisterWaitForInputIdle + 0x49"},'
-//    except
-//    end;
-//  finally
-//    FThreadSafe.Leave;
-//  end;
-//end;
-//
-//procedure DeskMetricsTrackExceptionA(FExceptionMessage, FExceptionType: PAnsiChar); stdcall;
-//begin
-//  FThreadSafe.Enter;
-//  try
-//    try
-//      DeskMetricsTrackException(PWideChar(FExceptionMessage), PWideChar(FExceptionType));
-//    except
-//    end;
-//  finally
-//    FThreadSafe.Leave;
-//  end;
-//end;
+procedure DeskMetricsTrackException(FExpectionObject: Exception); stdcall;
+var
+  FExMessage, FExStack, FExSource, FExTarget: string;
+begin
+  FThreadSafe.Enter;
+  try
+    try
+      if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
+      begin
+        FExMessage  := FExpectionObject.Message;
+        FExStack    := FExpectionObject.StackTrace;
+        FExSource   := '';
+        FExTarget   := FExpectionObject.ClassName;
+
+        FJSONData   := FJSONData + ',{"tp":"exC","msg":"' + FExMessage + '","stk":"' + FExStack + '","src":"' + FExSource + '","tgs":"' + FExTarget + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+      end;
+    except
+    end;
+  finally
+    FThreadSafe.Leave;
+  end;
+end;
 
 {Installations}
 function DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
@@ -1083,7 +1110,6 @@ end;
 procedure OnDLLLoad;
 begin
   FThreadSafe  := TCriticalSection.Create;
- // FThreadEvent := TEvent.Create(nil, True, False, '', False);
 end;
 
 procedure OnDLLUnload;
@@ -1101,9 +1127,6 @@ begin
     CloseHandle(FThreadStop.Handle);
     FThreadStop := nil;
   end;
-
-  //if Assigned(FThreadEvent) then
-  //  FreeAndNil(FThreadEvent);
 
   if Assigned(FThreadSafe) then
     FreeAndNil(FThreadSafe);
@@ -1132,19 +1155,19 @@ exports
  DeskMetricsTrackEventStopA,
  DeskMetricsTrackEventCancel,
  DeskMetricsTrackEventCancelA,
+ DeskMetricsTrackEventPeriod,
+ DeskMetricsTrackEventPeriodA,
  DeskMetricsTrackLog,
  DeskMetricsTrackLogA,
  DeskMetricsTrackCustomData,
  DeskMetricsTrackCustomDataA,
  DeskMetricsTrackCustomDataR,
  DeskMetricsTrackCustomDataRA,
- // DeskMetricsTrackExceptions,
- // DeskMetricsTrackException,
- // DeskMetricsTrackExceptionA,
  DeskMetricsTrackInstallation,
  DeskMetricsTrackInstallationA,
  DeskMetricsTrackUninstallation,
  DeskMetricsTrackUninstallationA,
+ DeskMetricsTrackException,
  DeskMetricsSetEnabled,
  DeskMetricsGetEnabled,
  DeskMetricsSetProxy,
@@ -1186,7 +1209,6 @@ begin
   FThreadSafe.Enter;
   try
     IsMultiThread     := True;
-    //FThreadHandle     := 0;
 
     FJSONData         := '';
     FLastErrorID      := -1;
