@@ -1,7 +1,7 @@
 { **********************************************************}
 {                                                           }
 {     DeskMetrics - Application Example (Delphi)            }
-{     Copyright (c) 2010                                    }
+{     Copyright (c) 2010-2011                               }
 {                                                           }
 {     http://deskmetrics.com                                }
 {     support@deskmetrics.com                               }

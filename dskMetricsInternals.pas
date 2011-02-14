@@ -148,7 +148,8 @@ implementation
 uses
   dskMetricsConsts, dskMetricsVars, dskMetricsWMI,
   dskMetricsCPUInfo,dskMetricsCommon, dskMetricsWinInfo,
-  ActiveX, Windows, SysUtils, Registry, WinInet, Variants, DateUtils;
+  ActiveX, Windows, SysUtils, Registry, WinInet, Variants,
+  DateUtils, EncdDecd;
 
 function _SetAppID(const FApplicationID: string): Boolean;
 begin
@@ -507,6 +508,7 @@ var
 begin
   Result := NULL_STR;
   try
+    Result := NONE_STR;
     FRegistry := TRegistry.Create;
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
@@ -529,6 +531,9 @@ var
 begin
   Result := True;
   try
+    FVersion     := NONE_STR;
+    FServicePack := -1;
+
     FRegistry := TRegistry.Create;
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
@@ -1271,7 +1276,7 @@ begin
       try
         Reset(FFile);
         ReadLn(FFile, FData);
-        Result := _Rot13(FData);
+        Result := UTF8ToUnicodeString(StringOf(DecodeBase64(FData)));
       finally
         CloseFile(FFile);
       end;
@@ -1334,12 +1339,12 @@ begin
       if FileExists(FFileName) then
       begin
         Append(FFile);
-        Write(FFile, _Rot13(','));
+        Write(FFile, EncodeBase64(BytesOf(UTF8Encode(',')), Length(BytesOf(UTF8Encode(',')))));
       end
       else
         Rewrite(FFile);
 
-      Write(FFile, _Rot13(FJSONData));
+      Write(FFile, EncodeBase64(BytesOf(UTF8Encode(FJSONData)), Length(BytesOf(UTF8Encode(FJSONData)))));
 
       SetFileAttributes(PChar(FFileName), faHidden);
     finally

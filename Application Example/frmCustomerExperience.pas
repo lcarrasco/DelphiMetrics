@@ -43,7 +43,7 @@ var
 implementation
 
 uses
-  DeskMetrics_Dynamic;
+  DeskMetrics;
 
 {$R *.dfm}
 

@@ -98,7 +98,7 @@ const
 implementation
 
 uses
-  DeskMetrics_Dynamic, { Component Unit }
+  DeskMetrics, { Component Unit }
   frmAnotherWindow, frmCustomerExperience;
 
 {$R *.dfm}

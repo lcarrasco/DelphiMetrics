@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  DeskMetrics_Dynamic; { Component Unit }
+  DeskMetrics; { Component Unit }
 
 procedure TfrmAnother.btnQuitClick(Sender: TObject);
 begin
