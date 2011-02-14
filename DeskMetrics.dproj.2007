@@ -1,6 +1,6 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{4B214924-C02F-470A-BF36-4C9C154D5DB6}</ProjectGuid>
+			<ProjectGuid>{C506EFCF-5E44-4165-95D3-9F84250EC846}</ProjectGuid>
 			<MainSource>DeskMetrics.dpr</MainSource>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
@@ -44,7 +44,6 @@
 			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<DCCReference Include="dskMetricsCommon.pas"/>
 			<DCCReference Include="dskMetricsWinInfo.pas"/>
-			<DCCReference Include="dskMetricsExceptions.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

@@ -75,7 +75,6 @@ type
     procedure btnEventStopClick(Sender: TObject);
     procedure btnEventStartClick(Sender: TObject);
     procedure btnSetProxyClick(Sender: TObject);
-    procedure btnCheckVersionClick(Sender: TObject);
     procedure btnTrackWindowClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnTrackEventClick(Sender: TObject);
@@ -93,12 +92,12 @@ var
 
 const
   // SET YOUR APPLICATION ID
-  FApplicationID = 'YOUR APPLICATION ID';
+  FApplicationID = '4c894b8c924b8d3dfd000000';
 
 implementation
 
 uses
-  DeskMetrics, { Component Unit }
+  DeskMetrics_Static, { Component Unit }
   frmAnotherWindow, frmCustomerExperience;
 
 {$R *.dfm}
@@ -165,39 +164,6 @@ begin
   else
     // An error occurred
     ShowMessage('Sorry! Try again later.');
-end;
-
-procedure Tfrm_Main.btnCheckVersionClick(Sender: TObject);
-var
-  VersionChecked: Boolean;
-  MyNewVersion: TVersionData;
-begin
-  Screen.Cursor := crHourGlass;
-  try
-    // Check if there is a new versions of this application
-    VersionChecked := DeskMetricsCheckVersion(MyNewVersion);
-  finally
-    Screen.Cursor := crDefault;
-  end;
-
-  // Has received a response from the server?
-  if VersionChecked then
-  begin
-    // Is there a new version available?
-    if (MyNewVersion.Version <> '') then
-    begin
-      ShowMessage('New version available: ' + string(MyNewVersion.Version));
-      ShowMessage('Release Date: '          + string(MyNewVersion.ReleaseDate));
-      ShowMessage('Download URL: '          + string(MyNewVersion.DownloadURL));
-      ShowMessage('Release Note: '          + string(MyNewVersion.ReleaseNote));
-    end
-    else
-      // You're already using the latest version
-      ShowMessage('Version up-to-date.');
-  end
-  else
-    // An error occurred
-    ShowMessage('Sorry! Check your internet connection and try again.');
 end;
 
 procedure Tfrm_Main.btnCustomDataClick(Sender: TObject);
@@ -271,14 +237,14 @@ begin
     DeskMetricsTrackEvent('Window', 'MainWindow');
   end;
 
-  // Shows informations about the component
-  if DeskMetricsDllLoaded then
-  begin
-    lblComponentName.Caption    := DeskMetricsGetComponentName;
-    lblComponentVersion.Caption := 'Component Version: ' + DeskMetricsGetComponentVersion;
-  end
-  else
-    lblComponentName.Caption    := 'DLL Not Found';
+//  // Shows informations about the component
+//  if DeskMetricsDllLoaded then
+//  begin
+//    lblComponentName.Caption    := DeskMetricsGetComponentName;
+//    lblComponentVersion.Caption := 'Component Version: ' + DeskMetricsGetComponentVersion;
+//  end
+//  else
+//    lblComponentName.Caption    := 'DLL Not Found';
 end;
 
 end.

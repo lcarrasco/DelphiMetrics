@@ -529,7 +529,6 @@ object frm_Main: Tfrm_Main
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      OnClick = btnCheckVersionClick
     end
     object btnCustomData: TButton
       Left = 522

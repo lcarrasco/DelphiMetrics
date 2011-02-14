@@ -28,7 +28,8 @@ uses
   dskMetricsWMI in 'dskMetricsWMI.pas',
   dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas',
   dskMetricsCommon in 'dskMetricsCommon.pas',
-  dskMetricsWinInfo in 'dskMetricsWinInfo.pas';
+  dskMetricsWinInfo in 'dskMetricsWinInfo.pas',
+  dskMetricsBase64 in 'dskMetricsBase64.pas';
 
 { 4 GB memory }
 {$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
@@ -41,63 +42,6 @@ uses
 {$WARN SYMBOL_PLATFORM OFF}
 
 {$R *.res}
-
-{ Component Configuration }
-function DeskMetricsGetComponentName: PWideChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := COMPONENTNAME;
-    except
-      Result := '';
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsGetComponentNameA: PAnsiChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := PAnsiChar(DeskMetricsGetComponentName);
-    except
-      Result := '';
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsGetComponentVersion: PWideChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := COMPONENTVERSION;
-    except
-      Result := '';
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsGetComponentVersionA: PAnsiChar; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := PAnsiChar(COMPONENTVERSION);
-    except
-      Result := '';
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
 
 { Component POST Configuration }
 function DeskMetricsGetPostServer: PWideChar; stdcall;
@@ -333,8 +277,8 @@ begin
 
         { Exists Cache }
         FCacheData := _GetCacheData;
-        if FCacheData <> '' then
-          FJSONData := FJSONData + ',' + FCacheData;
+         if FCacheData <> '' then
+          FJSONData := FJSONData + ',' + Trim(FCacheData);
 
         try
           { Send HTTP request }
@@ -346,50 +290,6 @@ begin
         { Debug / Test Mode }
         if _GetDebugMode then
           _InsertLogText('Stop', FLastErrorID);
-      end;
-    except
-      Result := False;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-{ Check Versions }
-function DeskMetricsCheckVersion(var FVersionData: TVersionData): Boolean; stdcall;
-var
-  FErrorID: Integer;
-  FJSONVersion, FJSONTemp: string;
-begin
-  FThreadSafe.Enter;
-  try
-    Result := True;
-    try
-      FJSONTemp    := FJSONData;
-      FJSONData    := _GetAppVersion;
-      try
-        FVersionData.Version       := '';
-        FVersionData.DownloadURL   := '';
-        FVersionData.ReleaseNote   := '';
-        FVersionData.ReleaseDate   := '';
-
-        FJSONVersion := _SendPost(FErrorID, API_CHECKVERSION);
-
-        Result       := FErrorID = 0;
-
-        if FJSONVersion <> '' then
-        begin
-          FVersionData.Version     := ShortString(_GetJSONData('version', FJSONVersion));
-          FVersionData.DownloadURL := ShortString(_GetJSONData('download_url', FJSONVersion));
-          FVersionData.ReleaseNote := ShortString(_GetJSONData('note', FJSONVersion));
-          FVersionData.ReleaseDate := ShortString(_GetJSONData('released', FJSONVersion));
-        end;
-
-        { Debug / Test Mode }
-        if _GetDebugMode then
-          _InsertLogText('CheckVersion', FErrorID);
-      finally
-        FJSONData := FJSONTemp;
       end;
     except
       Result := False;
@@ -1144,7 +1044,6 @@ exports
  DeskMetricsStart,
  DeskMetricsStartA,
  DeskMetricsStop,
- DeskMetricsCheckVersion,
  DeskMetricsTrackEvent,
  DeskMetricsTrackEventA,
  DeskMetricsTrackEventValue,
@@ -1176,10 +1075,6 @@ exports
  DeskMetricsGetProxyA,
  DeskMetricsSetUserID,
  DeskMetricsSetUserIDA,
- DeskMetricsGetComponentName,
- DeskMetricsGetComponentNameA,
- DeskMetricsGetComponentVersion,
- DeskMetricsGetComponentVersionA,
  DeskMetricsGetPostServer,
  DeskMetricsGetPostServerA,
  DeskMetricsSetPostServer,

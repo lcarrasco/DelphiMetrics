@@ -1,6 +1,6 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{4B214924-C02F-470A-BF36-4C9C154D5DB6}</ProjectGuid>
+			<ProjectGuid>{C506EFCF-5E44-4165-95D3-9F84250EC846}</ProjectGuid>
 			<MainSource>DeskMetrics.dpr</MainSource>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
@@ -45,6 +45,7 @@
 			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<DCCReference Include="dskMetricsCommon.pas"/>
 			<DCCReference Include="dskMetricsWinInfo.pas"/>
+			<DCCReference Include="dskMetricsBase64.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -70,14 +71,14 @@
 						<Parameters Name="UseLauncher">False</Parameters>
 						<Parameters Name="LoadAllSymbols">True</Parameters>
 						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
-						<Parameters Name="HostApplication">C:\Users\Bernardo\Documents\Quicksys\Produtos\Portinho\Portinho.exe</Parameters>
+						<Parameters Name="HostApplication">C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\Application Example\AppExample.exe</Parameters>
 					</Parameters>
 					<VersionInfo>
 						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">1</VersionInfo>
 						<VersionInfo Name="MinorVer">6</VersionInfo>
-						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Release">5</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -90,13 +91,13 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription">DeskMetrics DLL Component</VersionInfoKeys>
-						<VersionInfoKeys Name="FileVersion">1.6.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.6.5.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright"/>
 						<VersionInfoKeys Name="LegalTrademarks"/>
 						<VersionInfoKeys Name="OriginalFilename">DeskMetrics.dll</VersionInfoKeys>
 						<VersionInfoKeys Name="ProductName">DeskMetrics</VersionInfoKeys>
-						<VersionInfoKeys Name="ProductVersion">1.6.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">1.6.5.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>

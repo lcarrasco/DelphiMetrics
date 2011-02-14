@@ -146,10 +146,10 @@ type
 implementation
 
 uses
-  dskMetricsConsts, dskMetricsVars, dskMetricsWMI,
+  dskMetricsConsts, dskMetricsVars, dskMetricsWMI, dskMetricsBase64,
   dskMetricsCPUInfo,dskMetricsCommon, dskMetricsWinInfo,
   ActiveX, Windows, SysUtils, Registry, WinInet, Variants,
-  DateUtils, EncdDecd;
+  DateUtils;
 
 function _SetAppID(const FApplicationID: string): Boolean;
 begin
@@ -211,7 +211,7 @@ begin
   end;
 end;
 
-function  _GetDebugData: string;
+function _GetDebugData: string;
 begin
   try
     Result := Trim(FDebugData);
@@ -1276,7 +1276,7 @@ begin
       try
         Reset(FFile);
         ReadLn(FFile, FData);
-        Result := UTF8ToUnicodeString(StringOf(DecodeBase64(FData)));
+        Result := Base64DecodeStr(FData);
       finally
         CloseFile(FFile);
       end;
@@ -1339,12 +1339,12 @@ begin
       if FileExists(FFileName) then
       begin
         Append(FFile);
-        Write(FFile, EncodeBase64(BytesOf(UTF8Encode(',')), Length(BytesOf(UTF8Encode(',')))));
+        Write(FFile, Base64EncodeStr(','));
       end
       else
         Rewrite(FFile);
 
-      Write(FFile, EncodeBase64(BytesOf(UTF8Encode(FJSONData)), Length(BytesOf(UTF8Encode(FJSONData)))));
+      Write(FFile, Base64EncodeStr(FJSONData));
 
       SetFileAttributes(PChar(FFileName), faHidden);
     finally

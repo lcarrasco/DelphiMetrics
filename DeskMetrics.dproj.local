@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2011/02/01 19:10:22.979.pas,C:\Users\Bernardo\Desktop\deskmetrics-DLL-28ecfc7\dskMetricsExceptions.pas=</Transaction>
+	<Transactions>
+    <Transaction>2011/02/14 13:26:44.994.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsBase64.pas</Transaction>
   </Transactions>
 </BorlandProject>

@@ -21,19 +21,7 @@ interface
 uses
   Windows;
 
-type
-  TVersionData = record
-    Version: ShortString;
-    DownloadURL: ShortString;
-    ReleaseNote: ShortString;
-    ReleaseDate: ShortString;
-  end;
-
 const
-  { DeskMetrics Component Consts }
-  COMPONENTNAME      = 'DeskMetrics DLL';
-  COMPONENTVERSION   = '1.6.1.0';
-
   { DeskMetrics Server / HTTP Consts }
   USERAGENT          = 'DeskMetricsDLL';
   DEFAULTSERVER      = '.api.deskmetrics.com';
