@@ -17,26 +17,19 @@ unit frmMain;
 interface
 
 uses
-  SysUtils, Classes, Controls, Forms, StdCtrls, ExtCtrls, Dialogs,
+  Windows, SysUtils, Classes, Controls, Forms, StdCtrls, ExtCtrls, Dialogs,
   jpeg, pngimage;
 
 type
   Tfrm_Main = class(TForm)
-    lblComponentName: TLabel;
-    lblComponentVersion: TLabel;
     imgLogo: TImage;
     pnlData: TPanel;
     Bevel1: TBevel;
     Bevel2: TBevel;
-    Bevel3: TBevel;
     Bevel4: TBevel;
     Bevel5: TBevel;
-    btnCheckVersion: TButton;
     btnCustomData: TButton;
     btnCustomDataR: TButton;
-    btnEventCancel: TButton;
-    btnEventStart: TButton;
-    btnEventStop: TButton;
     btnLogs: TButton;
     btnSetProxy: TButton;
     btnTrackEvent: TButton;
@@ -50,37 +43,47 @@ type
     edtProxyPort: TEdit;
     edtProxyServer: TEdit;
     edtProxyUser: TEdit;
-    Label1: TLabel;
     Label2: TLabel;
-    lblCheckNewVersion: TLabel;
     lblConfigProxy: TLabel;
     lblTrackingCustomData: TLabel;
     lblTrackingEvents: TLabel;
     lblTrackingLog: TLabel;
     lblTrackingWindows: TLabel;
     lblZipCode: TLabel;
-    Label3: TLabel;
-    Bevel6: TBevel;
-    Label4: TLabel;
-    Bevel7: TBevel;
-    btnFeatureA: TButton;
-    btnFeatureB: TButton;
     rb1: TRadioButton;
     rb2: TRadioButton;
+    Label4: TLabel;
+    Bevel3: TBevel;
+    btnTrackException: TButton;
+    btnTrackEventTime: TButton;
+    Label1: TLabel;
+    Bevel6: TBevel;
+    btnTrackLicense: TButton;
+    Label3: TLabel;
+    Bevel7: TBevel;
+    btnSync: TButton;
+    lblDLLStatus: TLabel;
+    pnlLicense: TPanel;
+    rbFree: TRadioButton;
+    rbDemo: TRadioButton;
+    rbCracked: TRadioButton;
+    rbTrial: TRadioButton;
+    rbRegistered: TRadioButton;
+    btnTrackAll: TButton;
     procedure FormShow(Sender: TObject);
     procedure btnTrackEventValueClick(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
     procedure btnCustomDataClick(Sender: TObject);
     procedure btnCustomDataRClick(Sender: TObject);
-    procedure btnEventStopClick(Sender: TObject);
-    procedure btnEventStartClick(Sender: TObject);
     procedure btnSetProxyClick(Sender: TObject);
     procedure btnTrackWindowClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnTrackEventClick(Sender: TObject);
-    procedure btnEventCancelClick(Sender: TObject);
-    procedure btnFeatureAClick(Sender: TObject);
-    procedure btnFeatureBClick(Sender: TObject);
+    procedure btnTrackExceptionClick(Sender: TObject);
+    procedure btnTrackEventTimeClick(Sender: TObject);
+    procedure btnTrackLicenseClick(Sender: TObject);
+    procedure btnSyncClick(Sender: TObject);
+    procedure btnTrackAllClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -92,12 +95,12 @@ var
 
 const
   // SET YOUR APPLICATION ID
-  FApplicationID = '4c894b8c924b8d3dfd000000';
+  FApplicationID = 'YOUR APPLICATION ID';
 
 implementation
 
 uses
-  DeskMetrics_Static, { Component Unit }
+  DeskMetrics, { Component Unit }
   frmAnotherWindow, frmCustomerExperience;
 
 {$R *.dfm}
@@ -111,33 +114,36 @@ begin
     DeskMetricsTrackEventValue('Game', 'Level', PWideChar(rb2.Caption));
 end;
 
-procedure Tfrm_Main.btnEventCancelClick(Sender: TObject);
+procedure Tfrm_Main.btnTrackExceptionClick(Sender: TObject);
 begin
-  // Cancels a timed event
-  DeskMetricsTrackEventCancel('EventX', 'Sum');
-
-  btnEventStart.Enabled  := True;
-  btnEventStop.Enabled   := False;
-  btnEventCancel.Enabled := False;
+  try
+    raise Exception.Create('Error!');
+  except
+    on E: Exception do
+      DeskMetricsTrackException(E);
+  end;
+  // Tracks an exception
 end;
 
-procedure Tfrm_Main.btnEventStartClick(Sender: TObject);
-begin  // Starts a timed event
-  DeskMetricsTrackEventStart('EventX', 'Sum');
-
-  btnEventStart.Enabled  := False;
-  btnEventStop.Enabled   := True;
-  btnEventCancel.Enabled := True;
-end;
-
-procedure Tfrm_Main.btnEventStopClick(Sender: TObject);
+procedure Tfrm_Main.btnTrackLicenseClick(Sender: TObject);
 begin
-  // Stops a timed event
-  DeskMetricsTrackEventStop('EventX', 'Sum');
+  // Tracks a license
+  // IMPORTANT! The custom data category must to be "License"
 
-  btnEventStart.Enabled  := True;
-  btnEventStop.Enabled   := False;
-  btnEventCancel.Enabled := False;
+  if (rbFree.Checked) then
+    DeskMetricsTrackCustomData('License', 'F');
+
+  if (rbTrial.Checked) then
+    DeskMetricsTrackCustomData('License', 'T');
+
+  if (rbDemo.Checked) then
+    DeskMetricsTrackCustomData('License', 'D');
+
+  if (rbRegistered.Checked) then
+    DeskMetricsTrackCustomData('License', 'R');
+
+  if (rbCracked.Checked) then
+    DeskMetricsTrackCustomData('License', 'C');
 end;
 
 procedure Tfrm_Main.btnSendClick(Sender: TObject);
@@ -186,30 +192,49 @@ begin
   // DeskMetricsSetProxy(PWideChar(''), 0, PWideChar(''), PWideChar(''));
 end;
 
+procedure Tfrm_Main.btnSyncClick(Sender: TObject);
+begin
+  DeskMetricsSendData;
+end;
+
+procedure Tfrm_Main.btnTrackAllClick(Sender: TObject);
+var
+  FCounter: integer;
+begin
+  for FCounter := 0 to pred(frm_Main.ComponentCount) do
+  begin
+    if frm_Main.Components[FCounter] is TButton then
+    begin
+      OutputDebugString(PChar((frm_Main.Components[FCounter] as TButton).Name));
+
+      if (frm_Main.Components[FCounter] as TButton).Name = 'btnSetProxy' then
+        Continue;
+
+      if (frm_Main.Components[FCounter] as TButton).Name = 'btnTrackAll' then
+        Continue;
+
+      (frm_Main.Components[FCounter] as TButton).OnClick(Self);
+    end;
+  end;
+end;
+
 procedure Tfrm_Main.btnTrackEventClick(Sender: TObject);
 begin
   // Tracks a button click
   DeskMetricsTrackEvent('Buttons','MyButton');
 end;
 
+procedure Tfrm_Main.btnTrackEventTimeClick(Sender: TObject);
+begin
+  // Tracks a period
+  DeskMetricsTrackEventPeriod('EventsPeriod', 'MyEvent', 50);
+  // 50 == 50 seconds
+end;
+
 procedure Tfrm_Main.btnTrackWindowClick(Sender: TObject);
 begin
   // Show a window
   frmAnother.ShowModal;
-end;
-
-procedure Tfrm_Main.btnFeatureAClick(Sender: TObject);
-begin
-  // Tracks a feature
-  // IMPORTANT! The event category must to be "Feature"
-  DeskMetricsTrackEvent('Feature','Feature A');
-end;
-
-procedure Tfrm_Main.btnFeatureBClick(Sender: TObject);
-begin
-  // Tracks a feature
-  // IMPORTANT! The event category must to be "Window"
-  DeskMetricsTrackEvent('Feature','Feature B');
 end;
 
 procedure Tfrm_Main.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -237,14 +262,11 @@ begin
     DeskMetricsTrackEvent('Window', 'MainWindow');
   end;
 
-//  // Shows informations about the component
-//  if DeskMetricsDllLoaded then
-//  begin
-//    lblComponentName.Caption    := DeskMetricsGetComponentName;
-//    lblComponentVersion.Caption := 'Component Version: ' + DeskMetricsGetComponentVersion;
-//  end
-//  else
-//    lblComponentName.Caption    := 'DLL Not Found';
+  // Shows informations about the component
+  if DeskMetricsDllLoaded then
+    lblDLLStatus.Caption := 'DLL Loaded'
+  else
+    lblDLLStatus.Caption := 'DLL Not Found';
 end;
 
 end.

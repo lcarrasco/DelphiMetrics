@@ -48,7 +48,6 @@ const
 
   { DeskMetrics - WebService API Calls }
   API_SENDDATA       = '/sendData';
-  API_CHECKVERSION   = '/checkVersion';
 
   { DeskMetrics Wininet Consts }
   READBUFFERSIZE     = 4096;

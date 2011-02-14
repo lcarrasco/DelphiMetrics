@@ -20,14 +20,6 @@ typedef bool (__stdcall *_DeskMetricsStart)(LPCWSTR FApplicationID, LPCWSTR FApp
 typedef bool (__stdcall *_DeskMetricsStartA)(LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, bool FRealTime);
 typedef bool (__stdcall *_DeskMetricsStop)();
 
-struct TVERSIONDATA { 
-    char Version[255]; 
-    char DownloadURL[255];
-    char ReleaseNote[255];
-    char ReleaseDate[255];
-};
-typedef bool (__stdcall *_DeskMetricsCheckVersion)(TVERSIONDATA* FVersionData);
-
 typedef bool (__stdcall *_DeskMetricsSendData)();
 
 typedef void (__stdcall *_DeskMetricsTrackEvent)(LPCWSTR FEventCategory, LPCWSTR FEventName);
@@ -74,12 +66,6 @@ typedef bool (__stdcall *_DeskMetricsGetProxyA)(LPCTSTR FHostIP, int FPort);
 typedef bool (__stdcall *_DeskMetricsSetUserID)(LPCWSTR FID);
 typedef bool (__stdcall *_DeskMetricsSetUserIDA)(LPCTSTR FID);
 
-typedef LPCWSTR (__stdcall *_DeskMetricsGetComponentName)();
-typedef LPCTSTR (__stdcall *_DeskMetricsGetComponentNameA)();
-
-typedef LPCWSTR (__stdcall *_DeskMetricsGetComponentVersion)();
-typedef LPCTSTR (__stdcall *_DeskMetricsGetComponentVersionA)();
-
 typedef LPCWSTR (__stdcall *_DeskMetricsGetPostServer)();
 typedef LPCTSTR (__stdcall *_DeskMetricsGetPostServerA)();
 
@@ -120,8 +106,6 @@ bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion, bool
 bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, bool FRealTime);
 
 bool DeskMetricsStop ();
-
-bool DeskMetricsCheckVersion (TVERSIONDATA* FVersionData);
 
 bool DeskMetricsSendData();
 
@@ -168,12 +152,6 @@ bool DeskMetricsSetProxyA (LPCTSTR FHostIP, int FPort, LPCTSTR FUserName, LPCTST
 
 bool DeskMetricsSetUserID (LPCWSTR FID);
 bool DeskMetricsSetUserIDA (LPCTSTR FID);
-
-LPCWSTR DeskMetricsGetComponentName ();
-LPCTSTR DeskMetricsGetComponentNameA ();
-
-LPCWSTR DeskMetricsGetComponentVersion ();
-LPCTSTR DeskMetricsGetComponentVersionA ();
 
 LPCWSTR DeskMetricsGetPostServer ();
 LPCTSTR DeskMetricsGetPostServerA ();

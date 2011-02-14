@@ -795,11 +795,11 @@ function _SendPost(var FErrorID: Integer; const FAction: string): string;
 var
   FJSONTemp: string;
   hint,hconn,hreq:hinternet;
-  hdr: AnsiString;
-  buf:array[0..READBUFFERSIZE-1] of ansichar;
+  hdr: UTF8String;
+  buf:array[0..READBUFFERSIZE-1] of PAnsiChar;
   bufsize:dword;
   i,flags:integer;
-  data: AnsiString;
+  data: UTF8String;
   dwSize, dwFlags: DWORD;
 begin
   FErrorID  := 0;
@@ -816,20 +816,11 @@ begin
     { check type - WebService API Call }
     if FAction = API_SENDDATA then
     begin
-      hdr       := 'Content-Type: application/x-www-form-urlencoded';
-      FJSONTemp := '[' + FJSONTemp + ']';
-      data      := AnsiString('data=' + _URLEncode(FJSONTemp))
-    end
-    else
-    begin
-      if FAction = API_CHECKVERSION then
-      begin
-        hdr  := 'Content-Type: application/x-www-form-urlencoded';
-        data := AnsiString('version=' + _URLEncode(FJSONTemp));
-      end;
+      hdr       := UTF8Encode('Content-Type: application/json');
+      data      := UTF8Encode('[' + FJSONTemp + ']');
     end;
 
-    hint := InternetOpenW(PChar(FPostAgent),INTERNET_OPEN_TYPE_PRECONFIG,nil,nil,0);
+    hint := InternetOpenW(PWideChar(FPostAgent),INTERNET_OPEN_TYPE_PRECONFIG,nil,nil,0);
     if hint = nil then
     begin
       FErrorID := 2;
@@ -880,9 +871,9 @@ begin
         end;
 
         try
-          if HttpSendRequestA(hreq,PAnsiChar(hdr),Length(hdr),PAnsiChar(Data),Length(Data)) then
+          if HttpSendRequestA(hreq,PAnsiChar(hdr),Length(hdr), PAnsiChar(Data),Length(Data)) then
           begin
-            if (FPostWaitResponse) or (FAction = API_CHECKVERSION) then
+            if (FPostWaitResponse) then
             begin
               { Read server Response }
               bufsize := READBUFFERSIZE;
@@ -1414,11 +1405,11 @@ end;
 procedure TPostThread.Execute;
 var
   hint,hconn,hreq:hinternet;
-  hdr: AnsiString;
-  buf:array[0..READBUFFERSIZE-1] of ansichar;
+  hdr: UTF8String;
+  buf:array[0..READBUFFERSIZE-1] of AnsiChar;
   bufsize:dword;
   i,flags:integer;
-  data: AnsiString;
+  data: UTF8String;
   dwSize, dwFlags: DWORD;
 begin
   if not Terminated then
@@ -1435,17 +1426,8 @@ begin
       { check type - WebService API Call }
       if FAction = API_SENDDATA then
       begin
-        hdr     := 'Content-Type: application/x-www-form-urlencoded';
-        FJSON   := '[' + FJSON + ']';
-        data    := AnsiString('data=' + _URLEncode(FJSON));
-      end
-      else
-      begin
-        if FAction = API_CHECKVERSION then
-        begin
-          hdr  := 'Content-Type: application/x-www-form-urlencoded';
-          data := AnsiString('version=' + _URLEncode(FJSON));
-        end;
+        hdr       := UTF8Encode('Content-Type: application/json');
+        data      := UTF8Encode('[' + FJSON + ']');
       end;
 
       hint := InternetOpenW(PChar(FPostAgent),INTERNET_OPEN_TYPE_PRECONFIG,nil,nil,0);
@@ -1501,7 +1483,7 @@ begin
           try
             if HttpSendRequestA(hreq,PAnsiChar(hdr),Length(hdr),PAnsiChar(Data),Length(Data)) then
             begin
-              if (FPostWaitResponse) or (FAction = API_CHECKVERSION) then
+              if (FPostWaitResponse) then
               begin
                 { Read server Response }
                 bufsize := READBUFFERSIZE;

@@ -24,16 +24,20 @@ HINSTANCE hinstLib;
 
 bool DeskMetricsLoadLibrary ()
 {
-	if (hinstLib != NULL) {
-		return 1;
-	}
-	else
+	try
 	{
-		hinstLib = LoadLibrary(TEXT("DeskMetrics.dll"));
 		if (hinstLib != NULL) {
 			return 1;
 		}
+		else
+		{
+			hinstLib = LoadLibrary(TEXT("DeskMetrics.dll"));
+			if (hinstLib != NULL) {
+				return 1;
+			}
+		}
 	}
+	catch (...) {}
 }
 
 void DeskMetricsUnloadLibrary ()
@@ -86,21 +90,6 @@ bool DeskMetricsStop ()
 		}
 
 		dskmtsStop();
-	}
-}
-
-bool DeskMetricsCheckVersion (TVERSIONDATA* FVersionData)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsCheckVersion dskmtsCheckVersion;
-
-		dskmtsCheckVersion = (_DeskMetricsCheckVersion)GetProcAddress(hinstLib, "DeskMetricsCheckVersion");
-		if (dskmtsCheckVersion == NULL) {
-			return false;
-		}
-
-		return dskmtsCheckVersion(FVersionData);
 	}
 }
 
@@ -538,66 +527,6 @@ bool DeskMetricsSetUserIDA (LPCTSTR FID)
 		}
 
 		return dskmtsSetUserID(FID);
-	}
-}
-
-LPCWSTR DeskMetricsGetComponentName ()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetComponentName dskmtsGetComponentName;
-
-		dskmtsGetComponentName = (_DeskMetricsGetComponentName)GetProcAddress(hinstLib, "DeskMetricsGetComponentName");
-		if (dskmtsGetComponentName == NULL) {
-			return LPCWSTR("");
-		}
-
-		return LPCWSTR(dskmtsGetComponentName());
-	}
-}
-
-LPCTSTR DeskMetricsGetComponentNameA ()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetComponentName dskmtsGetComponentName;
-
-		dskmtsGetComponentName = (_DeskMetricsGetComponentName)GetProcAddress(hinstLib, "DeskMetricsGetComponentNameA");
-		if (dskmtsGetComponentName == NULL) {
-			return LPCWSTR("");
-		}
-
-		return LPCWSTR(dskmtsGetComponentName());
-	}
-}
-
-LPCWSTR DeskMetricsGetComponentVersion ()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetComponentVersion dskmtsGetComponentVersion;
-
-		dskmtsGetComponentVersion = (_DeskMetricsGetComponentVersion)GetProcAddress(hinstLib, "DeskMetricsGetComponentVersion");
-		if (dskmtsGetComponentVersion == NULL) {
-			return LPCWSTR("");
-		}
-
-		return LPCWSTR(dskmtsGetComponentVersion());
-	}
-}
-
-LPCTSTR DeskMetricsGetComponentVersionA ()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetComponentVersion dskmtsGetComponentVersion;
-
-		dskmtsGetComponentVersion = (_DeskMetricsGetComponentVersion)GetProcAddress(hinstLib, "DeskMetricsGetComponentVersionA");
-		if (dskmtsGetComponentVersion == NULL) {
-			return LPCWSTR("");
-		}
-
-		return LPCWSTR(dskmtsGetComponentVersion());
 	}
 }
 
