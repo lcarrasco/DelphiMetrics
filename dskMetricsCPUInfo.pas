@@ -238,70 +238,57 @@ uses
   dskMetricsCommon;
 
 function IsCPUID_Available: Boolean; register;
-begin
-  try
-    asm
-      PUSHFD                 {save EFLAGS to stack}
-      POP     EAX            {store EFLAGS in EAX}
-      MOV     EDX, EAX       {save in EDX for later testing}
-      XOR     EAX, $200000;  {flip ID bit in EFLAGS}
-      PUSH    EAX            {save new EFLAGS value on stack}
-      POPFD                  {replace current EFLAGS value}
-      PUSHFD                 {get new EFLAGS}
-      POP     EAX            {store new EFLAGS in EAX}
-      XOR     EAX, EDX       {check if ID bit changed}
-      JZ      @exit          {no, CPUID not available}
-      MOV     EAX, True      {yes, CPUID is available}
-      @exit:
-    end;
-  except
-  end;
+asm
+  PUSHFD                 {save EFLAGS to stack}
+  POP     EAX            {store EFLAGS in EAX}
+  MOV     EDX, EAX       {save in EDX for later testing}
+  XOR     EAX, $200000;  {flip ID bit in EFLAGS}
+  PUSH    EAX            {save new EFLAGS value on stack}
+  POPFD                  {replace current EFLAGS value}
+  PUSHFD                 {get new EFLAGS}
+  POP     EAX            {store new EFLAGS in EAX}
+  XOR     EAX, EDX       {check if ID bit changed}
+  JZ      @exit          {no, CPUID not available}
+  MOV     EAX, True      {yes, CPUID is available}
+  @exit:
 end;
+
 
 function IsFPU_Available: Boolean;
 var
   _FCW, _FSW: Word;
-begin
-  try
-    asm
-      MOV     EAX, False     {initialize return register}
-      MOV     _FSW, $5A5A    {store a non-zero value}
-      FNINIT                 {must use non-wait form}
-      FNSTSW  _FSW           {store the status}
-      CMP     _FSW, 0        {was the correct status read?}
-      JNE     @exit          {no, FPU not available}
-      FNSTCW  _FCW           {yes, now save control word}
-      MOV     DX, _FCW       {get the control word}
-      AND     DX, $103F      {mask the proper status bits}
-      CMP     DX, $3F        {is a numeric processor installed?}
-      JNE     @exit          {no, FPU not installed}
-      MOV     EAX, True      {yes, FPU is installed}
-      @exit:
-    end;
-  except
-  end;
+asm
+  MOV     EAX, False     {initialize return register}
+  MOV     _FSW, $5A5A    {store a non-zero value}
+  FNINIT                 {must use non-wait form}
+  FNSTSW  _FSW           {store the status}
+  CMP     _FSW, 0        {was the correct status read?}
+  JNE     @exit          {no, FPU not available}
+  FNSTCW  _FCW           {yes, now save control word}
+  MOV     DX, _FCW       {get the control word}
+  AND     DX, $103F      {mask the proper status bits}
+  CMP     DX, $3F        {is a numeric processor installed?}
+  JNE     @exit          {no, FPU not installed}
+  MOV     EAX, True      {yes, FPU is installed}
+  @exit:
 end;
 
+
 procedure GetCPUID(Param: Cardinal; var Registers: TQProcessorRegisters);
-begin
-  try
-    asm
-      PUSH    EBX                         {save affected registers}
-      PUSH    EDI
-      MOV     EDI, Registers
-      XOR     EBX, EBX                    {clear EBX register}
-      XOR     ECX, ECX                    {clear ECX register}
-      XOR     EDX, EDX                    {clear EDX register}
-      DB $0F, $A2                         {CPUID opcode}
-      MOV     TQProcessorRegisters(EDI).&EAX, EAX   {save EAX register}
-      MOV     TQProcessorRegisters(EDI).&EBX, EBX   {save EBX register}
-      MOV     TQProcessorRegisters(EDI).&ECX, ECX   {save ECX register}
-      MOV     TQProcessorRegisters(EDI).&EDX, EDX   {save EDX register}
-      POP     EDI                         {restore registers}
-      POP     EBX
-    end;
-  except
-  end;
+asm
+  PUSH    EBX                         {save affected registers}
+  PUSH    EDI
+  MOV     EDI, Registers
+  XOR     EBX, EBX                    {clear EBX register}
+  XOR     ECX, ECX                    {clear ECX register}
+  XOR     EDX, EDX                    {clear EDX register}
+  DB $0F, $A2                         {CPUID opcode}
+  MOV     TQProcessorRegisters(EDI).&EAX, EAX   {save EAX register}
+  MOV     TQProcessorRegisters(EDI).&EBX, EBX   {save EBX register}
+  MOV     TQProcessorRegisters(EDI).&ECX, ECX   {save ECX register}
+  MOV     TQProcessorRegisters(EDI).&EDX, EDX   {save EDX register}
+  POP     EDI                         {restore registers}
+  POP     EBX
 end;
 
 procedure GetCPUVendor;

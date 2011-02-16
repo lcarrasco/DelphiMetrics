@@ -21,24 +21,34 @@ interface
 uses
   Classes;
 
-{ Internal Functions }
+{ Operating System Functions }
 function _GetOperatingSystemVersion: string;
 function _GetOperatingSystemServicePack: string;
 function _GetOperatingSystemArchicteture: string;
 function _GetOperatingSystemLanguage: string;
 function _GetOperatingSystemScreen: string;
+
+{ Plugins Functions }
 function _GetJavaVM: string;
 function _GetDotNetVersion: string;
 function _GetDotNetServicePack: string;
+
+{ CPU Functions }
 function _GetProcessorName: string;
 function _GetProcessorBrand: string;
 function _GetProcessorFrequency: Integer;
 function _GetProcessorArchicteture: string;
 function _GetProcessorCores: string;
+
+{ Memory Functions }
 function _GetMemoryTotal: string;
 function _GetMemoryFree: string;
+
+{ Disk Functions }
 function _GetDiskTotal: string;
 function _GetDiskFree: string;
+
+{ Misc Functions }
 function _GetTimeStamp: string;
 function _GetFlowNumber: string;
 
@@ -51,7 +61,6 @@ function _GetSessionID: string;
 function _GetDotNetData(var FVersion: string; var FServicePack: Integer): Boolean;
 
 { Internal Internet / HTTP / Post Functions }
-function _URLEncode(const FText: string): string;
 function _SendPost(var FErrorID: Integer; const FAction: string): string;
 
 { Proxy Configuration }
@@ -89,9 +98,6 @@ function _GetCacheData: string;
 function _GetCacheSize: Int64;
 function _SaveCacheFile: Boolean;
 
-{ Encrypt / Decrypt Cache }
-function _Rot13(const FString: string): string;
-
 { Analytics Status }
 function _SetStarted(const FEnabled: Boolean): Boolean;
 function _GetStarted: Boolean;
@@ -105,9 +111,6 @@ function _SetMaxDailyNetwork(const FSize: Integer): Boolean;
 { Storage File }
 function _GetMaxStorageFile: Integer;
 function _SetMaxStorageFile(const FSize: Integer): Boolean;
-
-{ JSON Functions }
-function _GetJSONData(const FField, FJSON: string): string;
 
 { Internal Errors Functions }
 function _ErrorToString(const FErrorID: Integer): string;
@@ -248,28 +251,6 @@ begin
     end;
   except
     Result := False;
-  end;
-end;
-
-function _URLEncode(const FText: string): string;
-var
-  I: Integer;
-  Ch: Char;
-begin
-  try
-    for I := 1 to Length(FText) do
-    begin
-        Ch := FText[I];
-        if ((Ch >= '0') and (Ch <= '9')) or
-           ((Ch >= 'a') and (Ch <= 'z')) or
-           ((Ch >= 'A') and (Ch <= 'Z')) or
-           (Ch = '.') or (Ch = '-') or (Ch = '_') or (Ch = '~') then
-            Result := Result + Ch
-        else
-          Result := Result + '%' +  SysUtils.IntToHex(Ord(Ch), 2);
-    end;
-  except
-    Result := '';
   end;
 end;
 
@@ -505,9 +486,8 @@ function _GetJavaVM: string;
 var
   FRegistry: TRegistry;
 begin
-  Result := NULL_STR;
+  Result := NONE_STR;
   try
-    Result := NONE_STR;
     FRegistry := TRegistry.Create;
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
@@ -646,8 +626,11 @@ begin
         if FRegistry.ValueExists('ProcessorNameString') then
           Result := FRegistry.ReadString('ProcessorNameString');
 
-        if Result <> '' then Result := StringReplace(Result, '(R)', '', [rfReplaceAll,rfIgnoreCase]);
-        if Result <> '' then Result := StringReplace(Result, '(TM)', '', [rfReplaceAll,rfIgnoreCase]);
+        if Result <> '' then
+          Result := StringReplace(Result, '(R)', '', [rfReplaceAll,rfIgnoreCase]);
+
+        if Result <> '' then
+          Result := StringReplace(Result, '(TM)', '', [rfReplaceAll,rfIgnoreCase]);
 
         Result := StringReplace(Result, '  ', '', [rfReplaceAll, rfIgnoreCase]);
         Result := Trim(Result);
@@ -1020,38 +1003,6 @@ begin
   end;
 end;
 
-function _GetJSONData(const FField, FJSON: string): string;
-var
-  iFieldPos, iPos, iFirstQuote, iQuotes: Integer;
-begin
-  try
-    iFirstQuote := 0;
-    if Pos(FField, FJSON) > 0 then
-    begin
-      iFieldPos := Pos('"' + FField + '":', FJSON) + Length(FField) + 2;
-
-      iQuotes := 0;
-      iPos    := iFieldPos;
-      while iFieldPos <= Length(FJSON) do
-      begin
-        Inc(iPos);
-        if FJSON[iPos] = '"' then
-        begin
-          Inc(iQuotes);
-          if iQuotes = 2 then
-          begin
-            Result := Copy(FJSON, iFirstQuote + 1, iPos - iFirstQuote - 1);
-            Break;
-          end;
-          iFirstQuote := iPos;
-        end;
-      end;
-    end;
-  except
-    Result := '';
-  end;
-end;
-
 function _ErrorToString(const FErrorID: Integer): string;
 begin
   try
@@ -1079,60 +1030,6 @@ begin
     Result := UNKNOWN_STR;
   end;
 end;
-
-//function _GetWMIValue(const FValue, FClass: string): string;
-//var
-//  wmiLocator: TSWbemLocator;
-//  wmiServices: ISWbemServices;
-//  wmiObjectSet: ISWbemObjectSet;
-//  wmiObject: ISWbemObject;
-//  wmiRefresher: ISWbemRefresher;
-//  Enum: IEnumVariant;
-//  ovVar: OleVariant;
-//  ovResult: OleVariant;
-//  iCount: Cardinal;
-//  prop: ISWBEMProperty;
-//begin
-//  try
-//    wmiLocator   := TSWbemLocator.Create(nil);
-//    wmiRefresher := CoSWbemRefresher.Create;
-//    try
-//      wmiServices := wmiLocator.ConnectServer
-//      (
-//        '.',
-//        'root\cimv2',
-//        '',
-//        '',
-//        '', '', 0, nil
-//      );
-//
-//      // Obtain an instance of the WMI class
-//      wmiObjectSet := wmiServices.ExecQuery
-//      (
-//        'SELECT ' + FValue + ' FROM ' + FClass,
-//        'WQL',
-//        wbemFlagReturnImmediately,
-//        nil
-//      );
-//
-//      // Replicate VBScript's "for each" construct
-//      Enum := (wmiObjectSet._NewEnum) as IEnumVariant;
-//      while (Enum.Next(1, ovVar, iCount) = S_OK) do
-//      begin
-//        wmiObject := IUnknown(ovVar) as ISWBemObject;
-//        prop      := wmiObject.Properties_.Item(FValue, 0);
-//        ovResult  := prop.Get_Value;
-//        if (not VarIsNull(ovResult)) and (not VarIsEmpty(ovResult)) then
-//          Result := Trim(ovResult);
-//        Break;
-//      end;
-//    finally
-//      wmiLocator.Free;
-//    end;
-//  except
-//    Result := '';
-//  end;
-//end;
 
 function _GenerateGUID: string;
 var
@@ -1368,29 +1265,6 @@ begin
   end;
 end;
 
-{ Internal Encrypt / Decrypt }
-function _Rot13(const FString: string): string;
-var
-  StrLen, I, charNum : Word;
-begin
-  try
-    StrLen := Length(FString);
-    for I  := 1 to StrLen do
-    begin
-      charNum:= Ord(FString[I]);
-      if CharInSet(UpCase(FString[I]), ['A'..'M']) then
-        Inc(charNum, 13)
-      else
-        if CharInSet(UpCase(FString[I]), ['N'..'Z']) then
-          Dec(charNum, 13);
-
-      Result := Trim(Result + chr(charNum));
-    end;
-  except
-    Result := '';
-  end;
-end;
-
 { TPostThread }
 
 constructor TPostThread.Create(JSON: string; Action: string; ErrorID: Integer);
@@ -1530,57 +1404,5 @@ begin
   { Returning from the Execute function effectively terminate the thread  }
   ReturnValue := 0;
 end;
-
-{ TStopThread }
-
-//constructor TStopThread.Create;
-//begin
-//  FreeOnTerminate := True;
-//  inherited Create(False);
-//end;
-//
-//destructor TStopThread.Destroy;
-//begin
-//  FreeOnTerminate := False;
-//  Terminate;
-//  inherited Destroy;
-//end;
-//
-//procedure TStopThread.Execute;
-//var
-//  FSingleJSON: string;
-//  FCacheData: string;
-//  FWait: Cardinal;
-//begin
-//  while (not Terminated) do
-//  begin
-//    try
-//      if _GetStarted then
-//      begin
-//        FJSONData   := FJSONData + ',{"tp":"stApp","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
-//        FSingleJSON := FJSONData;
-//
-//        { Exists Cache }
-//        FCacheData := _GetCacheData;
-//        if FCacheData <> '' then
-//          FJSONData := FJSONData + ',' + FCacheData;
-//
-//        try
-//          { Send HTTP request }
-//          _SendPost(FLastErrorID, API_SENDDATA);
-//        finally
-//          FJSONData := FSingleJSON;
-//        end;
-//
-//        FThreadEvent.SetEvent;
-//
-//        { Debug / Test Mode }
-//        if _GetTestMode then
-//          _InsertLogText('Stop', FLastErrorID);
-//      end;
-//    except
-//    end;
-//  end;
-//end;
 
 end.
