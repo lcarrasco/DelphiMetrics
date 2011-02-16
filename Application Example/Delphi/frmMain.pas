@@ -95,7 +95,7 @@ var
 
 const
   // SET YOUR APPLICATION ID
-  FApplicationID = 'YOUR APPLICATION ID';
+  FApplicationID = '';
 
 implementation
 

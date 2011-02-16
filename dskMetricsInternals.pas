@@ -712,6 +712,8 @@ function _GetProcessorArchicteture: string;
 begin
   try
     Result := Trim(_GetProcessorArchitectureInternal);
+    if (Result = '32') and ((_GetProcessorCores = '4') or (_GetProcessorCores = '2') or (_GetProcessorCores = '6') or (_GetProcessorCores = '8')) then
+      Result := '64';
   except
     Result := NULL_STR;
   end;
@@ -742,6 +744,9 @@ begin
         else
           if  (Pos(UpperCase('i7'), FProcessorName) > 0)then
             Result := '6'
+          else
+            if (Pos(UpperCase('V8'), FProcessorName) > 0) or (Pos(UpperCase('8-core'), FProcessorName) > 0)then
+              Result := '8'
   except
     Result := NULL_STR;
   end;
