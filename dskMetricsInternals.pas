@@ -113,7 +113,7 @@ function _GetJSONData(const FField, FJSON: string): string;
 function _ErrorToString(const FErrorID: Integer): string;
 
 { WMI Functions }
-function _GetWMIValue(const FValue, FClass: string): string;
+// function _GetWMIValue(const FValue, FClass: string): string;
 
 { GUID Functions }
 function _GenerateGUID: string;
@@ -146,10 +146,9 @@ type
 implementation
 
 uses
-  dskMetricsConsts, dskMetricsVars, dskMetricsWMI, dskMetricsBase64,
+  dskMetricsConsts, dskMetricsVars, dskMetricsBase64,
   dskMetricsCPUInfo,dskMetricsCommon, dskMetricsWinInfo,
-  ActiveX, Windows, SysUtils, Registry, WinInet, Variants,
-  DateUtils;
+  Windows, SysUtils, Registry, WinInet, DateUtils;
 
 function _SetAppID(const FApplicationID: string): Boolean;
 begin
@@ -701,15 +700,9 @@ begin
 end;
 
 function _GetProcessorFrequency: Integer;
-var
-  FProcessorFrequency: Integer;
 begin
   try
-    FProcessorFrequency     := StrToInt(_GetWMIValue('CurrentClockSpeed', 'Win32_Processor'));
-    if (FProcessorFrequency = 0) then
-      Result := _GetProcessorFrequencyInternal
-    else
-      Result := FProcessorFrequency;
+    Result := 0;
   except
     Result := 0;
   end;
@@ -728,20 +721,27 @@ function _GetProcessorCores: string;
 var
   FProcessorName: string;
 begin
+  Result := '1';
   try
-    Result    := _GetWMIValue('NumberOfCores', 'Win32_Processor');
-    if (Result = '0') or (Result = '') then
-    begin
-      FProcessorName := _GetProcessorName;
+    FProcessorName := UpperCase(_GetProcessorName);
 
-      if (Pos('DualCore', FProcessorName) > 0)  or (Pos('Dual Core', FProcessorName) > 0) or
-        (Pos('Core 2 Duo', FProcessorName) > 0) or (Pos('Core2Duo', FProcessorName) > 0) or
-        (Pos('Core2 Duo', FProcessorName) > 0)
-      then
-        Result := '2'
+    if (Pos(UpperCase('DualCore'), FProcessorName) > 0)  or  (Pos(UpperCase('Dual Core'), FProcessorName) > 0) or
+       (Pos(UpperCase('Core 2'), FProcessorName) > 0)     or (Pos(UpperCase('Core2Duo'), FProcessorName) > 0) or
+       (Pos(UpperCase('Core2 Duo'), FProcessorName) > 0)  or (Pos(UpperCase('X2'), FProcessorName) > 0) or
+       (Pos(UpperCase('i3'), FProcessorName) > 0)         or (Pos(UpperCase('Athlon II'), FProcessorName) > 0) or
+       (Pos(UpperCase('Dual-Core'), FProcessorName) > 0)
+    then
+      Result := '2'
+    else
+      if (Pos(UpperCase('X3'), FProcessorName) > 0) then
+        Result := '3'
       else
-        Result := NULL_STR;
-    end;
+        if (Pos(UpperCase('Quad'), FProcessorName) > 0) or (Pos(UpperCase('i5'), FProcessorName) > 0) or
+           (Pos(UpperCase('X4'), FProcessorName) > 0) then
+          Result := '4'
+        else
+          if  (Pos(UpperCase('i7'), FProcessorName) > 0)then
+            Result := '6'
   except
     Result := NULL_STR;
   end;
@@ -1075,59 +1075,59 @@ begin
   end;
 end;
 
-function _GetWMIValue(const FValue, FClass: string): string;
-var
-  wmiLocator: TSWbemLocator;
-  wmiServices: ISWbemServices;
-  wmiObjectSet: ISWbemObjectSet;
-  wmiObject: ISWbemObject;
-  wmiRefresher: ISWbemRefresher;
-  Enum: IEnumVariant;
-  ovVar: OleVariant;
-  ovResult: OleVariant;
-  iCount: Cardinal;
-  prop: ISWBEMProperty;
-begin
-  try
-    wmiLocator   := TSWbemLocator.Create(nil);
-    wmiRefresher := CoSWbemRefresher.Create;
-    try
-      wmiServices := wmiLocator.ConnectServer
-      (
-        '.',
-        'root\cimv2',
-        '',
-        '',
-        '', '', 0, nil
-      );
-
-      // Obtain an instance of the WMI class
-      wmiObjectSet := wmiServices.ExecQuery
-      (
-        'SELECT ' + FValue + ' FROM ' + FClass,
-        'WQL',
-        wbemFlagReturnImmediately,
-        nil
-      );
-
-      // Replicate VBScript's "for each" construct
-      Enum := (wmiObjectSet._NewEnum) as IEnumVariant;
-      while (Enum.Next(1, ovVar, iCount) = S_OK) do
-      begin
-        wmiObject := IUnknown(ovVar) as ISWBemObject;
-        prop      := wmiObject.Properties_.Item(FValue, 0);
-        ovResult  := prop.Get_Value;
-        if (not VarIsNull(ovResult)) and (not VarIsEmpty(ovResult)) then
-          Result := Trim(ovResult);
-        Break;
-      end;
-    finally
-      wmiLocator.Free;
-    end;
-  except
-    Result := '';
-  end;
-end;
+//function _GetWMIValue(const FValue, FClass: string): string;
+//var
+//  wmiLocator: TSWbemLocator;
+//  wmiServices: ISWbemServices;
+//  wmiObjectSet: ISWbemObjectSet;
+//  wmiObject: ISWbemObject;
+//  wmiRefresher: ISWbemRefresher;
+//  Enum: IEnumVariant;
+//  ovVar: OleVariant;
+//  ovResult: OleVariant;
+//  iCount: Cardinal;
+//  prop: ISWBEMProperty;
+//begin
+//  try
+//    wmiLocator   := TSWbemLocator.Create(nil);
+//    wmiRefresher := CoSWbemRefresher.Create;
+//    try
+//      wmiServices := wmiLocator.ConnectServer
+//      (
+//        '.',
+//        'root\cimv2',
+//        '',
+//        '',
+//        '', '', 0, nil
+//      );
+//
+//      // Obtain an instance of the WMI class
+//      wmiObjectSet := wmiServices.ExecQuery
+//      (
+//        'SELECT ' + FValue + ' FROM ' + FClass,
+//        'WQL',
+//        wbemFlagReturnImmediately,
+//        nil
+//      );
+//
+//      // Replicate VBScript's "for each" construct
+//      Enum := (wmiObjectSet._NewEnum) as IEnumVariant;
+//      while (Enum.Next(1, ovVar, iCount) = S_OK) do
+//      begin
+//        wmiObject := IUnknown(ovVar) as ISWBemObject;
+//        prop      := wmiObject.Properties_.Item(FValue, 0);
+//        ovResult  := prop.Get_Value;
+//        if (not VarIsNull(ovResult)) and (not VarIsEmpty(ovResult)) then
+//          Result := Trim(ovResult);
+//        Break;
+//      end;
+//    finally
+//      wmiLocator.Free;
+//    end;
+//  except
+//    Result := '';
+//  end;
+//end;
 
 function _GenerateGUID: string;
 var

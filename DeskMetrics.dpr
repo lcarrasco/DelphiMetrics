@@ -25,7 +25,6 @@ uses
   dskMetricsInternals in 'dskMetricsInternals.pas',
   dskMetricsConsts in 'dskMetricsConsts.pas',
   dskMetricsVars in 'dskMetricsVars.pas',
-  dskMetricsWMI in 'dskMetricsWMI.pas',
   dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas',
   dskMetricsCommon in 'dskMetricsCommon.pas',
   dskMetricsWinInfo in 'dskMetricsWinInfo.pas',

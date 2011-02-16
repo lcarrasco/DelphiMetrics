@@ -41,7 +41,6 @@
 			<DCCReference Include="dskMetricsInternals.pas"/>
 			<DCCReference Include="dskMetricsConsts.pas"/>
 			<DCCReference Include="dskMetricsVars.pas"/>
-			<DCCReference Include="dskMetricsWMI.pas"/>
 			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<DCCReference Include="dskMetricsCommon.pas"/>
 			<DCCReference Include="dskMetricsWinInfo.pas"/>

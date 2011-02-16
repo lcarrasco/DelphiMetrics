@@ -2,5 +2,6 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2011/02/14 13:26:44.994.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsBase64.pas</Transaction>
+    <Transaction>2011/02/16 12:14:05.188.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsWMI.pas=</Transaction>
   </Transactions>
 </BorlandProject>
