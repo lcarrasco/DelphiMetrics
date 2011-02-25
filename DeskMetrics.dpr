@@ -471,7 +471,7 @@ begin
         FNameTemp     := Trim(FName);
         FValueTemp    := Trim(FValue);
 
-        FJSONData := '{"tp":"ctDR","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+        FJSONData := '{"tp":"ctDR","ID":"' + _GetUserID + '","aver":"' + FAppVersion + '","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
 
         { Send HTTP request }
         _SendPost(FErrorID, API_SENDDATA);
