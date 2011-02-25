@@ -301,6 +301,21 @@ object frm_Main: Tfrm_Main
     Height = 15
     Caption = 'lblDLLStatus'
   end
+  object btnTrackAll: TButton
+    Left = 485
+    Top = 14
+    Width = 71
+    Height = 25
+    Caption = 'Track All'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    OnClick = btnTrackAllClick
+  end
   object pnlData: TPanel
     Left = 1
     Top = 79
@@ -310,17 +325,10 @@ object frm_Main: Tfrm_Main
     Color = 15987699
     ParentBackground = False
     ShowCaption = False
-    TabOrder = 0
+    TabOrder = 1
     object Bevel1: TBevel
       Left = 21
       Top = 195
-      Width = 246
-      Height = 11
-      Shape = bsTopLine
-    end
-    object Bevel2: TBevel
-      Left = 309
-      Top = 383
       Width = 246
       Height = 11
       Shape = bsTopLine
@@ -398,19 +406,6 @@ object frm_Main: Tfrm_Main
       Width = 100
       Height = 18
       Caption = 'Tracking Logs'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object lblTrackingWindows: TLabel
-      Left = 309
-      Top = 362
-      Width = 128
-      Height = 18
-      Caption = 'Tracking Windows'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -15
@@ -578,27 +573,12 @@ object frm_Main: Tfrm_Main
       TabOrder = 5
       OnClick = btnTrackEventValueClick
     end
-    object btnTrackWindow: TButton
-      Left = 309
-      Top = 394
-      Width = 246
-      Height = 25
-      Caption = 'Track Window'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 6
-      OnClick = btnTrackWindowClick
-    end
     object edtCustomData: TEdit
       Left = 311
       Top = 70
       Width = 167
       Height = 23
-      TabOrder = 7
+      TabOrder = 6
       Text = '30330150'
     end
     object edtCustomDataR: TEdit
@@ -606,7 +586,7 @@ object frm_Main: Tfrm_Main
       Top = 130
       Width = 167
       Height = 23
-      TabOrder = 8
+      TabOrder = 7
       Text = 'your@email.com'
     end
     object edtLogs: TEdit
@@ -614,7 +594,7 @@ object frm_Main: Tfrm_Main
       Top = 206
       Width = 163
       Height = 23
-      TabOrder = 9
+      TabOrder = 8
       Text = 'A simple text message'
     end
     object edtProxyPass: TEdit
@@ -623,7 +603,7 @@ object frm_Main: Tfrm_Main
       Width = 69
       Height = 23
       PasswordChar = '*'
-      TabOrder = 10
+      TabOrder = 9
       Text = 'Password'
     end
     object edtProxyPort: TEdit
@@ -632,7 +612,7 @@ object frm_Main: Tfrm_Main
       Width = 69
       Height = 23
       NumbersOnly = True
-      TabOrder = 11
+      TabOrder = 10
       Text = '8080'
     end
     object edtProxyServer: TEdit
@@ -640,7 +620,7 @@ object frm_Main: Tfrm_Main
       Top = 204
       Width = 167
       Height = 23
-      TabOrder = 12
+      TabOrder = 11
       Text = 'my.proxy.com'
     end
     object edtProxyUser: TEdit
@@ -648,7 +628,7 @@ object frm_Main: Tfrm_Main
       Top = 237
       Width = 167
       Height = 23
-      TabOrder = 13
+      TabOrder = 12
       Text = 'Username'
     end
     object rb1: TRadioButton
@@ -664,7 +644,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 14
+      TabOrder = 13
       TabStop = True
     end
     object rb2: TRadioButton
@@ -679,7 +659,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 15
+      TabOrder = 14
     end
     object btnTrackException: TButton
       Left = 311
@@ -693,7 +673,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 16
+      TabOrder = 15
       OnClick = btnTrackExceptionClick
     end
     object btnTrackEventTime: TButton
@@ -708,7 +688,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 17
+      TabOrder = 16
       OnClick = btnTrackEventTimeClick
     end
     object btnTrackLicense: TButton
@@ -723,7 +703,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 18
+      TabOrder = 17
       OnClick = btnTrackLicenseClick
     end
     object btnSync: TButton
@@ -738,7 +718,7 @@ object frm_Main: Tfrm_Main
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
-      TabOrder = 19
+      TabOrder = 18
       OnClick = btnSyncClick
     end
     object pnlLicense: TPanel
@@ -747,7 +727,7 @@ object frm_Main: Tfrm_Main
       Width = 248
       Height = 43
       BevelOuter = bvNone
-      TabOrder = 20
+      TabOrder = 19
       object rbFree: TRadioButton
         Left = 8
         Top = 3
@@ -821,20 +801,5 @@ object frm_Main: Tfrm_Main
         TabOrder = 4
       end
     end
-  end
-  object btnTrackAll: TButton
-    Left = 485
-    Top = 14
-    Width = 71
-    Height = 25
-    Caption = 'Track All'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Arial'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 1
-    OnClick = btnTrackAllClick
   end
 end

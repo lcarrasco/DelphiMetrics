@@ -26,15 +26,11 @@ var
 
   FThreadSafe: TCriticalSection;
 
-  FThreadStart: TPostThread = nil;
-  FThreadStop: TPostThread = nil;
-
   FLastErrorID: Integer;
 
   FException: Exception;
 
   FStarted: Boolean;
-  FStopped: Boolean;
   FEnabled: Boolean;
 
   FDebugMode: Boolean;
@@ -56,10 +52,6 @@ var
   FPostTimeOut: Integer;
   FPostAgent: string;
   FPostWaitResponse: Boolean;
-
-  FDailyData: Integer;
-  FCurrentDailyData: Integer;
-  FMaxStorage: Integer;
 
   FProxyServer: string;
   FProxyPort: Integer;

@@ -21,7 +21,6 @@ program AppExample;
 uses
   Forms,
   frmMain in 'frmMain.pas' {frm_Main},
-  frmAnotherWindow in 'frmAnotherWindow.pas' {frmAnother},
   frmCustomerExperience in 'frmCustomerExperience.pas' {frm_CustomerExperience};
 
 {$R *.res}
@@ -30,7 +29,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(Tfrm_Main, frm_Main);
-  Application.CreateForm(TfrmAnother, frmAnother);
   Application.CreateForm(Tfrm_CustomerExperience, frm_CustomerExperience);
   Application.Run;
 end.

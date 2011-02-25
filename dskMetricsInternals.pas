@@ -79,17 +79,14 @@ function _LoadUserIDReg: string;
 { Internal General Functions }
 function _SetAppID(const FApplicationID: string): Boolean;
 function _GetAppID: string;
-function _SetAppVersion (const FVersion: string): Boolean;
 function _GetAppVersion: string;
 
 { Internal Debug / Test Mode }
 function  _SetDebugMode(const FEnabled: Boolean): Boolean;
 function  _GetDebugMode: Boolean;
 function  _GetDebugData: string;
-
-{ Internal Logs }
-function  _InsertLogText(const FFunction: string; const FErrorID: Integer): Boolean;
-function  _SaveTestLogFile(const FFileName: string): Boolean;
+function  _DebugLog(const FFunction: string; const FErrorID: Integer): Boolean;
+function  _SaveDebugFile(const FFileName: string): Boolean;
 
 { Internal Cache Mode }
 function _CheckCacheFile: Boolean;
@@ -98,53 +95,15 @@ function _GetCacheData: string;
 function _GetCacheSize: Int64;
 function _SaveCacheFile: Boolean;
 
-{ Analytics Status }
+{ Component Mode Status }
 function _SetStarted(const FEnabled: Boolean): Boolean;
 function _GetStarted: Boolean;
-function _SetStopped(const FEnabled: Boolean): Boolean;
-function _GetStopped: Boolean;
-
-{ Network Bandwidth }
-function _GetMaxDailyNetwork: Integer;
-function _SetMaxDailyNetwork(const FSize: Integer): Boolean;
-
-{ Storage File }
-function _GetMaxStorageFile: Integer;
-function _SetMaxStorageFile(const FSize: Integer): Boolean;
 
 { Internal Errors Functions }
 function _ErrorToString(const FErrorID: Integer): string;
 
-{ WMI Functions }
-// function _GetWMIValue(const FValue, FClass: string): string;
-
 { GUID Functions }
 function _GenerateGUID: string;
-
-{ Stop Thread }
-//type
-//  TStopThread = class(TThread)
-//  protected
-//    procedure Execute; override;
-//  public
-//    constructor Create;
-//    destructor Destroy; override;
-//end;
-
-{ Post Thread }
-type
-  TPostThread = class (TThread)
-  private
-    FErrorID: Integer;
-    FAction: string;
-    FResponse: string;
-    FJSON: string;
-  protected
-    procedure Execute; override;
-  public
-    constructor Create(JSON: string; Action: string; ErrorID: Integer);
-    destructor Destroy; override;
-  end;
 
 implementation
 
@@ -172,15 +131,6 @@ begin
   end;
 end;
 
-function _SetAppVersion(const FVersion: string): Boolean;
-begin
-  try
-    FAppVersion := FVersion;
-    Result      := True;
-  except
-    Result      := False;
-  end;
-end;
 
 function _GetAppVersion: string;
 begin
@@ -222,25 +172,34 @@ begin
   end;
 end;
 
-function _InsertLogText(const FFunction: string; const FErrorID: Integer): Boolean;
+function _DebugLog(const FFunction: string; const FErrorID: Integer): Boolean;
 begin
   try
     FDebugData := FDebugData + '[' + _GetTimeStamp + '] Method ' + FFunction  + ' (Error: ' + IntToStr(FErrorID) + ' - ' + _ErrorToString(FErrorID) + ')';
-    Result    :=_SaveTestLogFile(LOGFILENAME);
+    Result    :=_SaveDebugFile(LOGFILENAME);
   except
     Result    := False;
   end;
 end;
 
-function _SaveTestLogFile(const FFileName: string): Boolean;
+function _SaveDebugFile(const FFileName: string): Boolean;
 var
   FFile : TextFile;
+  FTempFolder: string;
 begin
   Result := True;
   try
-    AssignFile(FFile,IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + FFileName);
+    FTempFolder := _GetTemporaryFolder;
+
+    if (FTempFolder = '') or (DirectoryExists(FTempFolder) = False) then
+    begin
+      Result := False;
+      Exit;
+    end;
+
+    AssignFile(FFile, FTempFolder + FFileName);
     try
-      if FileExists(IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + FFileName) then
+      if FileExists(FTempFolder + FFileName) then
         Append(FFile)
       else
         Rewrite(FFile);
@@ -309,7 +268,14 @@ begin
         _SaveUserIDReg(Result);
       end
       else
+      begin
         Result := Trim(_LoadUserIDReg);
+        if Result = '' then
+        begin
+          Result := Trim(_GenerateUserID);
+          _SaveUserIDReg(Result);
+        end;
+      end;
     end
     else
       Result := Trim(FUserID);
@@ -344,13 +310,12 @@ var
 begin
   Result := False;
   try
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := REGROOTKEY;
-      if FRegistry.OpenKey(REGPATH, True) then
+      if FRegistry.OpenKey(REGPATH, False) then
       begin
-        Result := FRegistry.ValueExists('ID');
-        if Result then
+        if FRegistry.ValueExists('ID') then
           Result := FRegistry.ReadString('ID') <> '';
       end;
     finally
@@ -367,7 +332,7 @@ var
 begin
   Result := False;
   try
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := REGROOTKEY;
       if FRegistry.OpenKey(REGPATH, True) then
@@ -386,10 +351,10 @@ var
 begin
   Result := '';
   try
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := REGROOTKEY;
-      if FRegistry.OpenKey(REGPATH, True) then
+      if FRegistry.OpenKey(REGPATH, False) then
       begin
         if FRegistry.ValueExists('ID') then;
           Result := FRegistry.ReadString('ID');
@@ -406,9 +371,9 @@ function _GetFlowNumber: string;
 begin
   try
     FFlowNumber := FFlowNumber + 1;
-    Result      := Trim(IntToStr(FFlowNumber));
+    Result      := IntToStr(FFlowNumber);
   except
-    Result := '0';
+    Result := '-1';
   end;
 end;
 
@@ -488,7 +453,7 @@ var
 begin
   Result := NONE_STR;
   try
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
       if FRegistry.OpenKeyReadOnly('\SOFTWARE\JavaSoft\Java Runtime Environment') then
@@ -513,7 +478,7 @@ begin
     FVersion     := NONE_STR;
     FServicePack := -1;
 
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
 
@@ -618,7 +583,7 @@ var
   FRegistry: TRegistry;
 begin
   try
-    FRegistry := TRegistry.Create;
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
       if FRegistry.OpenKeyReadOnly('\HARDWARE\DESCRIPTION\System\CentralProcessor\0') then
@@ -794,13 +759,6 @@ begin
   try
     FJSONTemp := FJSONData;
 
-    { have bandwidth? }
-    if (FCurrentDailyData >= _GetMaxDailyNetwork) and (_GetMaxDailyNetwork <> -1) then
-    begin
-      FErrorID := 9;
-      Exit;
-    end;
-
     { check type - WebService API Call }
     if FAction = API_SENDDATA then
     begin
@@ -880,9 +838,6 @@ begin
                 end;
               end;
             end;
-
-            if _GetMaxDailyNetwork <> -1 then
-              FCurrentDailyData := FCurrentDailyData + (SizeOf(Result) * Length(Result));
           end
           else
             FErrorID := 6;
@@ -1049,46 +1004,6 @@ begin
   end;
 end;
 
-{ Network Bandwidth }
-function _GetMaxDailyNetwork: Integer;
-begin
-  try
-    Result := FDailyData;
-  except
-    Result := MAXDAILYNETWORK;
-  end;
-end;
-
-function _SetMaxDailyNetwork(const FSize: Integer): Boolean;
-begin
-  try
-    FDailyData := FSize;
-    Result     := True;
-  except
-    Result := False;
-  end;
-end;
-
-{ Storage File }
-function _GetMaxStorageFile: Integer;
-begin
-  try
-    Result := FMaxStorage;
-  except
-    Result := MAXSTORAGEDATA;
-  end;
-end;
-
-function _SetMaxStorageFile(const FSize: Integer): Boolean;
-begin
-  Result := True;
-  try
-    FMaxStorage := FSize;
-  except
-    Result := False;
-  end;
-end;
-
 function _SetStarted(const FEnabled: Boolean): Boolean;
 begin
   Result   := True;
@@ -1108,24 +1023,6 @@ begin
   end;
 end;
 
-function _SetStopped(const FEnabled: Boolean): Boolean;
-begin
-  Result := True;
-  try
-    FStopped := FEnabled;
-  except
-    Result := False;
-  end;
-end;
-function _GetStopped: Boolean;
-begin
-  try
-    Result := FStopped;
-  except
-    Result := False;
-  end;
-end;
-
 { Internal Cache Mode }
 
 function _CheckCacheFile: Boolean;
@@ -1135,10 +1032,7 @@ begin
     if (FLastErrorID = 0) then
       _DeleteCacheFile
     else
-    begin
-      if (_GetCacheSize < _GetMaxStorageFile) then
-        _SaveCacheFile;
-    end;
+      _SaveCacheFile;
   except
     Result := False;
   end;
@@ -1169,7 +1063,7 @@ begin
       try
         Reset(FFile);
         ReadLn(FFile, FData);
-        Result := Base64DecodeStr(FData);
+        Result := string(Base64DecodeStr(AnsiString(FData)));
       finally
         CloseFile(FFile);
       end;
@@ -1237,7 +1131,7 @@ begin
       else
         Rewrite(FFile);
 
-      Write(FFile, Base64EncodeStr(FJSONData));
+      Write(FFile, Base64EncodeStr(AnsiString(FJSONData)));
 
       SetFileAttributes(PChar(FFileName), faHidden);
     finally
@@ -1263,146 +1157,6 @@ begin
   except
     Result := False;
   end;
-end;
-
-{ TPostThread }
-
-constructor TPostThread.Create(JSON: string; Action: string; ErrorID: Integer);
-begin
-  FJSON := JSON;
-  FAction  := Action;
-  FErrorID := ErrorID;
-
-  inherited Create(True);
-end;
-
-destructor TPostThread.Destroy;
-begin
-  inherited Destroy;
-end;
-
-procedure TPostThread.Execute;
-var
-  hint,hconn,hreq:hinternet;
-  hdr: UTF8String;
-  buf:array[0..READBUFFERSIZE-1] of AnsiChar;
-  bufsize:dword;
-  i,flags:integer;
-  data: UTF8String;
-  dwSize, dwFlags: DWORD;
-begin
-  if not Terminated then
-  begin
-    FErrorID  := 0;
-    try
-      { have bandwidth? }
-      if (FCurrentDailyData >= _GetMaxDailyNetwork) and (_GetMaxDailyNetwork <> -1) then
-      begin
-        FErrorID := 9;
-        Exit;
-      end;
-
-      { check type - WebService API Call }
-      if FAction = API_SENDDATA then
-      begin
-        hdr       := UTF8Encode('Content-Type: application/json');
-        data      := UTF8Encode('[' + FJSON + ']');
-      end;
-
-      hint := InternetOpenW(PChar(FPostAgent),INTERNET_OPEN_TYPE_PRECONFIG,nil,nil,0);
-      if hint = nil then
-      begin
-        FErrorID := 2;
-        Exit;
-      end;
-
-      try
-        { Set HTTP request timeout }
-        if FPostTimeOut > 0 then
-        begin
-          InternetSetOption(hint, INTERNET_OPTION_CONNECT_TIMEOUT, @FPostTimeOut, SizeOf(FPostTimeOut));
-          InternetSetOption(hint, INTERNET_OPTION_SEND_TIMEOUT,    @FPostTimeOut, SizeOf(FPostTimeOut));
-          InternetSetOption(hint, INTERNET_OPTION_RECEIVE_TIMEOUT, @FPostTimeOut, SizeOf(FPostTimeOut));
-        end;
-
-        { Set HTTP port }
-        hconn := InternetConnect(hint,PChar(FAppID + FPostServer),FPostPort,nil,nil,INTERNET_SERVICE_HTTP,0,1);
-        if hconn = nil then
-        begin
-          FErrorID := 3;
-          Exit;
-        end;
-
-        try
-          if FPostPort = INTERNET_DEFAULT_HTTPS_PORT then
-            flags := INTERNET_FLAG_NO_UI or INTERNET_FLAG_SECURE or INTERNET_FLAG_IGNORE_CERT_CN_INVALID or INTERNET_FLAG_IGNORE_CERT_DATE_INVALID
-          else
-            flags := INTERNET_FLAG_NO_UI;
-
-          hreq := HttpOpenRequest(hconn, 'POST', PChar(FAction), nil, nil, nil, flags, 1);
-          if Assigned(hreq) and (FPostPort = INTERNET_DEFAULT_HTTPS_PORT) then
-          begin
-            dwSize := SizeOf(dwFlags);
-            if (InternetQueryOption(hreq, INTERNET_OPTION_SECURITY_FLAGS, @dwFlags, dwSize)) then
-            begin
-              dwFlags := dwFlags or SECURITY_FLAG_IGNORE_UNKNOWN_CA;
-              if not (InternetSetOption(hreq, INTERNET_OPTION_SECURITY_FLAGS, @dwFlags, dwSize)) then
-                FErrorID := 4;
-            end
-            else
-              FErrorID := 5;  //InternetQueryOption failed
-          end;
-
-          if hreq = nil then
-          begin
-            FErrorID := 2;
-            Exit;
-          end;
-
-          try
-            if HttpSendRequestA(hreq,PAnsiChar(hdr),Length(hdr),PAnsiChar(Data),Length(Data)) then
-            begin
-              if (FPostWaitResponse) then
-              begin
-                { Read server Response }
-                bufsize := READBUFFERSIZE;
-                while (bufsize > 0) do
-                begin
-                  if not InternetReadFile(hreq,@buf,READBUFFERSIZE,bufsize) then
-                  begin
-                    FErrorID := 7;
-                    Break;
-                  end;
-
-                  if (bufsize > 0) and (bufsize <= READBUFFERSIZE) then
-                  begin
-                    for i := 0 to bufsize - 1 do
-                      FResponse := FResponse + string(buf[i]);
-                  end;
-                end;
-              end;
-
-              if _GetMaxDailyNetwork <> -1 then
-                FCurrentDailyData := FCurrentDailyData + (SizeOf(FResponse) * Length(FResponse));
-            end
-            else
-              FErrorID := 6;
-          finally
-            InternetCloseHandle(hreq);
-          end;
-        finally
-          InternetCloseHandle(hconn);
-        end;
-      finally
-        InternetCloseHandle(hint);
-      end;
-    except
-      FResponse   := '';
-      FErrorID := 5;
-    end;
-  end;
-  { Returning from the Execute function effectively terminate the thread  }
-  ReturnValue := 0;
 end;
 
 end.

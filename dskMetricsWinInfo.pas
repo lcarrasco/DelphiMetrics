@@ -57,33 +57,14 @@ uses
   dskMetricsConsts, dskMetricsCommon;
 
 function _GetOperatingSystemArchictetureInternal: Integer;
-type
-  TIsWow64Process = function(
-    Handle: THandle;
-    var Res: BOOL
-  ): BOOL; stdcall;
-var
-  IsWow64Result: BOOL;
-  IsWow64Process: TIsWow64Process;
 begin
-  Result := 32;
   try
-      // Try to load required function from kernel32
-      IsWow64Process := _LoadKernelFunc('IsWow64Process');
-      if Assigned(IsWow64Process) then
-      begin
-        // Function is implemented: call it
-        if not IsWow64Process(GetCurrentProcess, IsWow64Result) then
-          Result := 32;
-
-        // Return result of function
-        if IsWow64Result then
-          Result := 64;
-      end
-      else
+    if GetEnvironmentVariable('ProgramW6432') <> '' then
+      Result := 64
+    else
       Result := 32;
   except
-    Result := 32;
+    Result := -1;
   end;
 end;
 

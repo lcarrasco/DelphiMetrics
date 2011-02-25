@@ -20,6 +20,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
 			<DCC_DependencyCheckOutputName>DeskMetrics.dll</DCC_DependencyCheckOutputName>
 			<GenDll>true</GenDll>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
@@ -76,7 +77,7 @@
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">1</VersionInfo>
 						<VersionInfo Name="MinorVer">7</VersionInfo>
-						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Release">1</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -89,13 +90,13 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription">DeskMetrics DLL Component</VersionInfoKeys>
-						<VersionInfoKeys Name="FileVersion">1.7.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.7.1.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">DeskMetrics</VersionInfoKeys>
-						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalCopyright">Copyright (c) 2011 DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalTrademarks"/>
 						<VersionInfoKeys Name="OriginalFilename">DeskMetrics.dll</VersionInfoKeys>
 						<VersionInfoKeys Name="ProductName">DeskMetrics</VersionInfoKeys>
-						<VersionInfoKeys Name="ProductVersion">1.7.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">1.7.1.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
@@ -589,5 +590,5 @@ Count mtException_AntiFreeze=1
 mtException_AntiFreeze0="The application seems to be frozen."
 Count mtInvalidEmailMsg=1
 mtInvalidEmailMsg0="Invalid email."
-TextsCollection=English
+TextsCollection=
 EurekaLog Last Line -->

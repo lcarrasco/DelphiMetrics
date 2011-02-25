@@ -16,8 +16,8 @@
 //                                                           //
 // **********************************************************//
 
-typedef bool (__stdcall *_DeskMetricsStart)(LPCWSTR FApplicationID, LPCWSTR FApplicationVersion, bool FRealTime);
-typedef bool (__stdcall *_DeskMetricsStartA)(LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, bool FRealTime);
+typedef bool (__stdcall *_DeskMetricsStart)(LPCWSTR FApplicationID, LPCWSTR FApplicationVersion);
+typedef bool (__stdcall *_DeskMetricsStartA)(LPCTSTR FApplicationID, LPCTSTR FApplicationVersion);
 typedef bool (__stdcall *_DeskMetricsStop)();
 
 typedef bool (__stdcall *_DeskMetricsSendData)();
@@ -28,17 +28,8 @@ typedef void (__stdcall *_DeskMetricsTrackEventA)(LPCTSTR FEventCategory, LPCTST
 typedef void (__stdcall *_DeskMetricsTrackEventValue)(LPCWSTR FEventCategory, LPCWSTR FEventName, LPCWSTR FEventValue);
 typedef void (__stdcall *_DeskMetricsTrackEventValueA)(LPCTSTR FEventCategory, LPCTSTR FEventName, LPCTSTR FEventValue);
 
-typedef void (__stdcall *_DeskMetricsTrackEventStart)(LPCWSTR FEventCategory, LPCWSTR FEventName);
-typedef void (__stdcall *_DeskMetricsTrackEventStartA)(LPCTSTR FEventCategory, LPCTSTR FEventName);
-
-typedef void (__stdcall *_DeskMetricsTrackEventStop)(LPCWSTR FEventCategory, LPCWSTR FEventName);
-typedef void (__stdcall *_DeskMetricsTrackEventStopA)(LPCTSTR FEventCategory, LPCTSTR FEventName);
-
-typedef void (__stdcall *_DeskMetricsTrackEventCancel)(LPCWSTR FEventCategory, LPCWSTR FEventName);
-typedef void (__stdcall *_DeskMetricsTrackEventCancelA)(LPCTSTR FEventCategory, LPCTSTR FEventName);
-
-typedef void (__stdcall *_DeskMetricsTrackEventPeriod)(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime);
-typedef void (__stdcall *_DeskMetricsTrackEventPeriodA)(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime);
+typedef void (__stdcall *_DeskMetricsTrackEventPeriod)(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime, bool FEventCompleted);
+typedef void (__stdcall *_DeskMetricsTrackEventPeriodA)(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime, bool FEventCompleted);
 
 typedef void (__stdcall *_DeskMetricsTrackLog)(LPCWSTR FMessage);
 typedef void (__stdcall *_DeskMetricsTrackLogA)(LPCTSTR FMessage);
@@ -46,16 +37,10 @@ typedef void (__stdcall *_DeskMetricsTrackLogA)(LPCTSTR FMessage);
 typedef void (__stdcall *_DeskMetricsTrackCustomData)(LPCWSTR FName, LPCWSTR FValue);
 typedef void (__stdcall *_DeskMetricsTrackCustomDataA)(LPCTSTR FName, LPCTSTR FValue);
 
-typedef int (__stdcall *_DeskMetricsTrackCustomDataR)(LPCWSTR FApplicationID, LPCWSTR FAppVersion, LPCWSTR FName, LPCWSTR FValue); 
-typedef int (__stdcall *_DeskMetricsTrackCustomDataRA)(LPCTSTR FApplicationID, LPCTSTR FAppVersion, LPCTSTR FName, LPCTSTR FValue); 
+typedef int (__stdcall *_DeskMetricsTrackCustomDataR)(LPCWSTR FName, LPCWSTR FValue); 
+typedef int (__stdcall *_DeskMetricsTrackCustomDataRA)(LPCTSTR FName, LPCTSTR FValue); 
 
 //typedef void (__stdcall *_DeskMetricsTrackException)(LPCWSTR FExceptionMessage, LPCWSTR FExceptionType);
-
-typedef int (__stdcall *_DeskMetricsTrackInstallation)(LPCWSTR FApplicationID, LPCWSTR FAppVersion);
-typedef int (__stdcall *_DeskMetricsTrackInstallationA)(LPCTSTR FApplicationID, LPCTSTR FAppVersion);
-
-typedef int (__stdcall *_DeskMetricsTrackUninstallation)(LPCWSTR FApplicationID, LPCWSTR FAppVersion);
-typedef int (__stdcall *_DeskMetricsTrackUninstallationA)(LPCTSTR FApplicationID, LPCTSTR FAppVersion);
 
 typedef bool (__stdcall *_DeskMetricsSetProxy)(LPCWSTR FHostIP, int FPort, LPCWSTR FUserName, LPCWSTR FPassword);
 typedef bool (__stdcall *_DeskMetricsSetProxyA)(LPCTSTR FHostIP, int FPort, LPCTSTR FUserName, LPCTSTR FPassword);
@@ -90,20 +75,13 @@ typedef bool (__stdcall *_DeskMetricsGetDebugMode)();
 typedef LPCWSTR (__stdcall *_DeskMetricsGetJSON)();
 typedef LPCTSTR (__stdcall *_DeskMetricsGetJSONA)();
 
-typedef int (__stdcall *_DeskMetricsGetDailyNetworkUtilizationInKB)();
-typedef bool (__stdcall *_DeskMetricsSetDailyNetworkUtilizationInKB)(int FDataSize);
-
-typedef int (__stdcall *_DeskMetricsGetMaxStorageSizeInKB)();
-typedef bool (__stdcall *_DeskMetricsSetMaxStorageSizeInKB)(int FDataSize);
-
-
 //////////////////////////////////////////////////////////////////////////////
 
 bool DeskMetricsLoadLibrary ();
 void DeskMetricsUnloadLibrary ();
 
-bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion, bool FRealTime);
-bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, bool FRealTime);
+bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion);
+bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion);
 
 bool DeskMetricsStop ();
 
@@ -118,17 +96,8 @@ void DeskMetricsTrackEventA(LPCTSTR FEventCategory, LPCTSTR FEventName);
 void DeskMetricsTrackEventValue(LPCWSTR FEventCategory, LPCWSTR FEventName, LPCWSTR FEventValue);
 void DeskMetricsTrackEventValueA(LPCTSTR FEventCategory, LPCTSTR FEventName, LPCTSTR FEventValue);
 
-void DeskMetricsTrackEventStart(LPCWSTR FEventCategory, LPCWSTR FEventName);
-void DeskMetricsTrackEventStartA(LPCTSTR FEventCategory, LPCTSTR FEventName); 
-
-void DeskMetricsTrackEventStop(LPCWSTR FEventCategory, LPCWSTR FEventName);
-void DeskMetricsTrackEventStopA(LPCTSTR FEventCategory, LPCTSTR FEventName); 
-
-void DeskMetricsTrackEventCancel(LPCWSTR FEventCategory, LPCWSTR FEventName); 
-void DeskMetricsTrackEventCancelA(LPCTSTR FEventCategory, LPCTSTR FEventName); 
-
-void DeskMetricsTrackEventPeriod(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime);
-void DeskMetricsTrackEventPeriodA(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime);
+void DeskMetricsTrackEventPeriod(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime, bool FEventCompleted);
+void DeskMetricsTrackEventPeriodA(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime, bool FEventCompleted);
 
 void DeskMetricsTrackLog(LPCWSTR FMessage);
 void DeskMetricsTrackLogA(LPCTSTR FMessage);
@@ -136,16 +105,10 @@ void DeskMetricsTrackLogA(LPCTSTR FMessage);
 void DeskMetricsTrackCustomData(LPCWSTR FName, LPCWSTR FValue);
 void DeskMetricsTrackCustomDataA(LPCTSTR FName, LPCTSTR FValue);
 
-int DeskMetricsTrackCustomDataR(LPCWSTR FApplicationID, LPCWSTR FAppVersion, LPCWSTR FName, LPCWSTR FValue);
-int DeskMetricsTrackCustomDataRA(LPCTSTR FApplicationID, LPCTSTR FAppVersion, LPCTSTR FName, LPCTSTR FValue);
+int DeskMetricsTrackCustomDataR(LPCWSTR FName, LPCWSTR FValue);
+int DeskMetricsTrackCustomDataRA(LPCTSTR FName, LPCTSTR FValue);
 
 //void DeskMetricsTrackException(LPCWSTR FExceptionMessage, LPCWSTR FExceptionType);
-
-int DeskMetricsTrackInstallation(LPCWSTR FApplicationID, LPCWSTR FAppVersion);
-int DeskMetricsTrackInstallationA(LPCTSTR FApplicationID, LPCTSTR FAppVersion);
-
-int DeskMetricsTrackUninstallation(LPCWSTR FApplicationID, LPCWSTR FAppVersion);
-int DeskMetricsTrackUninstallationA(LPCTSTR FApplicationID, LPCTSTR FAppVersion);
 
 bool DeskMetricsSetProxy (LPCWSTR FHostIP, int FPort, LPCWSTR FUserName, LPCWSTR FPassword);
 bool DeskMetricsSetProxyA (LPCTSTR FHostIP, int FPort, LPCTSTR FUserName, LPCTSTR FPassword);
@@ -176,9 +139,3 @@ bool DeskMetricsGetDebugMode();
 
 LPCWSTR DeskMetricsGetJSON();
 LPCTSTR DeskMetricsGetJSONA();
-
-int DeskMetricsGetDailyNetworkUtilizationInKB();
-bool DeskMetricsSetDailyNetworkUtilizationInKB(int FDataSize);
-
-int DeskMetricsGetMaxStorageSizeInKB();
-bool DeskMetricsSetMaxStorageSizeInKB(int FDataSize);

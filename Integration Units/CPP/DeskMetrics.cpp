@@ -45,7 +45,7 @@ void DeskMetricsUnloadLibrary ()
 	FreeLibrary(hinstLib);
 }
 
-bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion, bool FRealTime)
+bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion)
 {	
 	try
 	{
@@ -57,13 +57,13 @@ bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion, bool
 			if (dskmtsStart == NULL) {
 				return false;
 			}
-			dskmtsStart(FApplicationID, FApplicationVersion, FRealTime);
+			dskmtsStart(FApplicationID, FApplicationVersion);
 		}
 	}
 	catch (...) {}
 }
 
-bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, bool FRealTime)
+bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion)
 {	
 	if (DeskMetricsLoadLibrary())
 	{
@@ -74,7 +74,7 @@ bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion, boo
 			return false;
 		}
 
-		dskmtsStart(FApplicationID, FApplicationVersion, FRealTime);
+		dskmtsStart(FApplicationID, FApplicationVersion);
 	}
 }
 
@@ -153,97 +153,7 @@ void DeskMetricsTrackEventValueA(LPCTSTR FEventCategory, LPCTSTR FEventName, LPC
 	}
 }
 
-void DeskMetricsTrackEventStart(LPCWSTR FEventCategory, LPCWSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventStart dskmtsTrackEventStart;
-
-		dskmtsTrackEventStart = (_DeskMetricsTrackEventStart)GetProcAddress(hinstLib, "DeskMetricsTrackEventStart");
-		if (dskmtsTrackEventStart == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventStart(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventStartA(LPCTSTR FEventCategory, LPCTSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventStart dskmtsTrackEventStart;
-
-		dskmtsTrackEventStart = (_DeskMetricsTrackEventStart)GetProcAddress(hinstLib, "DeskMetricsTrackEventStartA");
-		if (dskmtsTrackEventStart == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventStart(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventStop(LPCWSTR FEventCategory, LPCWSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventStop dskmtsTrackEventStop;
-
-		dskmtsTrackEventStop = (_DeskMetricsTrackEventStop)GetProcAddress(hinstLib, "DeskMetricsTrackEventStop");
-		if (dskmtsTrackEventStop == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventStop(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventStopA(LPCTSTR FEventCategory, LPCTSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventStop dskmtsTrackEventStop;
-
-		dskmtsTrackEventStop = (_DeskMetricsTrackEventStop)GetProcAddress(hinstLib, "DeskMetricsTrackEventStopA");
-		if (dskmtsTrackEventStop == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventStop(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventCancel(LPCWSTR FEventCategory, LPCWSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventCancel dskmtsTrackEventCancel;
-
-		dskmtsTrackEventCancel = (_DeskMetricsTrackEventCancel)GetProcAddress(hinstLib, "DeskMetricsTrackEventCancel");
-		if (dskmtsTrackEventCancel == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventCancel(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventCancelA(LPCTSTR FEventCategory, LPCTSTR FEventName) 
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackEventCancel dskmtsTrackEventCancel;
-
-		dskmtsTrackEventCancel = (_DeskMetricsTrackEventCancel)GetProcAddress(hinstLib, "DeskMetricsTrackEventCancelA");
-		if (dskmtsTrackEventCancel == NULL) {
-			return;
-		}
-
-		dskmtsTrackEventCancel(FEventCategory, FEventName);
-	}
-}
-
-void DeskMetricsTrackEventPeriod(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime) 
+void DeskMetricsTrackEventPeriod(LPCWSTR FEventCategory, LPCWSTR FEventName, int FEventTime, bool FEventCompleted) 
 {
 	if (DeskMetricsLoadLibrary())
 	{
@@ -254,12 +164,12 @@ void DeskMetricsTrackEventPeriod(LPCWSTR FEventCategory, LPCWSTR FEventName, int
 			return;
 		}
 
-		dskmtsTrackEventPeriod(FEventCategory, FEventName, FEventTime);
+		dskmtsTrackEventPeriod(FEventCategory, FEventName, FEventTime, FEventCompleted);
 	}
 }
 
 
-void DeskMetricsTrackEventPeriodA(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime) 
+void DeskMetricsTrackEventPeriodA(LPCTSTR FEventCategory, LPCTSTR FEventName, int FEventTime, bool FEventCompleted) 
 {
 	if (DeskMetricsLoadLibrary())
 	{
@@ -270,7 +180,7 @@ void DeskMetricsTrackEventPeriodA(LPCTSTR FEventCategory, LPCTSTR FEventName, in
 			return;
 		}
 
-		dskmtsTrackEventPeriodA(FEventCategory, FEventName, FEventTime);
+		dskmtsTrackEventPeriodA(FEventCategory, FEventName, FEventTime, FEventCompleted);
 	}
 }
 
@@ -335,7 +245,7 @@ void DeskMetricsTrackCustomDataA(LPCTSTR FName, LPCTSTR FValue)
 	}
 }
 
-int DeskMetricsTrackCustomDataR(LPCWSTR FApplicationID, LPCWSTR FAppVersion, LPCWSTR FName, LPCWSTR FValue)
+int DeskMetricsTrackCustomDataR(LPCWSTR FName, LPCWSTR FValue)
 {
 	if (DeskMetricsLoadLibrary())
 	{
@@ -346,11 +256,11 @@ int DeskMetricsTrackCustomDataR(LPCWSTR FApplicationID, LPCWSTR FAppVersion, LPC
 			return -1;
 		}
 
-		return dskmtsTrackCustomDataR(FApplicationID, FAppVersion, FName, FValue);
+		return dskmtsTrackCustomDataR(FName, FValue);
 	}
 }
 
-int DeskMetricsTrackCustomDataRA(LPCTSTR FApplicationID, LPCTSTR FAppVersion, LPCTSTR FName, LPCTSTR FValue)
+int DeskMetricsTrackCustomDataRA(LPCTSTR FName, LPCTSTR FValue)
 {
 	if (DeskMetricsLoadLibrary())
 	{
@@ -361,7 +271,7 @@ int DeskMetricsTrackCustomDataRA(LPCTSTR FApplicationID, LPCTSTR FAppVersion, LP
 			return -1;
 		}
 
-		return dskmtsTrackCustomDataR(FApplicationID, FAppVersion, FName, FValue);
+		return dskmtsTrackCustomDataR(FName, FValue);
 	}
 }
 
@@ -379,66 +289,6 @@ int DeskMetricsTrackCustomDataRA(LPCTSTR FApplicationID, LPCTSTR FAppVersion, LP
 //		dskmtsTrackException(FExceptionMessage, FExceptionType);
 //	}
 //}
-
-int DeskMetricsTrackInstallation(LPCWSTR FApplicationID, LPCWSTR FAppVersion, bool FTestMode)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackInstallationA dskmtsTrackInstallationA;
-
-		dskmtsTrackInstallationA = (_DeskMetricsTrackInstallationA)GetProcAddress(hinstLib, "DeskMetricsTrackInstallation");
-		if (dskmtsTrackInstallationA == NULL) {
-			return -1;
-		}
-
-		return dskmtsTrackInstallationA(FApplicationID, FAppVersion, FTestMode);
-	}
-}
-
-int DeskMetricsTrackInstallationA(LPCTSTR FApplicationID, LPCTSTR FAppVersion)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackInstallationA dskmtsTrackInstallationA;
-
-		dskmtsTrackInstallationA = (_DeskMetricsTrackInstallationA)GetProcAddress(hinstLib, "DeskMetricsTrackInstallationA");
-		if (dskmtsTrackInstallationA == NULL) {
-			return -1;
-		}
-
-		return dskmtsTrackInstallationA(FApplicationID, FAppVersion);
-	}
-}
-
-int DeskMetricsTrackUninstallation(LPCWSTR FApplicationID, LPCWSTR FAppVersion)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackUninstallationA dskmtsTrackUninstallationA;
-
-		dskmtsTrackUninstallationA = (_DeskMetricsTrackUninstallationA)GetProcAddress(hinstLib, "DeskMetricsTrackUninstallation");
-		if (dskmtsTrackUninstallationA == NULL) {
-			return -1;
-		}
-
-		return dskmtsTrackUninstallationA(FApplicationID, FAppVersion);
-	}
-}
-
-int DeskMetricsTrackUninstallationA(LPCTSTR FApplicationID, LPCTSTR FAppVersion)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsTrackUninstallationA dskmtsTrackUninstallationA;
-
-		dskmtsTrackUninstallationA = (_DeskMetricsTrackUninstallationA)GetProcAddress(hinstLib, "DeskMetricsTrackUninstallationA");
-		if (dskmtsTrackUninstallationA == NULL) {
-			return -1;
-		}
-
-		return dskmtsTrackUninstallationA(FApplicationID, FAppVersion);
-	}
-}
 
 bool DeskMetricsSetProxy (LPCWSTR FHostIP, int FPort, LPCWSTR FUserName, LPCWSTR FPassword)
 {
@@ -768,66 +618,6 @@ LPCTSTR DeskMetricsGetJSONA()
 		}
 
 		return LPCWSTR(dskmtsGetJSON());
-	}
-}
-
-int DeskMetricsGetDailyNetworkUtilizationInKB()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetDailyNetworkUtilizationInKB dskmtsGetDailyNetworkUtilizationInKB;
-
-		dskmtsGetDailyNetworkUtilizationInKB = (_DeskMetricsGetDailyNetworkUtilizationInKB)GetProcAddress(hinstLib, "DeskMetricsGetDailyNetworkUtilizationInKB");
-		if (dskmtsGetDailyNetworkUtilizationInKB == NULL) {
-			return -1;
-		}
-
-		return dskmtsGetDailyNetworkUtilizationInKB();
-	}
-}
-
-bool DeskMetricsSetDailyNetworkUtilizationInKB(int FDataSize)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsSetDailyNetworkUtilizationInKB dskmtsSetDailyNetworkUtilizationInKB;
-
-		dskmtsSetDailyNetworkUtilizationInKB = (_DeskMetricsSetDailyNetworkUtilizationInKB)GetProcAddress(hinstLib, "DeskMetricsSetDailyNetworkUtilizationInKB");
-		if (dskmtsSetDailyNetworkUtilizationInKB == NULL) {
-			return 0;
-		}
-
-		return dskmtsSetDailyNetworkUtilizationInKB(FDataSize);
-	}
-}
-
-int DeskMetricsGetMaxStorageSizeInKB()
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsGetMaxStorageSizeInKB dskmtsGetMaxStorageSizeInKB;
-
-		dskmtsGetMaxStorageSizeInKB = (_DeskMetricsGetMaxStorageSizeInKB)GetProcAddress(hinstLib, "DeskMetricsGetMaxStorageSizeInKB");
-		if (dskmtsGetMaxStorageSizeInKB == NULL) {
-			return -1;
-		}
-
-		return dskmtsGetMaxStorageSizeInKB();
-	}
-}
-
-bool DeskMetricsSetMaxStorageSizeInKB(int FDataSize)
-{
-	if (DeskMetricsLoadLibrary())
-	{
-		_DeskMetricsSetMaxStorageSizeInKB dskmtsSetMaxStorageSizeInKB;
-
-		dskmtsSetMaxStorageSizeInKB = (_DeskMetricsSetMaxStorageSizeInKB)GetProcAddress(hinstLib, "DeskMetricsSetMaxStorageSizeInKB");
-		if (dskmtsSetMaxStorageSizeInKB == NULL) {
-			return 0;
-		}
-
-		return dskmtsSetMaxStorageSizeInKB(FDataSize);
 	}
 }
 

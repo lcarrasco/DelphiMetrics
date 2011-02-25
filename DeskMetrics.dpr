@@ -36,10 +36,6 @@ uses
 { Multi-threading }
 {$define AssumeMultiThreaded}
 
-{ Disable compiler platform warning }
-{$WARN UNIT_PLATFORM OFF}
-{$WARN SYMBOL_PLATFORM OFF}
-
 {$R *.res}
 
 { Component POST Configuration }
@@ -190,17 +186,15 @@ begin
 end;
 
 { Component Control }
-function DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall;
+function DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean; stdcall;
 var
   FHeader: string;
   FOperatingSystem: string;
   FHardware: string;
-  FErrorID: Integer;
 begin
   FThreadSafe.Enter;
   try
     Result   := False;
-    FErrorID := 0;
     try
       { Set Application ID }
       _SetAppID(FApplicationID);
@@ -216,14 +210,9 @@ begin
         FHeader           := '{"tp":"strApp","aver":"' + FAppVersion + '","ID":"' + _GetUserID + '","ss":"' + _GetSessionID + '","ts":' + _GetTimeStamp + ',';
         FOperatingSystem  := '"osv":"' + _GetOperatingSystemVersion + '","ossp":'+ _GetOperatingSystemServicePack +',"osar":' + _GetOperatingSystemArchicteture + ',"osjv":"' + _GetJavaVM + '","osnet":"' + _GetDotNetVersion + '","osnsp":' + _GetDotNetServicePack + ',"oslng":' + _GetOperatingSystemLanguage + ',"osscn":"' + _GetOperatingSystemScreen + '",';
         FHardware         := '"cnm":"' + _GetProcessorName + '","cbr":"' + _GetProcessorBrand + '","cfr":' + IntToStr(_GetProcessorFrequency) + ',"ccr":' + _GetProcessorCores + ',"car":'+ _GetProcessorArchicteture + ',"mtt":' + _GetMemoryTotal + ',"mfr":' + _GetMemoryFree + ',"dtt":' + _GetDiskTotal + ',"dfr":' + _GetDiskFree + '}';
-        FJSONData         := Trim(FHeader) + Trim(FOperatingSystem) + Trim(FHardware);
 
-        { Real-time Mode }
-        if FRealTime then
-        begin
-          FThreadStart := TPostThread.Create(FJSONData, API_SENDDATA, FErrorID);
-          FThreadStart.Resume;
-        end;
+        { Set JSON data }
+        FJSONData         := Trim(FHeader) + Trim(FOperatingSystem) + Trim(FHardware);
 
         _SetStarted(True);
 
@@ -237,12 +226,12 @@ begin
   end;
 end;
 
-function DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PWideChar; FRealTime: Boolean): Boolean; stdcall;
+function DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PWideChar): Boolean; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsStart(PWideChar(FApplicationID), PWideChar(FApplicationVersion), FRealTime);
+      Result := DeskMetricsStart(PWideChar(FApplicationID), PWideChar(FApplicationVersion));
     except
       Result := False;
     end;
@@ -260,15 +249,6 @@ begin
   try
     Result := True;
     try
-    
-      { if DeskMetricsStart Thread is running -> wait }
-      if FThreadStart <> nil then
-      begin
-        WaitForSingleObject(FThreadStart.Handle, INFINITE);
-        FThreadStart.Free;
-        FThreadStart := nil;
-      end;
-
       if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
       begin
         FJSONData   := FJSONData + ',{"tp":"stApp","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
@@ -288,7 +268,7 @@ begin
 
         { Debug / Test Mode }
         if _GetDebugMode then
-          _InsertLogText('Stop', FLastErrorID);
+          _DebugLog('Stop', FLastErrorID);
       end;
     except
       Result := False;
@@ -371,112 +351,7 @@ begin
   end;
 end;
 
-procedure DeskMetricsTrackEventStart(FEventCategory, FEventName: PWideChar); stdcall;
-var
-  FEventNameTemp: string;
-  FEventCategoryTemp: string;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
-      begin
-        FEventNameTemp     := Trim(FEventName);
-        FEventCategoryTemp := Trim(FEventCategory);
-
-        FJSONData := FJSONData + ',{"tp":"evS","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
-      end;
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventStartA(FEventCategory, FEventName: PWideChar); stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      DeskMetricsTrackEventStart(PWideChar(FEventCategory), PWideChar(FEventName));
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventStop(FEventCategory, FEventName: PWideChar); stdcall;
-var
-  FEventNameTemp: string;
-  FEventCategoryTemp: string;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
-      begin
-        FEventNameTemp     := Trim(FEventName);
-        FEventCategoryTemp := Trim(FEventCategory);
-
-        FJSONData := FJSONData + ',{"tp":"evST","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
-      end;
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventStopA(FEventCategory, FEventName: PAnsiChar); stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      DeskMetricsTrackEventStop(PWideChar(FEventCategory), PWideChar(FEventName));
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventCancel(FEventCategory, FEventName: PWideChar); stdcall;
-var
-  FEventNameTemp: string;
-  FEventCategoryTemp: string;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
-      begin
-        FEventNameTemp     := Trim(FEventName);
-        FEventCategoryTemp := Trim(FEventCategory);
-
-        FJSONData := FJSONData + ',{"tp":"evC","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
-      end;
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventCancelA(FEventCategory, FEventName: PAnsiChar); stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      DeskMetricsTrackEventCancel(PWideChar(FEventCategory), PWideChar(FEventName));
-    except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-procedure DeskMetricsTrackEventPeriod(FEventCategory, FEventName: PWideChar; FEventTime: Integer); stdcall;
+procedure DeskMetricsTrackEventPeriod(FEventCategory, FEventName: PWideChar; FEventTime: Integer; FEventCompleted: Boolean); stdcall;
 var
   FEventNameTemp: string;
   FEventCategoryTemp: string;
@@ -489,7 +364,8 @@ begin
         FEventNameTemp     := Trim(FEventName);
         FEventCategoryTemp := Trim(FEventCategory);
 
-        FJSONData := FJSONData + ',{"tp":"evP","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","tm":' + IntToStr(FEventTime) + ',"fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
+
+        FJSONData := FJSONData + ',{"tp":"evP","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","tm":' + IntToStr(FEventTime) + ',"ec":' + BoolToStr(FEventCompleted, False) + ',"fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
       end;
     except
     end;
@@ -498,12 +374,12 @@ begin
   end;
 end;
 
-procedure DeskMetricsTrackEventPeriodA(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer); stdcall;
+procedure DeskMetricsTrackEventPeriodA(FEventCategory, FEventName: PAnsiChar; FEventTime: Integer; FEventCanceled: Boolean); stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      DeskMetricsTrackEventPeriod(PWideChar(FEventCategory), PWideChar(FEventName), FEventTime);
+      DeskMetricsTrackEventPeriod(PWideChar(FEventCategory), PWideChar(FEventName), FEventTime, FEventCanceled);
     except
     end;
   finally
@@ -522,7 +398,6 @@ begin
       if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
       begin
         FMessageTemp  := Trim(FMessage);
-
         FJSONData     := FJSONData + ',{"tp":"lg","ms":"' + FMessageTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
       end;
     except
@@ -581,7 +456,7 @@ begin
   end;
 end;
 
-function DeskMetricsTrackCustomDataR(FApplicationID: PWideChar; FApplicationVersion: PWideChar; FName: PWideChar; FValue: PWideChar): Integer; stdcall;
+function DeskMetricsTrackCustomDataR(FName: PWideChar; FValue: PWideChar): Integer; stdcall;
 var
   FJSONTemp: string;
   FNameTemp: string;
@@ -596,10 +471,7 @@ begin
         FNameTemp     := Trim(FName);
         FValueTemp    := Trim(FValue);
 
-        { Set Application ID }
-        _SetAppID(FApplicationID);
-
-        FJSONData := '{"tp":"ctDR","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+        FJSONData := '{"tp":"ctDR","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
 
         { Send HTTP request }
         _SendPost(FErrorID, API_SENDDATA);
@@ -607,7 +479,7 @@ begin
 
         { Debug / Test Mode }
         if _GetDebugMode then
-          _InsertLogText('TrackCustomDataR', FErrorID);
+          _DebugLog('TrackCustomDataR', FErrorID);
       finally
         FJSONData := FJSONTemp;
       end;
@@ -619,12 +491,12 @@ begin
   end;
 end;
 
-function DeskMetricsTrackCustomDataRA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; FName: PAnsiChar; FValue: PAnsiChar): Integer; stdcall;
+function DeskMetricsTrackCustomDataRA(FName: PAnsiChar; FValue: PAnsiChar): Integer; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsTrackCustomDataR(PWideChar(FApplicationID), PWideChar(FApplicationVersion), PWideChar(FName), PWideChar(FValue));
+      Result := DeskMetricsTrackCustomDataR(PWideChar(FName), PWideChar(FValue));
     except
       Result := -1;
     end;
@@ -634,6 +506,7 @@ begin
 end;
 
 { Exceptions }
+
 procedure DeskMetricsTrackException(FExpectionObject: Exception); stdcall;
 var
   FExMessage, FExStack, FExSource, FExTarget: string;
@@ -651,96 +524,6 @@ begin
         FJSONData   := FJSONData + ',{"tp":"exC","msg":"' + FExMessage + '","stk":"' + FExStack + '","src":"' + FExSource + '","tgs":"' + FExTarget + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
       end;
     except
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-{Installations}
-function DeskMetricsTrackInstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
-var
-  FErrorID: Integer;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      { Set Application ID }
-      _SetAppID(FApplicationID);
-
-      { Check Version }
-      if FApplicationVersion = '' then
-        FApplicationVersion := NULL_STR;
-
-      { JSON Data }
-      FJSONData := '{"tp":"ist","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
-
-      { Send HTTP request }
-      _SendPost(FErrorID, API_SENDDATA);
-      Result := FErrorID;
-    except
-      Result := -1;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsTrackInstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := DeskMetricsTrackInstallation(WideString(FApplicationID), WideString(FAppVersion));
-    except
-      Result := -1;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-{ Uninstallations }
-function DeskMetricsTrackUninstallation(FApplicationID: string; FApplicationVersion: string): Integer; stdcall;
-var
-  FErrorID: Integer;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      { Set Application ID }
-      _SetAppID(FApplicationID);
-
-      { Check Version }
-      if FApplicationVersion = '' then
-        FApplicationVersion := NULL_STR;
-
-      { JSON Data }
-      FJSONData := '{"tp":"ust","aver":"' + FApplicationVersion + '","ID":"' + _GetUserID + '","ts":' + _GetTimeStamp + ',"ss":"' + _GetSessionID + '"}';
-
-      { Send HTTP request }
-      _SendPost(FErrorID, API_SENDDATA);
-      Result := FErrorID;
-
-      { Debug / Test Mode }
-      if _GetDebugMode then
-        _InsertLogText('TrackUninstallation', FErrorID);
-    except
-      Result := -1;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsTrackUninstallationA(FApplicationID: AnsiString; FApplicationVersion: AnsiString): Integer; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := DeskMetricsTrackUninstallation(WideString(FApplicationID), WideString(FApplicationVersion));
-    except
-      Result := -1;
     end;
   finally
     FThreadSafe.Leave;
@@ -900,62 +683,6 @@ begin
   end;
 end;
 
-function  DeskMetricsGetDailyNetworkUtilizationInKB: Integer; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := _GetMaxDailyNetwork;
-    except
-      Result := MAXDAILYNETWORK;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsSetDailyNetworkUtilizationInKB(FDataSize: Integer): Boolean; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := _SetMaxDailyNetwork(FDataSize);
-    except
-      Result := False;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function  DeskMetricsGetMaxStorageSizeInKB: Integer; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := _GetMaxStorageFile;
-    except
-      Result := MAXSTORAGEDATA;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
-function DeskMetricsSetMaxStorageSizeInKB(FDataSize: Integer): Boolean; stdcall;
-begin
-  FThreadSafe.Enter;
-  try
-    try
-      Result := _SetMaxStorageFile(FDataSize);
-    except
-      Result := False;
-    end;
-  finally
-    FThreadSafe.Leave;
-  end;
-end;
-
 { Manually Send Data}
 
 function DeskMetricsSendData: Boolean; stdcall;
@@ -975,7 +702,7 @@ begin
         Result := FErrorID = 0;
 
         if _GetDebugMode then
-          _InsertLogText('SendData', FErrorID);
+          _DebugLog('SendData', FErrorID);
       end;
     except
       Result := False;
@@ -1015,18 +742,6 @@ procedure OnDLLUnload;
 begin
   _CheckCacheFile;
 
-  if FThreadStart <> nil then
-  begin
-    CloseHandle(FThreadStart.Handle);
-    FThreadStart := nil;
-  end;
-
-  if FThreadStop <> nil then
-  begin
-    CloseHandle(FThreadStop.Handle);
-    FThreadStop := nil;
-  end;
-
   if Assigned(FThreadSafe) then
     FreeAndNil(FThreadSafe);
 end;
@@ -1047,12 +762,6 @@ exports
  DeskMetricsTrackEventA,
  DeskMetricsTrackEventValue,
  DeskMetricsTrackEventValueA,
- DeskMetricsTrackEventStart,
- DeskMetricsTrackEventStartA,
- DeskMetricsTrackEventStop,
- DeskMetricsTrackEventStopA,
- DeskMetricsTrackEventCancel,
- DeskMetricsTrackEventCancelA,
  DeskMetricsTrackEventPeriod,
  DeskMetricsTrackEventPeriodA,
  DeskMetricsTrackLog,
@@ -1061,10 +770,6 @@ exports
  DeskMetricsTrackCustomDataA,
  DeskMetricsTrackCustomDataR,
  DeskMetricsTrackCustomDataRA,
- DeskMetricsTrackInstallation,
- DeskMetricsTrackInstallationA,
- DeskMetricsTrackUninstallation,
- DeskMetricsTrackUninstallationA,
  DeskMetricsTrackException,
  DeskMetricsSetEnabled,
  DeskMetricsGetEnabled,
@@ -1086,10 +791,6 @@ exports
  DeskMetricsSetPostWaitResponse,
  DeskMetricsGetJSON,
  DeskMetricsGetJSONA,
- DeskMetricsGetDailyNetworkUtilizationInKB,
- DeskMetricsSetDailyNetworkUtilizationInKB,
- DeskMetricsGetMaxStorageSizeInKB,
- DeskMetricsSetMaxStorageSizeInKB,
  DeskMetricsSendData,
  DeskMetricsSetDebugMode,
  DeskMetricsGetDebugMode;
@@ -1105,23 +806,25 @@ begin
     IsMultiThread     := True;
 
     FJSONData         := '';
+
     FLastErrorID      := -1;
+
     FStarted          := False;
-    FStopped          := False;
     FEnabled          := True;
+
     FAppID            := '';
     FAppVersion       := NULL_STR;
+
     FUserID           := '';
     FSessionID        := NULL_STR;
     FFlowNumber       := 0;
+
     FPostServer       := DEFAULTSERVER;
     FPostPort         := DEFAULTPORT;
     FPostTimeOut      := DEFAULTTIMEOUT;
     FPostAgent        := USERAGENT;
     FPostWaitResponse := False;
-    FDailyData        := MAXDAILYNETWORK;
-    FCurrentDailyData := 0;
-    FMaxStorage       := MAXSTORAGEDATA;
+
     FProxyServer      := '';
     FProxyPort        := DEFAULTPROXYPORT;
     FProxyUser        := '';

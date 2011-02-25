@@ -42,9 +42,6 @@
 			<DCCReference Include="frmMain.pas">
 				<Form>frm_Main</Form>
 			</DCCReference>
-			<DCCReference Include="frmAnotherWindow.pas">
-				<Form>frmAnother</Form>
-			</DCCReference>
 			<DCCReference Include="frmCustomerExperience.pas">
 				<Form>frm_CustomerExperience</Form>
 			</DCCReference>
