@@ -21,7 +21,8 @@ program AppExample;
 uses
   Forms,
   frmMain in 'frmMain.pas' {frm_Main},
-  frmCustomerExperience in 'frmCustomerExperience.pas' {frm_CustomerExperience};
+  frmCustomerExperience in 'frmCustomerExperience.pas' {frm_CustomerExperience},
+  DeskMetrics in '..\..\Integration Units\Delphi\DeskMetrics.pas';
 
 {$R *.res}
 

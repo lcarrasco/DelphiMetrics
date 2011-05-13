@@ -38,6 +38,7 @@ bool DeskMetricsLoadLibrary ()
 		}
 	}
 	catch (...) {}
+	return 0;
 }
 
 void DeskMetricsUnloadLibrary ()
@@ -58,9 +59,11 @@ bool DeskMetricsStart (LPCWSTR FApplicationID, LPCWSTR FApplicationVersion)
 				return false;
 			}
 			dskmtsStart(FApplicationID, FApplicationVersion);
+			return true;
 		}
 	}
 	catch (...) {}
+	return 0;
 }
 
 bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion)
@@ -75,7 +78,9 @@ bool DeskMetricsStartA (LPCTSTR FApplicationID, LPCTSTR FApplicationVersion)
 		}
 
 		dskmtsStart(FApplicationID, FApplicationVersion);
+		return true;
 	}
+	return false;
 }
 
 bool DeskMetricsStop () 
@@ -90,7 +95,9 @@ bool DeskMetricsStop ()
 		}
 
 		dskmtsStop();
+		return true;
 	}
+	return false;
 }
 
 void DeskMetricsTrackEvent(LPCWSTR FEventCategory, LPCWSTR FEventName)
@@ -258,6 +265,7 @@ int DeskMetricsTrackCustomDataR(LPCWSTR FName, LPCWSTR FValue)
 
 		return dskmtsTrackCustomDataR(FName, FValue);
 	}
+	return -1;
 }
 
 int DeskMetricsTrackCustomDataRA(LPCTSTR FName, LPCTSTR FValue)
@@ -273,6 +281,7 @@ int DeskMetricsTrackCustomDataRA(LPCTSTR FName, LPCTSTR FValue)
 
 		return dskmtsTrackCustomDataR(FName, FValue);
 	}
+	return -1;
 }
 
 //void DeskMetricsTrackException(LPCWSTR FExceptionMessage, LPCWSTR FExceptionType)
@@ -298,11 +307,12 @@ bool DeskMetricsSetProxy (LPCWSTR FHostIP, int FPort, LPCWSTR FUserName, LPCWSTR
 
 		dskmtsSetProxy = (_DeskMetricsSetProxy)GetProcAddress(hinstLib, "DeskMetricsSetProxy");
 		if (dskmtsSetProxy == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetProxy(FHostIP, FPort, FUserName, FPassword);
 	}
+	return false;
 }
 
 bool DeskMetricsSetProxyA (LPCTSTR FHostIP, int FPort, LPCTSTR FUserName, LPCTSTR FPassword)
@@ -313,11 +323,12 @@ bool DeskMetricsSetProxyA (LPCTSTR FHostIP, int FPort, LPCTSTR FUserName, LPCTST
 
 		dskmtsSetProxy = (_DeskMetricsSetProxy)GetProcAddress(hinstLib, "DeskMetricsSetProxyA");
 		if (dskmtsSetProxy == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetProxy(FHostIP, FPort, FUserName, FPassword);
 	}
+	return false;
 }
 
 bool DeskMetricsGetProxy (LPCWSTR FHostIP, int FPort)
@@ -333,6 +344,7 @@ bool DeskMetricsGetProxy (LPCWSTR FHostIP, int FPort)
 
 		return dskmtsGetProxy(FHostIP, FPort);
 	}
+	return false;
 }
 
 bool DeskMetricsGetProxyA (LPCTSTR FHostIP, int FPort)
@@ -343,11 +355,12 @@ bool DeskMetricsGetProxyA (LPCTSTR FHostIP, int FPort)
 
 		dskmtsGetProxy = (_DeskMetricsGetProxy)GetProcAddress(hinstLib, "DeskMetricsGetProxyA");
 		if (dskmtsGetProxy == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsGetProxy(FHostIP, FPort);
 	}
+	return false;
 }
 
 bool DeskMetricsSetUserID (LPCWSTR FID)
@@ -358,11 +371,12 @@ bool DeskMetricsSetUserID (LPCWSTR FID)
 
 		dskmtsSetUserID = (_DeskMetricsSetUserID)GetProcAddress(hinstLib, "DeskMetricsSetUserID");
 		if (dskmtsSetUserID == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetUserID(FID);
 	}
+	return false;
 }
 
 bool DeskMetricsSetUserIDA (LPCTSTR FID)
@@ -373,11 +387,12 @@ bool DeskMetricsSetUserIDA (LPCTSTR FID)
 
 		dskmtsSetUserID = (_DeskMetricsSetUserID)GetProcAddress(hinstLib, "DeskMetricsSetUserIDA");
 		if (dskmtsSetUserID == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetUserID(FID);
 	}
+	return false;
 }
 
 LPCWSTR DeskMetricsGetPostServer ()
@@ -393,6 +408,7 @@ LPCWSTR DeskMetricsGetPostServer ()
 
 		return LPCWSTR(dskmtsGetPostServer());
 	}
+	return LPCWSTR("");
 }
 
 LPCTSTR DeskMetricsGetPostServerA ()
@@ -408,6 +424,7 @@ LPCTSTR DeskMetricsGetPostServerA ()
 
 		return LPCWSTR(dskmtsGetPostServer());
 	}
+	return LPCWSTR("");
 }
 
 bool DeskMetricsSetPostServer(LPCWSTR FServer)
@@ -418,11 +435,11 @@ bool DeskMetricsSetPostServer(LPCWSTR FServer)
 
 		dskmtsSetPostServer = (_DeskMetricsSetPostServer)GetProcAddress(hinstLib, "DeskMetricsSetPostServer");
 		if (dskmtsSetPostServer == NULL) {
-			return 0;
+			return false;
 		}
-
 		return dskmtsSetPostServer(FServer);
 	}
+	return false;
 }
 
 bool DeskMetricsSetPostServerA(LPCTSTR FServer)
@@ -433,11 +450,12 @@ bool DeskMetricsSetPostServerA(LPCTSTR FServer)
 
 		dskmtsSetPostServer = (_DeskMetricsSetPostServer)GetProcAddress(hinstLib, "DeskMetricsSetPostServerA");
 		if (dskmtsSetPostServer == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetPostServer(FServer);
 	}
+	return false;
 }
 
 int DeskMetricsGetPostPort()
@@ -453,6 +471,7 @@ int DeskMetricsGetPostPort()
 
 		return dskmtsGetPostPort();
 	}
+	return -1;
 }
 
 bool DeskMetricsSetPostPort(int FPort)
@@ -463,11 +482,12 @@ bool DeskMetricsSetPostPort(int FPort)
 
 		dskmtsSetPostPort = (_DeskMetricsSetPostPort)GetProcAddress(hinstLib, "DeskMetricsSetPostPort");
 		if (dskmtsSetPostPort == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetPostPort(FPort);
 	}
+	return false;
 }
 
 int DeskMetricsGetPostTimeOut()
@@ -483,6 +503,7 @@ int DeskMetricsGetPostTimeOut()
 
 		return dskmtsGetPostTimeOut();
 	}
+	return -1;
 }
 
 bool DeskMetricsSetPostTimeOut(int FTimeOut)
@@ -493,11 +514,12 @@ bool DeskMetricsSetPostTimeOut(int FTimeOut)
 
 		dskmtsSetPostTimeOut = (_DeskMetricsSetPostTimeOut)GetProcAddress(hinstLib, "DeskMetricsSetPostTimeOut");
 		if (dskmtsSetPostTimeOut == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetPostTimeOut(FTimeOut);
 	}
+	return false;
 }
 
 bool DeskMetricsGetPostWaitResponse()
@@ -508,11 +530,12 @@ bool DeskMetricsGetPostWaitResponse()
 
 		dskmtsGetPostWaitResponse = (_DeskMetricsGetPostWaitResponse)GetProcAddress(hinstLib, "DeskMetricsGetPostWaitResponse");
 		if (dskmtsGetPostWaitResponse == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsGetPostWaitResponse();
 	}
+	return false;
 }
 
 bool DeskMetricsSetPostWaitResponse(bool FEnabled)
@@ -523,11 +546,12 @@ bool DeskMetricsSetPostWaitResponse(bool FEnabled)
 
 		dskmtsSetPostWaitResponse = (_DeskMetricsSetPostWaitResponse)GetProcAddress(hinstLib, "DeskMetricsSetPostWaitResponse");
 		if (dskmtsSetPostWaitResponse == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetPostWaitResponse(FEnabled);
 	}
+	return false;
 }
 
 bool DeskMetricsSetEnabled(bool FValue)
@@ -538,11 +562,12 @@ bool DeskMetricsSetEnabled(bool FValue)
 
 		dskmtsSetEnabled = (_DeskMetricsSetEnabled)GetProcAddress(hinstLib, "DeskMetricsSetEnabled");
 		if (dskmtsSetEnabled == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetEnabled(FValue);
 	}
+	return false;
 }
 
 bool DeskMetricsGetEnabled()
@@ -553,11 +578,12 @@ bool DeskMetricsGetEnabled()
 
 		dskmtsGetEnabled = (_DeskMetricsGetEnabled)GetProcAddress(hinstLib, "DeskMetricsGetEnabled");
 		if (dskmtsGetEnabled == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsGetEnabled();
 	}
+	return false;
 }
 
 bool DeskMetricsSetDebugMode(bool FEnabled)
@@ -568,11 +594,12 @@ bool DeskMetricsSetDebugMode(bool FEnabled)
 
 		dskmtsSetDebugMode = (_DeskMetricsSetDebugMode)GetProcAddress(hinstLib, "DeskMetricsSetDebugMode");
 		if (dskmtsSetDebugMode == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsSetDebugMode(FEnabled);
 	}
+	return false;
 }
 
 bool DeskMetricsGetDebugMode()
@@ -583,11 +610,12 @@ bool DeskMetricsGetDebugMode()
 
 		dskmtsGetDebugMode = (_DeskMetricsGetDebugMode)GetProcAddress(hinstLib, "DeskMetricsGetDebugMode");
 		if (dskmtsGetDebugMode == NULL) {
-			return 0;
+			return false;
 		}
 
 		return dskmtsGetDebugMode();
 	}
+	return false;
 }
 
 
@@ -604,6 +632,7 @@ LPCWSTR DeskMetricsGetJSON()
 
 		return LPCWSTR(dskmtsGetJSON());
 	}
+	return LPCWSTR("");
 }
 
 LPCTSTR DeskMetricsGetJSONA()
@@ -619,6 +648,7 @@ LPCTSTR DeskMetricsGetJSONA()
 
 		return LPCWSTR(dskmtsGetJSON());
 	}
+	return LPCWSTR("");
 }
 
 bool DeskMetricsSendData()
@@ -634,4 +664,6 @@ bool DeskMetricsSendData()
 
 		return dskmtsSendData();
 	}
+	return false;
 }
+

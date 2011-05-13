@@ -16,6 +16,8 @@
 //                                                           //
 // **********************************************************//
 
+#include <Windows.h>
+
 typedef bool (__stdcall *_DeskMetricsStart)(LPCWSTR FApplicationID, LPCWSTR FApplicationVersion);
 typedef bool (__stdcall *_DeskMetricsStartA)(LPCTSTR FApplicationID, LPCTSTR FApplicationVersion);
 typedef bool (__stdcall *_DeskMetricsStop)();
