@@ -86,7 +86,7 @@ function  _SetDebugMode(const FEnabled: Boolean): Boolean;
 function  _GetDebugMode: Boolean;
 function  _GetDebugData: string;
 function  _DebugLog(const FFunction: string; const FErrorID: Integer): Boolean;
-function  _SaveDebugFile(const FFileName: string): Boolean;
+function _GenerateDebugFile: Boolean;
 
 { Internal Cache Mode }
 function _CheckCacheFile: Boolean;
@@ -108,8 +108,8 @@ function _GenerateGUID: string;
 implementation
 
 uses
-  dskMetricsConsts, dskMetricsVars, dskMetricsBase64,
-  dskMetricsCPUInfo,dskMetricsCommon, dskMetricsWinInfo,
+  dskMetricsConsts, dskMetricsVars, dskMetricsBase64, dskMetricsCommon,
+  {$IFDEF CPUX86}dskMetricsCPUInfo,{$ENDIF} dskMetricsWinInfo,
   Windows, SysUtils, Registry, WinInet, DateUtils;
 
 function _SetAppID(const FApplicationID: string): Boolean;
@@ -174,39 +174,44 @@ end;
 
 function _DebugLog(const FFunction: string; const FErrorID: Integer): Boolean;
 begin
+  Result       := True;
   try
-    FDebugData := FDebugData + '[' + _GetTimeStamp + '] Method ' + FFunction  + ' (Error: ' + IntToStr(FErrorID) + ' - ' + _ErrorToString(FErrorID) + ')';
-    Result    :=_SaveDebugFile(LOGFILENAME);
+    if FDebugData = '' then
+    begin
+      {$IFDEF CPUX86}
+      FDebugData := 'DeskMetrics DLL x86 - ' + DateToStr(Now) + sLineBreak;
+      {$ENDIF$}
+      {$IFDEF CPUX64}
+      FDebugData := 'DeskMetrics DLL x64 - ' + DateToStr(Now) + sLineBreak;
+      {$ENDIF}
+    end;
+
+    FDebugData := FDebugData + '[' + TimeToStr(Now) + '] Method: ' + FFunction  + ' (Error: ' + IntToStr(FErrorID) + ' - ' + _ErrorToString(FErrorID) + ')' + sLineBreak;
   except
-    Result    := False;
+    Result     := False;
   end;
 end;
 
-function _SaveDebugFile(const FFileName: string): Boolean;
+function _GenerateDebugFile: Boolean;
 var
-  FFile : TextFile;
-  FTempFolder: string;
+  FFile: TStringList;
+  FDebugFilePath: string;
+const
+  FDebugFile = 'debug.log';
 begin
   Result := True;
   try
-    FTempFolder := _GetTemporaryFolder;
+    FDebugFilePath := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + FDebugFile;
 
-    if (FTempFolder = '') or (DirectoryExists(FTempFolder) = False) then
-    begin
-      Result := False;
-      Exit;
-    end;
+    if FileExists(FDebugFilePath) then
+      DeleteFile(FDebugFilePath);
 
-    AssignFile(FFile, FTempFolder + FFileName);
+    FFile          := TStringList.Create;
     try
-      if FileExists(FTempFolder + FFileName) then
-        Append(FFile)
-      else
-        Rewrite(FFile);
-
-      WriteLn(FFile, _GetDebugData);
+      FFile.Add(FDebugData);
+      FFile.SaveToFile(FDebugFilePath);
     finally
-      CloseFile(FFile);
+      FreeAndNil(FFile);
     end;
   except
     Result := False;
@@ -310,7 +315,7 @@ var
 begin
   Result := False;
   try
-    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS OR KEY_WOW64_32KEY);
     try
       FRegistry.RootKey := REGROOTKEY;
       if FRegistry.OpenKey(REGPATH, False) then
@@ -332,7 +337,7 @@ var
 begin
   Result := False;
   try
-    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS OR KEY_WOW64_32KEY);
     try
       FRegistry.RootKey := REGROOTKEY;
       if FRegistry.OpenKey(REGPATH, True) then
@@ -351,7 +356,7 @@ var
 begin
   Result := '';
   try
-    FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
+    FRegistry := TRegistry.Create(KEY_ALL_ACCESS OR KEY_WOW64_32KEY);
     try
       FRegistry.RootKey := REGROOTKEY;
       if FRegistry.OpenKey(REGPATH, False) then
@@ -455,12 +460,27 @@ begin
   try
     FRegistry := TRegistry.Create(KEY_ALL_ACCESS);
     try
+      {$IFDEF CPUX64}
+      { try 64-bit branch }
       FRegistry.RootKey := HKEY_LOCAL_MACHINE;
       if FRegistry.OpenKeyReadOnly('\SOFTWARE\JavaSoft\Java Runtime Environment') then
       begin
         if FRegistry.ValueExists('CurrentVersion') then
           Result := Trim(FRegistry.ReadString('CurrentVersion'));
       end;
+      {$ENDIF}
+
+      { try 32-bit branch }
+      if Result = NONE_STR then
+      begin
+        FRegistry.Access := KEY_ALL_ACCESS OR KEY_WOW64_32KEY;
+        if FRegistry.OpenKeyReadOnly('\SOFTWARE\JavaSoft\Java Runtime Environment') then
+        begin
+          if FRegistry.ValueExists('CurrentVersion') then
+            Result := Trim(FRegistry.ReadString('CurrentVersion'));
+        end;
+      end;
+
     finally
       FreeAndNil(FRegistry);
     end;
@@ -613,10 +633,6 @@ var
   FProcessorBrand: string;
 begin
   try
-    FProcessorBrand := _GetProcessorVendorInternal;
-
-    if (FProcessorBrand = '') or (FProcessorBrand = UNKNOWN_STR) then
-    begin
       FProcessorBrand  := _GetProcessorName;
 
       { Detect Intel CPUs }
@@ -639,9 +655,6 @@ begin
         Result := 'AMD';
         Exit;
       end;
-    end
-    else
-      Result := Trim(FProcessorBrand);
   except
     Result := NULL_STR;
   end;
@@ -658,6 +671,15 @@ end;
 
 function _GetProcessorArchicteture: string;
 begin
+  {$IFDEF CPUX64}
+  try
+    Result := '64';
+  except
+    Result := NULL_STR;
+  end;
+  {$ENDIF}
+
+  {$IFDEF CPUX86}
   try
     Result := Trim(_GetProcessorArchitectureInternal);
     if (Result = '32') and ((_GetProcessorCores = '4') or (_GetProcessorCores = '2') or (_GetProcessorCores = '6') or (_GetProcessorCores = '8')) then
@@ -665,6 +687,7 @@ begin
   except
     Result := NULL_STR;
   end;
+  {$ENDIF}
 end;
 
 function _GetProcessorCores: string;

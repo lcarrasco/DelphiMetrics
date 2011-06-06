@@ -17,7 +17,6 @@
 library DeskMetrics;
 
 uses
-  FastMM4,
   Windows,
   SysUtils,
   ActiveX,
@@ -25,16 +24,10 @@ uses
   dskMetricsInternals in 'dskMetricsInternals.pas',
   dskMetricsConsts in 'dskMetricsConsts.pas',
   dskMetricsVars in 'dskMetricsVars.pas',
-  dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas',
   dskMetricsCommon in 'dskMetricsCommon.pas',
   dskMetricsWinInfo in 'dskMetricsWinInfo.pas',
-  dskMetricsBase64 in 'dskMetricsBase64.pas';
-
-{ 4 GB memory }
-{$SetPEFlags IMAGE_FILE_LARGE_ADDRESS_AWARE}
-
-{ Multi-threading }
-{$define AssumeMultiThreaded}
+  dskMetricsBase64 in 'dskMetricsBase64.pas',
+  dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas';
 
 {$R *.res}
 
@@ -51,7 +44,6 @@ begin
   finally
     FThreadSafe.Leave;
   end;
-
 end;
 
 function DeskMetricsGetPostServerA: PAnsiChar; stdcall;
@@ -216,6 +208,9 @@ begin
 
         _SetStarted(True);
 
+        if _GetDebugMode then
+          _DebugLog('Start', 0);
+
         Result := True;
       end;
     except
@@ -268,7 +263,10 @@ begin
 
         { Debug / Test Mode }
         if _GetDebugMode then
+        begin
           _DebugLog('Stop', FLastErrorID);
+          _GenerateDebugFile;
+        end;
       end;
     except
       Result := False;
@@ -293,6 +291,9 @@ begin
         FEventCategoryTemp := Trim(FEventCategory);
 
         FJSONData := FJSONData + ',{"tp":"ev","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+
+        if _GetDebugMode then
+          _DebugLog('TrackEvent', 0);
       end;
     except
     end;
@@ -330,6 +331,9 @@ begin
         FEventValueTemp    := Trim(FEventValue);
 
         FJSONData := FJSONData + ',{"tp":"evV","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","vl":"' + FEventValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+
+        if _GetDebugMode then
+          _DebugLog('TrackEventValue', 0);
       end;
     except
     end;
@@ -364,8 +368,10 @@ begin
         FEventNameTemp     := Trim(FEventName);
         FEventCategoryTemp := Trim(FEventCategory);
 
+        FJSONData := FJSONData + ',{"tp":"evP","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","tm":' + IntToStr(FEventTime) + ',"ec":' + IntToStr(Integer(FEventCompleted)) + ',"fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
 
-        FJSONData := FJSONData + ',{"tp":"evP","ca":"' + FEventCategoryTemp + '","nm":"' + FEventNameTemp + '","tm":' + IntToStr(FEventTime) + ',"ec":' + BoolToStr(FEventCompleted, False) + ',"fl":' + _GetFlowNumber + ',"ts":' + _GetTimeStamp  + ',"ss":"' + _GetSessionID + '"}';
+        if _GetDebugMode then
+          _DebugLog('TrackEventPeriod', 0);
       end;
     except
     end;
@@ -399,6 +405,9 @@ begin
       begin
         FMessageTemp  := Trim(FMessage);
         FJSONData     := FJSONData + ',{"tp":"lg","ms":"' + FMessageTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+
+        if _GetDebugMode then
+          _DebugLog('TrackLog', 0);
       end;
     except
     end;
@@ -435,6 +444,9 @@ begin
         FValueTemp  := Trim(FValue);
 
         FJSONData   := FJSONData + ',{"tp":"ctD","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+
+        if _GetDebugMode then
+          _DebugLog('TrackCustomData', 0);
       end;
     except
     end;
@@ -522,6 +534,9 @@ begin
         FExTarget   := FExpectionObject.ClassName;
 
         FJSONData   := FJSONData + ',{"tp":"exC","msg":"' + FExMessage + '","stk":"' + FExStack + '","src":"' + FExSource + '","tgs":"' + FExTarget + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
+
+        if _GetDebugMode then
+          _DebugLog('TrackException', 0);
       end;
     except
     end;
@@ -731,6 +746,15 @@ begin
   end;
 end;
 
+function DeskMetricsGetDebugFile: Boolean; stdcall;
+begin
+  try
+    Result := _GenerateDebugFile;
+  except
+    Result := False;
+  end;
+end;
+
 { DLL Control }
 
 procedure OnDLLLoad;
@@ -793,7 +817,8 @@ exports
  DeskMetricsGetJSONA,
  DeskMetricsSendData,
  DeskMetricsSetDebugMode,
- DeskMetricsGetDebugMode;
+ DeskMetricsGetDebugMode,
+ DeskMetricsGetDebugFile;
 
 begin
   { DLL Management }

@@ -58,14 +58,23 @@ uses
 
 function _GetOperatingSystemArchictetureInternal: Integer;
 begin
+  {$IFDEF CPUX64}
   try
-    if GetEnvironmentVariable('ProgramW6432') <> '' then
-      Result := 64
-    else
-      Result := 32;
+    Result := 64;
   except
     Result := -1;
   end;
+  {$ENDIF}
+
+  {$IFDEF CPUX86}
+  Result := 32;
+  try
+    if GetEnvironmentVariable('ProgramW6432') <> '' then
+      Result := 64;
+  except
+    Result := -1;
+  end;
+  {$ENDIF}
 end;
 
 function _GetWindowsVersion: string;

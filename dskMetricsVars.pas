@@ -19,7 +19,7 @@ unit dskMetricsVars;
 interface
 
 uses
-  dskMetricsInternals, SyncObjs, SysUtils;
+  SyncObjs, SysUtils;
 
 var
   FJSONData: string;

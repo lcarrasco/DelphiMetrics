@@ -56,6 +56,7 @@ type
   TDMSendData              = function:Boolean; stdcall;
   TDMGetDebugMode          = function:Boolean; stdcall;
   TDMSetDebugMode          = function(FEnabled: Boolean): Boolean; stdcall;
+  TDMGetDebugFile          = function:Boolean; stdcall;
 
   function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean;
   function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar): Boolean;
@@ -96,6 +97,7 @@ type
   function  DeskMetricsSendData: Boolean;
   function  DeskMetricsGetDebugMode: Boolean;
   function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean;
+  function  DeskMetricsGetDebugFile: Boolean;
 
   function  DeskMetricsDllLoaded: Boolean;
   function  Load_DLL: Boolean;
@@ -154,6 +156,7 @@ const
   PROC_DeskMetricsSendData = 'DeskMetricsSendData';
   PROC_DeskMetricsGetDebugMode = 'DeskMetricsGetDebugMode';
   PROC_DeskMetricsSetDebugMode = 'DeskMetricsSetDebugMode';
+  PROC_DeskMetricsGetDebugFile = 'DeskMetricsGetDebugFile';
 
 function GetAppPath : string;
 begin
@@ -843,6 +846,23 @@ begin
       @DMSetDebugMode := GetProcAddress(hModule, PROC_DeskMetricsSetDebugMode);
       if Assigned(DMSetDebugMode) then
         Result := DMSetDebugMode(FEnabled);
+    end;
+  except
+    Result := False;
+  end;
+end;
+
+function  DeskMetricsGetDebugFile: Boolean;
+const
+  DMGetDebugFile : TDMGetDebugFile = nil;
+begin
+  Result := False;
+  try
+    if CheckLoadDLL then
+    begin
+      @DMGetDebugFile := GetProcAddress(hModule, PROC_DeskMetricsGetDebugFile);
+      if Assigned(DMGetDebugFile) then
+        Result := DMGetDebugFile;
     end;
   except
     Result := False;

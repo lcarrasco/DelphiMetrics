@@ -239,6 +239,7 @@ uses
 
 function IsCPUID_Available: Boolean; register;
 asm
+  {$IFDEF CPUX86}
   PUSHFD                 {save EFLAGS to stack}
   POP     EAX            {store EFLAGS in EAX}
   MOV     EDX, EAX       {save in EDX for later testing}
@@ -251,6 +252,7 @@ asm
   JZ      @exit          {no, CPUID not available}
   MOV     EAX, True      {yes, CPUID is available}
   @exit:
+  {$ENDIF}
 end;
 
 
@@ -258,6 +260,7 @@ function IsFPU_Available: Boolean;
 var
   _FCW, _FSW: Word;
 asm
+  {$IFDEF CPUX86}
   MOV     EAX, False     {initialize return register}
   MOV     _FSW, $5A5A    {store a non-zero value}
   FNINIT                 {must use non-wait form}
@@ -271,11 +274,13 @@ asm
   JNE     @exit          {no, FPU not installed}
   MOV     EAX, True      {yes, FPU is installed}
   @exit:
+  {$ENDIF}
 end;
 
 
 procedure GetCPUID(Param: Cardinal; var Registers: TQProcessorRegisters);
 asm
+  {$IFDEF CPUX86}
   PUSH    EBX                         {save affected registers}
   PUSH    EDI
   MOV     EDI, Registers
@@ -289,13 +294,17 @@ asm
   MOV     TQProcessorRegisters(EDI).&EDX, EDX   {save EDX register}
   POP     EDI                         {restore registers}
   POP     EBX
+  {$ENDIF}
 end;
 
 procedure GetCPUVendor;
+{$IFDEF CPUX86}
 var
   VendorStr: TQProcessorVendorStr;
   Registers: TQProcessorRegisters;
+{$ENDIF CPUX86}
 begin
+  {$IFDEF CPUX86}
   try
     {call CPUID function 0}
     GetCPUID(0, Registers);
@@ -313,11 +322,13 @@ begin
       Dec(ProcessorData.Vendor);
   except
   end;
+  {$ENDIF CPUX86}
 end;
 
 procedure GetCPUFeatures;
 {preconditions: 1. maximum CPUID must be at least $00000001
                 2. GetCPUVendor must have been called}
+{$IFDEF CPUX86}
 type
   _Int64 = packed record
     Lo: Longword;
@@ -326,7 +337,9 @@ type
 var
   Registers: TQProcessorRegisters;
   CpuFeatures: TQCPUFeatureSet;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     {call CPUID function $00000001}
     GetCPUID($00000001, Registers);
@@ -391,14 +404,18 @@ begin
       Include(ProcessorData.InstructionSupport, isHTT);
   except
   end;
+  {$ENDIF}
 end;
 
 procedure GetCPUExtendedFeatures;
 {preconditions: maximum extended CPUID >= $80000001}
+{$IFDEF CPUX86}
 var
   Registers: TQProcessorRegisters;
   CpuExFeatures: TCpuExtendedFeatureSet;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     {call CPUID function $80000001}
     GetCPUID($80000001, Registers);
@@ -420,18 +437,22 @@ begin
       HyperThreading falta}
   except
   end;
+  {$ENDIF}
 end;
 
 procedure GetProcessorCacheInfo;
 {preconditions: 1. maximum CPUID must be at least $00000002
                 2. GetCPUVendor must have been called}
+{$IFDEF CPUX86}
 type
   TConfigDescriptor = packed array[0..15] of Byte;
 var
   Registers: TQProcessorRegisters;
   i, j: Integer;
   QueryCount: Byte;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     {call CPUID function 2}
     GetCPUID($00000002, Registers);
@@ -496,14 +517,18 @@ begin
     end;
   except
   end;
+  {$ENDIF}
 end;
 
 procedure GetExtendedProcessorCacheInfo;
 {preconditions: 1. maximum extended CPUID must be at least $80000006
                 2. GetCPUVendor and GetCPUFeatures must have been called}
+{$IFDEF CPUX86}
 var
   Registers: TQProcessorRegisters;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     {call CPUID function $80000005}
     GetCPUID($80000005, Registers);
@@ -533,10 +558,12 @@ begin
       ProcessorData.L2CacheSize := Registers.ECX shr 16;
   except
   end;
+  {$ENDIF}
 end;
 
 procedure VerifyOSSupportForXMMRegisters;
 begin
+  {$IFDEF CPUX86}
   try
     {try a SSE instruction that operates on XMM registers}
     try
@@ -554,14 +581,18 @@ begin
     end;
   except
   end;
+  {$ENDIF}
 end;
 
 procedure GetCPUInfo;
+{$IFDEF CPUX86}
 var
   Registers: TQProcessorRegisters;
   MaxCPUID: Cardinal;
   MaxExCPUID: Cardinal;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   {initialize - just to be sure}
   FillChar(ProcessorData, SizeOf(ProcessorData), 0);
 
@@ -608,11 +639,13 @@ begin
     end;
   except
   end;
+  {$ENDIF}
 end;
 
 procedure GetFastCodeTarget;
 {precondition: GetCPUInfo must have been called}
 begin
+   {$IFDEF CPUX86}
   try
     {as default, select blended target if there is at least FPU, MMX, and CMOV
      instruction support, otherwise select RTL Replacement target}
@@ -653,10 +686,12 @@ begin
     end;
   except
   end;
+  {$ENDIF}
 end;
 
 function _GetProcessorArchitectureInternal: string;
 begin
+  {$IFDEF CPUX86}
   Result := '32';
   try
     if isX64 in ProcessorData.InstructionSupport then
@@ -666,10 +701,12 @@ begin
   except
     Result := '32'; //Assume 32 bits processor
   end;
+  {$ENDIF}
 end;
 
 function _GetProcessorVendorInternal: string;
 begin
+  {$IFDEF CPUX86}
   Result := '';
   try
     Result := string(QVendorIDString[ProcessorData.Vendor]);
@@ -692,16 +729,20 @@ begin
   except
     Result := '';
   end;
+  {$ENDIF}
 end;
 
 function _GetProcessorFrequencyInternal: Integer;
+{$IFDEF CPUX86}
 const
   DelayTime = 500;
   ID_BIT    = $200000;
 var
   TimerHi, TimerLo: DWORD;
   PriorityClass, Priority: Integer;
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     PriorityClass := GetPriorityClass(GetCurrentProcess);
     Priority      := GetThreadPriority(GetCurrentThread);
@@ -731,15 +772,19 @@ begin
   except
     Result := 0;
   end;
+  {$ENDIF}
 end;
 
 procedure InitializeEx;
+{$IFDEF CPUX86}
 type
   // Function type of the GetNativeSystemInfo and GetSystemInfo functions
   TGetSystemInfo = procedure(var lpSystemInfo: TSystemInfo); stdcall;
 var
   GetSystemInfoFn: TGetSystemInfo;  // fn used to get system info
+{$ENDIF}
 begin
+  {$IFDEF CPUX86}
   try
     { Extract function from kernel and execute }
       GetSystemInfoFn := _LoadKernelFunc('GetNativeSystemInfo');
@@ -748,15 +793,21 @@ begin
     GetSystemInfoFn(SI);
   except
   end;
+  {$ENDIF}
 end;
+
 
 initialization
   { Processor Data Initialization }
   try
+    {$IFDEF CPUX86}
     InitializeEx;
     GetCPUInfo;
     GetFastCodeTarget;
+    {$ENDIF}
   except
   end;
 
 end.
+
+

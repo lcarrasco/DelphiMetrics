@@ -67,6 +67,9 @@ type
     rbCracked: TRadioButton;
     rbTrial: TRadioButton;
     rbRegistered: TRadioButton;
+    Label5: TLabel;
+    Bevel2: TBevel;
+    btnDebug: TButton;
     procedure FormShow(Sender: TObject);
     procedure btnTrackEventValueClick(Sender: TObject);
     procedure btnSendClick(Sender: TObject);
@@ -80,6 +83,7 @@ type
     procedure btnTrackLicenseClick(Sender: TObject);
     procedure btnSyncClick(Sender: TObject);
     procedure btnTrackAllClick(Sender: TObject);
+    procedure btnDebugClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -91,7 +95,7 @@ var
 
 const
   // SET YOUR APPLICATION ID
-  FApplicationID = '4dc82a2c8d15fc68f4000000';
+  FApplicationID = 'YOUR APPLICATION ID';
 
 implementation
 
@@ -168,6 +172,16 @@ begin
     ShowMessage('Sorry! Try again later.');
 end;
 
+procedure Tfrm_Main.btnDebugClick(Sender: TObject);
+begin
+  ShowMessage('Generating Debugging...');
+
+  if DeskMetricsGetDebugFile then
+    ShowMessage('Debug file created.')
+  else
+    ShowMessage('Debug file not created.');
+end;
+
 procedure Tfrm_Main.btnCustomDataClick(Sender: TObject);
 begin
   // Tracks a custom data
@@ -240,6 +254,8 @@ end;
 procedure Tfrm_Main.FormShow(Sender: TObject);
 begin
   frm_CustomerExperience.ShowModal;
+
+  DeskMetricsSetDebugMode(True);
 
   if (DeskMetricsGetEnabled = True) then
     // Starts the DeskMetrics component (required)

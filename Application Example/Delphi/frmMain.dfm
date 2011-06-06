@@ -4,8 +4,8 @@ object frm_Main: Tfrm_Main
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'DeskMetrics - Delphi Application Example'
-  ClientHeight = 515
-  ClientWidth = 582
+  ClientHeight = 514
+  ClientWidth = 589
   Color = clWhite
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -480,6 +480,26 @@ object frm_Main: Tfrm_Main
       Height = 11
       Shape = bsTopLine
     end
+    object Label5: TLabel
+      Left = 311
+      Top = 364
+      Width = 78
+      Height = 18
+      Caption = 'Debugging'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Bevel2: TBevel
+      Left = 311
+      Top = 386
+      Width = 246
+      Height = 11
+      Shape = bsTopLine
+    end
     object btnCustomData: TButton
       Left = 484
       Top = 70
@@ -708,9 +728,9 @@ object frm_Main: Tfrm_Main
     end
     object btnSync: TButton
       Left = 21
-      Top = 394
+      Top = 388
       Width = 246
-      Height = 25
+      Height = 38
       Caption = 'Sync Now!'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -800,6 +820,21 @@ object frm_Main: Tfrm_Main
         ParentFont = False
         TabOrder = 4
       end
+    end
+    object btnDebug: TButton
+      Left = 311
+      Top = 388
+      Width = 246
+      Height = 40
+      Caption = 'Generate Debug Log'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 20
+      OnClick = btnDebugClick
     end
   end
 end

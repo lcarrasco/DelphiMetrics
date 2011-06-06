@@ -8,132 +8,28 @@
   resources were bound to the produced executable.
 */
 
-#define Consts_SDuplicateMenus 65312
-#define Consts_SDockedCtlNeedsName 65313
-#define Consts_SDockTreeRemoveError 65314
-#define Consts_SDockZoneNotFound 65315
-#define Consts_SDockZoneHasNoCtl 65316
-#define Consts_SDockZoneVersionConflict 65317
-#define HelpIntfs_hNoContext 65318
-#define HelpIntfs_hNoContextFound 65319
-#define HelpIntfs_hNoIndex 65320
-#define HelpIntfs_hNoSearch 65321
-#define HelpIntfs_hNoTableOfContents 65322
-#define HelpIntfs_hNoTopics 65323
-#define HelpIntfs_hNothingFound 65324
-#define OleConst_sNoRunningObject 65325
-#define Consts_SmkcEnter 65328
-#define Consts_SmkcSpace 65329
-#define Consts_SmkcPgUp 65330
-#define Consts_SmkcPgDn 65331
-#define Consts_SmkcEnd 65332
-#define Consts_SmkcHome 65333
-#define Consts_SmkcLeft 65334
-#define Consts_SmkcUp 65335
-#define Consts_SmkcRight 65336
-#define Consts_SmkcDown 65337
-#define Consts_SmkcIns 65338
-#define Consts_SmkcDel 65339
-#define Consts_SmkcShift 65340
-#define Consts_SmkcCtrl 65341
-#define Consts_SmkcAlt 65342
-#define Consts_SIconToClipboard 65343
-#define Consts_SMsgDlgConfirm 65344
-#define Consts_SMsgDlgYes 65345
-#define Consts_SMsgDlgNo 65346
-#define Consts_SMsgDlgOK 65347
-#define Consts_SMsgDlgCancel 65348
-#define Consts_SMsgDlgHelp 65349
-#define Consts_SMsgDlgAbort 65350
-#define Consts_SMsgDlgRetry 65351
-#define Consts_SMsgDlgIgnore 65352
-#define Consts_SMsgDlgAll 65353
-#define Consts_SMsgDlgNoToAll 65354
-#define Consts_SMsgDlgYesToAll 65355
-#define Consts_SMsgDlgClose 65356
-#define Consts_SmkcBkSp 65357
-#define Consts_SmkcTab 65358
-#define Consts_SmkcEsc 65359
-#define Consts_SParentRequired 65360
-#define Consts_SParentGivenNotAParent 65361
-#define Consts_SMDIChildNotVisible 65362
-#define Consts_SVisibleChanged 65363
-#define Consts_SCannotShowModal 65364
-#define Consts_SMenuIndexError 65365
-#define Consts_SMenuReinserted 65366
-#define Consts_SMenuNotFound 65367
-#define Consts_SNoTimers 65368
-#define Consts_SGroupIndexTooLow 65369
-#define Consts_SNoMDIForm 65370
-#define Consts_SControlParentSetToSelf 65371
-#define Consts_SCannotDragForm 65372
-#define Consts_SMsgDlgWarning 65373
-#define Consts_SMsgDlgError 65374
-#define Consts_SMsgDlgInformation 65375
-#define ComConst_SDCOMNotInstalled 65376
-#define Consts_SInvalidBitmap 65377
-#define Consts_SInvalidIcon 65378
-#define Consts_SInvalidPixelFormat 65379
-#define Consts_SChangeIconSize 65380
-#define Consts_SUnknownClipboardFormat 65381
-#define Consts_SOutOfResources 65382
-#define Consts_SNoCanvasHandle 65383
-#define Consts_SInvalidImageSize 65384
-#define Consts_SInvalidImageList 65385
-#define Consts_SImageIndexError 65386
-#define Consts_SImageReadFail 65387
-#define Consts_SImageWriteFail 65388
-#define Consts_SWindowDCError 65389
-#define Consts_SWindowClass 65390
-#define Consts_SCannotFocus 65391
-#define RTLConsts_SSeekNotImplemented 65392
-#define RTLConsts_SSortedListError 65393
-#define RTLConsts_SUnknownGroup 65394
-#define RTLConsts_SUnknownProperty 65395
-#define RTLConsts_SWriteError 65396
-#define RTLConsts_SThreadCreateError 65397
-#define RTLConsts_SThreadError 65398
-#define RTLConsts_SThreadExternalTerminate 65399
-#define RTLConsts_SThreadExternalWait 65400
-#define RTLConsts_hNoFilterViewer 65401
-#define RTLConsts_SInvalidInteger 65402
-#define RTLConsts_STimeEncodeError 65403
-#define ComConst_SOleError 65404
-#define ComConst_SNoMethod 65405
-#define ComConst_SVarNotObject 65406
-#define ComConst_STooManyParams 65407
-#define RTLConsts_SInvalidFileName 65408
-#define RTLConsts_SInvalidImage 65409
-#define RTLConsts_SInvalidName 65410
-#define RTLConsts_SInvalidPropertyPath 65411
-#define RTLConsts_SInvalidPropertyValue 65412
-#define RTLConsts_SInvalidRegType 65413
-#define RTLConsts_SListCapacityError 65414
-#define RTLConsts_SListCountError 65415
-#define RTLConsts_SListIndexError 65416
-#define RTLConsts_SMemoryStreamError 65417
-#define RTLConsts_SPropertyException 65418
-#define RTLConsts_SReadError 65419
-#define RTLConsts_SReadOnlyProperty 65420
-#define RTLConsts_SRegGetDataFailed 65421
-#define RTLConsts_SRegSetDataFailed 65422
-#define RTLConsts_SResNotFound 65423
+#define RTLConsts_SRegSetDataFailed 65408
+#define RTLConsts_SSeekNotImplemented 65409
+#define RTLConsts_SSortedListError 65410
+#define RTLConsts_SWriteError 65411
+#define RTLConsts_SInvalidInteger 65412
+#define RTLConsts_STimeEncodeError 65413
 #define SysConst_SByteIndexOutOfBounds 65424
 #define SysConst_SInvalidCharCount 65425
 #define SysConst_SInvalidDestinationIndex 65426
 #define SysConst_SInvalidCodePage 65427
-#define RTLConsts_SAncestorNotFound 65428
-#define RTLConsts_SAssignError 65429
-#define RTLConsts_SBitsIndexError 65430
-#define RTLConsts_SCantWriteResourceStreamError 65431
-#define RTLConsts_SCheckSynchronizeError 65432
-#define RTLConsts_SClassNotFound 65433
-#define RTLConsts_SDuplicateClass 65434
-#define RTLConsts_SDuplicateItem 65435
-#define RTLConsts_SDuplicateName 65436
-#define RTLConsts_SDuplicateString 65437
-#define RTLConsts_SFCreateErrorEx 65438
-#define RTLConsts_SFOpenErrorEx 65439
+#define RTLConsts_SAssignError 65428
+#define RTLConsts_SDuplicateString 65429
+#define RTLConsts_SFCreateErrorEx 65430
+#define RTLConsts_SFOpenErrorEx 65431
+#define RTLConsts_SInvalidFileName 65432
+#define RTLConsts_SInvalidPropertyValue 65433
+#define RTLConsts_SInvalidRegType 65434
+#define RTLConsts_SListCapacityError 65435
+#define RTLConsts_SListCountError 65436
+#define RTLConsts_SListIndexError 65437
+#define RTLConsts_SReadError 65438
+#define RTLConsts_SRegGetDataFailed 65439
 #define SysConst_SShortDayNameMon 65440
 #define SysConst_SShortDayNameTue 65441
 #define SysConst_SShortDayNameWed 65442
@@ -232,132 +128,28 @@
 #define SysConst_SOverflow 65535
 STRINGTABLE
 BEGIN
-	Consts_SDuplicateMenus,	"Menu '%s' is already being used by another form"
-	Consts_SDockedCtlNeedsName,	"Docked control must have a name"
-	Consts_SDockTreeRemoveError,	"Error removing control from dock tree"
-	Consts_SDockZoneNotFound,	" - Dock zone not found"
-	Consts_SDockZoneHasNoCtl,	" - Dock zone has no control"
-	Consts_SDockZoneVersionConflict,	"Error loading dock zone from the stream. Expecting version %d, but found %d."
-	HelpIntfs_hNoContext,	"No context-sensitive help installed"
-	HelpIntfs_hNoContextFound,	"No help found for context"
-	HelpIntfs_hNoIndex,	"Unable to open Index"
-	HelpIntfs_hNoSearch,	"Unable to open Search"
-	HelpIntfs_hNoTableOfContents,	"Unable to find a Table of Contents"
-	HelpIntfs_hNoTopics,	"No topic-based help system installed"
-	HelpIntfs_hNothingFound,	"No help found for %s"
-	OleConst_sNoRunningObject,	"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
-	Consts_SmkcEnter,	"Enter"
-	Consts_SmkcSpace,	"Space"
-	Consts_SmkcPgUp,	"PgUp"
-	Consts_SmkcPgDn,	"PgDn"
-	Consts_SmkcEnd,	"End"
-	Consts_SmkcHome,	"Home"
-	Consts_SmkcLeft,	"Left"
-	Consts_SmkcUp,	"Up"
-	Consts_SmkcRight,	"Right"
-	Consts_SmkcDown,	"Down"
-	Consts_SmkcIns,	"Ins"
-	Consts_SmkcDel,	"Del"
-	Consts_SmkcShift,	"Shift+"
-	Consts_SmkcCtrl,	"Ctrl+"
-	Consts_SmkcAlt,	"Alt+"
-	Consts_SIconToClipboard,	"Clipboard does not support Icons"
-	Consts_SMsgDlgConfirm,	"Confirm"
-	Consts_SMsgDlgYes,	"&Yes"
-	Consts_SMsgDlgNo,	"&No"
-	Consts_SMsgDlgOK,	"OK"
-	Consts_SMsgDlgCancel,	"Cancel"
-	Consts_SMsgDlgHelp,	"&Help"
-	Consts_SMsgDlgAbort,	"&Abort"
-	Consts_SMsgDlgRetry,	"&Retry"
-	Consts_SMsgDlgIgnore,	"&Ignore"
-	Consts_SMsgDlgAll,	"&All"
-	Consts_SMsgDlgNoToAll,	"N&o to All"
-	Consts_SMsgDlgYesToAll,	"Yes to &All"
-	Consts_SMsgDlgClose,	"&Close"
-	Consts_SmkcBkSp,	"BkSp"
-	Consts_SmkcTab,	"Tab"
-	Consts_SmkcEsc,	"Esc"
-	Consts_SParentRequired,	"Control '%s' has no parent window"
-	Consts_SParentGivenNotAParent,	"Parent given is not a parent of '%s'"
-	Consts_SMDIChildNotVisible,	"Cannot hide an MDI Child Form"
-	Consts_SVisibleChanged,	"Cannot change Visible in OnShow or OnHide"
-	Consts_SCannotShowModal,	"Cannot make a visible window modal"
-	Consts_SMenuIndexError,	"Menu index out of range"
-	Consts_SMenuReinserted,	"Menu inserted twice"
-	Consts_SMenuNotFound,	"Sub-menu is not in menu"
-	Consts_SNoTimers,	"Not enough timers available"
-	Consts_SGroupIndexTooLow,	"GroupIndex cannot be less than a previous menu item's GroupIndex"
-	Consts_SNoMDIForm,	"Cannot create form. No MDI forms are currently active"
-	Consts_SControlParentSetToSelf,	"A control cannot have itself as its parent"
-	Consts_SCannotDragForm,	"Cannot drag a form"
-	Consts_SMsgDlgWarning,	"Warning"
-	Consts_SMsgDlgError,	"Error"
-	Consts_SMsgDlgInformation,	"Information"
-	ComConst_SDCOMNotInstalled,	"DCOM not installed"
-	Consts_SInvalidBitmap,	"Bitmap image is not valid"
-	Consts_SInvalidIcon,	"Icon image is not valid"
-	Consts_SInvalidPixelFormat,	"Invalid pixel format"
-	Consts_SChangeIconSize,	"Cannot change the size of an icon"
-	Consts_SUnknownClipboardFormat,	"Unsupported clipboard format"
-	Consts_SOutOfResources,	"Out of system resources"
-	Consts_SNoCanvasHandle,	"Canvas does not allow drawing"
-	Consts_SInvalidImageSize,	"Invalid image size"
-	Consts_SInvalidImageList,	"Invalid ImageList"
-	Consts_SImageIndexError,	"Invalid ImageList Index"
-	Consts_SImageReadFail,	"Failed to read ImageList data from stream"
-	Consts_SImageWriteFail,	"Failed to write ImageList data to stream"
-	Consts_SWindowDCError,	"Error creating window device context"
-	Consts_SWindowClass,	"Error creating window class"
-	Consts_SCannotFocus,	"Cannot focus a disabled or invisible window"
+	RTLConsts_SRegSetDataFailed,	"Failed to set data for '%s'"
 	RTLConsts_SSeekNotImplemented,	"%s.Seek not implemented"
 	RTLConsts_SSortedListError,	"Operation not allowed on sorted list"
-	RTLConsts_SUnknownGroup,	"%s not in a class registration group"
-	RTLConsts_SUnknownProperty,	"Property %s does not exist"
 	RTLConsts_SWriteError,	"Stream write error"
-	RTLConsts_SThreadCreateError,	"Thread creation error: %s"
-	RTLConsts_SThreadError,	"Thread Error: %s (%d)"
-	RTLConsts_SThreadExternalTerminate,	"Cannot terminate an externally created thread"
-	RTLConsts_SThreadExternalWait,	"Cannot wait for an externally created thread"
-	RTLConsts_hNoFilterViewer,	"No help viewer that supports filters"
 	RTLConsts_SInvalidInteger,	"''%s'' is not a valid integer value"
 	RTLConsts_STimeEncodeError,	"Invalid argument to time encode"
-	ComConst_SOleError,	"OLE error %.8x"
-	ComConst_SNoMethod,	"Method '%s' not supported by automation object"
-	ComConst_SVarNotObject,	"Variant does not reference an automation object"
-	ComConst_STooManyParams,	"Dispatch methods do not support more than 64 parameters"
+	SysConst_SByteIndexOutOfBounds,	"Start index out of bounds (%d)"
+	SysConst_SInvalidCharCount,	"Invalid count (%d)"
+	SysConst_SInvalidDestinationIndex,	"Invalid destination index (%d)"
+	SysConst_SInvalidCodePage,	"Invalid code page"
+	RTLConsts_SAssignError,	"Cannot assign a %s to a %s"
+	RTLConsts_SDuplicateString,	"String list does not allow duplicates"
+	RTLConsts_SFCreateErrorEx,	"Cannot create file \"%s\". %s"
+	RTLConsts_SFOpenErrorEx,	"Cannot open file \"%s\". %s"
 	RTLConsts_SInvalidFileName,	"Invalid file name - %s"
-	RTLConsts_SInvalidImage,	"Invalid stream format"
-	RTLConsts_SInvalidName,	"''%s'' is not a valid component name"
-	RTLConsts_SInvalidPropertyPath,	"Invalid property path"
 	RTLConsts_SInvalidPropertyValue,	"Invalid property value"
 	RTLConsts_SInvalidRegType,	"Invalid data type for '%s'"
 	RTLConsts_SListCapacityError,	"List capacity out of bounds (%d)"
 	RTLConsts_SListCountError,	"List count out of bounds (%d)"
 	RTLConsts_SListIndexError,	"List index out of bounds (%d)"
-	RTLConsts_SMemoryStreamError,	"Out of memory while expanding memory stream"
-	RTLConsts_SPropertyException,	"Error reading %s%s%s: %s"
 	RTLConsts_SReadError,	"Stream read error"
-	RTLConsts_SReadOnlyProperty,	"Property is read-only"
 	RTLConsts_SRegGetDataFailed,	"Failed to get data for '%s'"
-	RTLConsts_SRegSetDataFailed,	"Failed to set data for '%s'"
-	RTLConsts_SResNotFound,	"Resource %s not found"
-	SysConst_SByteIndexOutOfBounds,	"Start index out of bounds (%d)"
-	SysConst_SInvalidCharCount,	"Invalid count (%d)"
-	SysConst_SInvalidDestinationIndex,	"Invalid destination index (%d)"
-	SysConst_SInvalidCodePage,	"Invalid code page"
-	RTLConsts_SAncestorNotFound,	"Ancestor for '%s' not found"
-	RTLConsts_SAssignError,	"Cannot assign a %s to a %s"
-	RTLConsts_SBitsIndexError,	"Bits index out of range"
-	RTLConsts_SCantWriteResourceStreamError,	"Can't write to a read-only resource stream"
-	RTLConsts_SCheckSynchronizeError,	"CheckSynchronize called from thread $%x, which is NOT the main thread"
-	RTLConsts_SClassNotFound,	"Class %s not found"
-	RTLConsts_SDuplicateClass,	"A class named %s already exists"
-	RTLConsts_SDuplicateItem,	"List does not allow duplicates ($0%x)"
-	RTLConsts_SDuplicateName,	"A component named %s already exists"
-	RTLConsts_SDuplicateString,	"String list does not allow duplicates"
-	RTLConsts_SFCreateErrorEx,	"Cannot create file \"%s\". %s"
-	RTLConsts_SFOpenErrorEx,	"Cannot open file \"%s\". %s"
 	SysConst_SShortDayNameMon,	"Mon"
 	SysConst_SShortDayNameTue,	"Tue"
 	SysConst_SShortDayNameWed,	"Wed"
@@ -457,6 +249,5 @@ BEGIN
 END
 
 /* c:\program files (x86)\codegear\rad studio\6.0\lib\character.res */
-/* c:\program files (x86)\codegear\rad studio\6.0\lib\Controls.res */
-/* C:\Users\Bernardo\Desktop\deskmetrics-DLL-27f2ca4\DeskMetrics.res */
-/* C:\Users\Bernardo\Desktop\deskmetrics-DLL-27f2ca4\DeskMetrics.drf */
+/* C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.res */
+/* C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.drf */

@@ -53,6 +53,7 @@ uses
   function  DeskMetricsSendData: Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsGetDebugMode: Boolean; stdcall; external 'DeskMetrics.dll';
   function  DeskMetricsSetDebugMode(FEnabled: Boolean): Boolean; stdcall; external 'DeskMetrics.dll';
+  function  DeskMetricsGetDebugFile: Boolean; stdcall; external 'DeskMetrics.dll';
 
  implementation
 

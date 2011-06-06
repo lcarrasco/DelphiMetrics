@@ -4,7 +4,11 @@
 			<MainSource>DeskMetrics.dpr</MainSource>
 			<Config Condition="'$(Config)'==''">Release</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-			<ProjectVersion>12.0</ProjectVersion>
+			<ProjectVersion>13.3</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<Base>True</Base>
+			<Platform Condition="'$(Platform)'==''">Win64</Platform>
+			<AppType>Library</AppType>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
 			<Base>true</Base>
@@ -20,6 +24,11 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<VerInfo_Keys>CompanyName=DeskMetrics;FileDescription=DeskMetrics DLL Component;FileVersion=1.7.3.0;InternalName=DeskMetrics;LegalCopyright=Copyright (c) 2011 DeskMetrics;LegalTrademarks=;OriginalFilename=DeskMetrics.dll;ProductName=DeskMetrics;ProductVersion=1.7.3.0;Comments=</VerInfo_Keys>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_MinorVer>7</VerInfo_MinorVer>
+			<VerInfo_Release>3</VerInfo_Release>
+			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
 			<DCC_DependencyCheckOutputName>DeskMetrics.dll</DCC_DependencyCheckOutputName>
 			<GenDll>true</GenDll>
@@ -27,10 +36,10 @@
 			<DCC_Platform>x86</DCC_Platform>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_MapFile>3</DCC_MapFile>
 			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -42,10 +51,10 @@
 			<DCCReference Include="dskMetricsInternals.pas"/>
 			<DCCReference Include="dskMetricsConsts.pas"/>
 			<DCCReference Include="dskMetricsVars.pas"/>
-			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<DCCReference Include="dskMetricsCommon.pas"/>
 			<DCCReference Include="dskMetricsWinInfo.pas"/>
 			<DCCReference Include="dskMetricsBase64.pas"/>
+			<DCCReference Include="dskMetricsCPUInfo.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -77,7 +86,7 @@
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">1</VersionInfo>
 						<VersionInfo Name="MinorVer">7</VersionInfo>
-						<VersionInfo Name="Release">1</VersionInfo>
+						<VersionInfo Name="Release">3</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -90,20 +99,104 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription">DeskMetrics DLL Component</VersionInfoKeys>
-						<VersionInfoKeys Name="FileVersion">1.7.1.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.7.3.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright">Copyright (c) 2011 DeskMetrics</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalTrademarks"/>
 						<VersionInfoKeys Name="OriginalFilename">DeskMetrics.dll</VersionInfoKeys>
 						<VersionInfoKeys Name="ProductName">DeskMetrics</VersionInfoKeys>
-						<VersionInfoKeys Name="ProductVersion">1.7.1.0</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">1.7.3.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDS)\bin\dcloffice2k120.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDS)\bin\dclofficexp120.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="%BDSBIN%\dcloffice2k120.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="%BDSBIN%\dclofficexp120.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
+				<Platforms>
+					<Platform value="Win64">True</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+				<Deployment>
+					<DeployFile Class="AdditionalDebugSymbols" LocalName="$(BDSLIB)\$(PLATFORM)\debug\rtl.dcp" Condition="'$(UsePackages)'=='true'">
+						<Platform Name="All"/>
+					</DeployFile>
+					<DeployFile Class="AdditionalDebugSymbols" LocalName="$(BDSLIB)\$(PLATFORM)\debug\sysinit.dcu" Condition="'$(UsePackages)'=='true'">
+						<Platform Name="All"/>
+					</DeployFile>
+					<DeployClass Name="ProjectOutput">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyPackage">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyModule">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXInfoPList">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents</RemoteDir>
+							<RemoteName>Info.plist</RemoteName>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="File">
+						<Platform Name="OSX32">
+							<Operation>0</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DebugSymbols">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="DependencyFramework">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="AdditionalDebugSymbols">
+						<Platform Name="OSX32">
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="ProjectOSXResource">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\Resources</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="OSX32"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
+				</Deployment>
 			</BorlandProject>
 			<ProjectFileVersion>12</ProjectFileVersion>
 		</ProjectExtensions>
@@ -111,7 +204,7 @@
 
 <!-- EurekaLog First Line
 [Exception Log]
-EurekaLog Version=6024
+EurekaLog Version=6101
 Activate=0
 Activate Handle=1
 Save Log File=1
@@ -271,6 +364,7 @@ loFreeAllLeaks=1
 loCatchLeaksExceptions=1
 cfoReduceFileSize=1
 cfoCheckFileCorruption=0
+cfoUseEL7=0
 Count mtInformationMsgCaption=1
 mtInformationMsgCaption0="Information."
 Count mtQuestionMsgCaption=1

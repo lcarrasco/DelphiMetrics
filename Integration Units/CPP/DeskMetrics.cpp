@@ -666,4 +666,3 @@ bool DeskMetricsSendData()
 	}
 	return false;
 }
-
