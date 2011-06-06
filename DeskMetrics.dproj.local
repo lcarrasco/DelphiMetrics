@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2011/02/14 13:26:44.994.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\Unit1.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsBase64.pas</Transaction>
+    <Transaction>2011/02/14 13:26:44.994.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsBase64.pas=C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\Unit1.pas</Transaction>
     <Transaction>2011/02/16 12:14:05.188.pas,C:\Users\Bernardo\Documents\DeskMetrics\Componentes\componentDelphi\DLL\dskMetricsWMI.pas=</Transaction>
     <Transaction>2011/05/18 10:19:07.000.773,C:\Users\Bernardo\Desktop\x64 deskmetrics\dskMetricsCPUInfo.pas=</Transaction>
     <Transaction>2011/06/02 13:55:07.000.309,=C:\Users\Bernardo\Desktop\x64 deskmetrics\dskMetricsCPUInfo.pas</Transaction>
-    <Transaction>2011/06/02 16:47:10.000.921,C:\Users\Bernardo\Desktop\x64 deskmetrics\sadds.dproj=C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.dproj</Transaction>
-    <Transaction>2011/06/02 16:50:40.000.957,C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.dproj=C:\Users\Bernardo\Desktop\x64 deskmetrics\sadds.dproj</Transaction>
+    <Transaction>2011/06/02 16:47:10.000.921,C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.dproj=C:\Users\Bernardo\Desktop\x64 deskmetrics\sadds.dproj</Transaction>
+    <Transaction>2011/06/02 16:50:40.000.957,C:\Users\Bernardo\Desktop\x64 deskmetrics\sadds.dproj=C:\Users\Bernardo\Desktop\x64 deskmetrics\DeskMetrics.dproj</Transaction>
   </Transactions>
 </BorlandProject>
