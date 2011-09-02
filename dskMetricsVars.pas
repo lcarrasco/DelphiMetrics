@@ -39,6 +39,9 @@ var
   FAppID: string;
   FAppVersion: string;
 
+  FBackupServer: String;
+  FBackupServerPort : Integer;
+
   FNetFramework: string;
   FNetFrameworkSP: Integer;
 

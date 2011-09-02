@@ -8,7 +8,7 @@
 {                                                                       }
 {     support@deskmetrics.com                                           }
 {                                                                       }
-{     This code is provided under the DeskMetrics Modified BSD License  }
+{     This code is prounder the DeskMetrics Modified BSD License  }
 {     A copy of this license has been distributed in a file called      }
 {     LICENSE with this source code.                                    }
 {                                                                       }
@@ -179,12 +179,16 @@ begin
 end;
 
 { Component Control }
-function DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean; stdcall;
+function DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; BackupServer: PWideChar; BackupServerPort: Integer): Boolean; stdcall;
 var
   FHeader: string;
   FOperatingSystem: string;
   FHardware: string;
 begin
+  { Set BackupServer address and port }
+  FBackupServer:=BackupServer;
+  FBackupServerPort:=BackupServerPort;
+
   FThreadSafe.Enter;
   try
     Result   := False;
@@ -222,12 +226,13 @@ begin
   end;
 end;
 
-function DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PWideChar): Boolean; stdcall;
+function DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PWideChar; BackupServer: PWideChar; BackupServerPort: Integer): Boolean; stdcall;
 begin
   FThreadSafe.Enter;
   try
     try
-      Result := DeskMetricsStart(PWideChar(FApplicationID), PWideChar(FApplicationVersion));
+      Result := DeskMetricsStart(PWideChar(FApplicationID), PWideChar(FApplicationVersion),
+                PWideChar(FBackupServer), BackupServerPort);
     except
       Result := False;
     end;
@@ -257,7 +262,9 @@ begin
 
         try
           {Send HTTP request to application´s backup server}
-          _SendPost('metricas.eleventa.com', 80, FLastErrorID, API_SENDDATA);
+          if (FBackupServer <> '') then
+             _SendPost(FBackupServer, FBackupServerPort, FLastErrorID, API_SENDDATA);
+
           { Send HTTP request to DeskMetrics}
           _SendPost(FAppID + FPostServer, FPostPort, FLastErrorID, API_SENDDATA);
         finally
@@ -489,7 +496,9 @@ begin
         FJSONData := '{"tp":"ctDR","ID":"' + _GetUserID + '","aver":"' + FAppVersion + '","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
 
         { Send HTTP request }
-        _SendPost('metricas.eleventa.com', 80, FErrorID, API_SENDDATA);
+        if (FBackupServer <> '') then
+           _SendPost(FBackupServer, FBackupServerPort, FErrorID, API_SENDDATA);
+
         _SendPost(FAppID + FPostServer, FPostPort, FErrorID, API_SENDDATA);
         Result := FErrorID;
 
@@ -714,8 +723,11 @@ begin
     try
       if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
       begin
+
         { Send HTTP request }
-        _SendPost('metricas.eleventa.com', 80, FErrorID, API_SENDDATA);
+        if (FBackupServer <> '') then
+          _SendPost(FBackupServer, FBackupServerPort, FErrorID, API_SENDDATA);
+
         _SendPost(FAppID + FPostServer, FPostPort, FErrorID, API_SENDDATA);
 
         { Sent ? }
