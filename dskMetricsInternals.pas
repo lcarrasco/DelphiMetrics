@@ -61,7 +61,7 @@ function _GetSessionID: string;
 function _GetDotNetData(var FVersion: string; var FServicePack: Integer): Boolean;
 
 { Internal Internet / HTTP / Post Functions }
-function _SendPost(var FErrorID: Integer; const FAction: string): string;
+function _SendPost(Host: String; Port: Integer; var FErrorID: Integer; const FAction: string): string;
 
 { Proxy Configuration }
 function _SetProxy(const FServerAddress: string; FPort: Integer; const FUserName, FPassword: string): Boolean;
@@ -767,7 +767,7 @@ begin
   end;
 end;
 
-function _SendPost(var FErrorID: Integer; const FAction: string): string;
+function _SendPost(Host: String; Port: Integer; var FErrorID: Integer; const FAction: string): string;
 var
   FJSONTemp: string;
   hint,hconn,hreq:hinternet;
@@ -806,7 +806,7 @@ begin
       end;
 
       { Set HTTP port }
-      hconn := InternetConnect(hint,PChar(FAppID + FPostServer),FPostPort,nil,nil,INTERNET_SERVICE_HTTP,0,1);
+      hconn := InternetConnect(hint,PChar(Host), Port, nil,nil,INTERNET_SERVICE_HTTP,0,1);
       if hconn = nil then
       begin
         FErrorID := 3;
@@ -814,13 +814,13 @@ begin
       end;
 
       try
-        if FPostPort = INTERNET_DEFAULT_HTTPS_PORT then
+        if Port = INTERNET_DEFAULT_HTTPS_PORT then
           flags := INTERNET_FLAG_NO_UI or INTERNET_FLAG_SECURE or INTERNET_FLAG_IGNORE_CERT_CN_INVALID or INTERNET_FLAG_IGNORE_CERT_DATE_INVALID
         else
           flags := INTERNET_FLAG_NO_UI;
 
         hreq := HttpOpenRequest(hconn, 'POST', PChar(FAction), nil, nil, nil, flags, 1);
-        if Assigned(hreq) and (FPostPort = INTERNET_DEFAULT_HTTPS_PORT) then
+        if Assigned(hreq) and (Port = INTERNET_DEFAULT_HTTPS_PORT) then
         begin
           dwSize := SizeOf(dwFlags);
           if (InternetQueryOption(hreq, INTERNET_OPTION_SECURITY_FLAGS, @dwFlags, dwSize)) then

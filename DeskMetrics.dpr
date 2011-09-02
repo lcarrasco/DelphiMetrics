@@ -29,7 +29,8 @@ uses
   dskMetricsBase64 in 'dskMetricsBase64.pas',
   dskMetricsCPUInfo in 'dskMetricsCPUInfo.pas';
 
-{$R *.res}
+{$WEAKLINKRTTI ON}
+{$RTTI EXPLICIT METHODS([]) PROPERTIES([]) FIELDS([])}
 
 { Component POST Configuration }
 function DeskMetricsGetPostServer: PWideChar; stdcall;
@@ -255,8 +256,10 @@ begin
           FJSONData := FJSONData + ',' + Trim(FCacheData);
 
         try
-          { Send HTTP request }
-          _SendPost(FLastErrorID, API_SENDDATA);
+          {Send HTTP request to application´s backup server}
+          _SendPost('metricas.eleventa.com', 80, FLastErrorID, API_SENDDATA);
+          { Send HTTP request to DeskMetrics}
+          _SendPost(FAppID + FPostServer, FPostPort, FLastErrorID, API_SENDDATA);
         finally
           FJSONData := FSingleJSON;
         end;
@@ -486,7 +489,8 @@ begin
         FJSONData := '{"tp":"ctDR","ID":"' + _GetUserID + '","aver":"' + FAppVersion + '","nm":"' + FNameTemp + '","vl":"' + FValueTemp + '","fl":' + _GetFlowNumber + ',"ts":'+ _GetTimeStamp +',"ss":"' + _GetSessionID + '"}';
 
         { Send HTTP request }
-        _SendPost(FErrorID, API_SENDDATA);
+        _SendPost('metricas.eleventa.com', 80, FErrorID, API_SENDDATA);
+        _SendPost(FAppID + FPostServer, FPostPort, FErrorID, API_SENDDATA);
         Result := FErrorID;
 
         { Debug / Test Mode }
@@ -711,7 +715,8 @@ begin
       if (_GetStarted) and (_GetAppID <> '') and (FEnabled) then
       begin
         { Send HTTP request }
-        _SendPost(FErrorID, API_SENDDATA);
+        _SendPost('metricas.eleventa.com', 80, FErrorID, API_SENDDATA);
+        _SendPost(FAppID + FPostServer, FPostPort, FErrorID, API_SENDDATA);
 
         { Sent ? }
         Result := FErrorID = 0;
