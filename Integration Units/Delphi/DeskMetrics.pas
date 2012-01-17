@@ -17,8 +17,8 @@ interface
 uses SysUtils;
 
 type
-  TDMStart                = function(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean; stdcall;
-  TDMStartA               = function(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar): Boolean; stdcall;
+  TDMStart                = function(FApplicationID: PWideChar; FApplicationVersion: PWideChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean; stdcall;
+  TDMStartA               = function(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean; stdcall;
   TDMStop                 = function: Boolean; stdcall;
   TDMTrackEvent           = procedure(FEventCategory, FEventName: PWideChar); stdcall;
   TDMTrackEventA          = procedure(FEventCategory, FEventName: PAnsiChar); stdcall;
@@ -58,8 +58,8 @@ type
   TDMSetDebugMode          = function(FEnabled: Boolean): Boolean; stdcall;
   TDMGetDebugFile          = function:Boolean; stdcall;
 
-  function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean;
-  function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar): Boolean;
+  function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean;
+  function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean;
   function  DeskMetricsStop: Boolean;
   procedure DeskMetricsTrackEvent(FEventCategory, FEventName: PWideChar);
   procedure DeskMetricsTrackEventA(FEventCategory, FEventName: PAnsiChar);
@@ -102,6 +102,7 @@ type
   function  DeskMetricsDllLoaded: Boolean;
   function  Load_DLL: Boolean;
   function  Unload_DLL: Boolean;
+  procedure DeskMetricsLiberarDLL;
 
 const
   EMPTY_STRING = '';
@@ -211,7 +212,7 @@ begin
   end;
 end;
 
-function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar): Boolean;
+function  DeskMetricsStart(FApplicationID: PWideChar; FApplicationVersion: PWideChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean;
 const
   DMStart : TDMStart = nil;
 begin
@@ -221,14 +222,14 @@ begin
     begin
       @DMStart := GetProcAddress(hModule, PROC_DeskMetricsStart);
       if Assigned(DMStart) then
-        Result := DMStart(FApplicationID, FApplicationVersion);
+        Result := DMStart(FApplicationID, FApplicationVersion, BackupServer, BackupServerPort);
     end;
   except
     Result := False;
   end;
 end;
 
-function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar): Boolean;
+function  DeskMetricsStartA(FApplicationID: PAnsiChar; FApplicationVersion: PAnsiChar; BackupServer: PWideChar; BackUpServerPort: Integer): Boolean;
 const
   DMStartA : TDMStartA = nil;
 begin
@@ -238,7 +239,7 @@ begin
     begin
       @DMStartA := GetProcAddress(hModule, PROC_DeskMetricsStartA);
       if Assigned(DMStartA) then
-        Result := DMStartA(FApplicationID, FApplicationVersion);
+        Result := DMStartA(FApplicationID, FApplicationVersion, BackupServer, BackupServerPort);
     end;
   except
     Result := False;
@@ -869,11 +870,13 @@ begin
   end;
 end;
 
+procedure DeskMetricsLiberarDLL;
+begin
+    if not(hModule < HINSTANCE_ERROR) then
+    FreeLibrary(hModule);
+end;
+
 initialization
   hModule := 0;
-
-finalization
-  if not(hModule < HINSTANCE_ERROR) then
-    FreeLibrary(hModule);
 
 end.
